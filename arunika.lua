@@ -44,7 +44,7 @@ local function touchPart(part)
         local hrp, _ = getHRP()
         if hrp then
             firetouchinterest(hrp, part, 0)
-			task.wait(0.2)
+			task.wait(0.1)
             firetouchinterest(hrp, part, 1)
             return true
         end
@@ -72,7 +72,6 @@ local function runCheckpoints()
         return numA < numB
     end)
 	
-	task.wait(0.5)
     for i, cp in ipairs(checkpoints) do
         touchPart(cp)
         task.spawn(function()
@@ -86,7 +85,7 @@ local function runCheckpoints()
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger touched! Sequence complete."
 		end)
-		task.wait(1)
+		task.wait(0.5)
 	else
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger not found!"
