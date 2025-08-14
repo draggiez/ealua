@@ -286,6 +286,9 @@ btnStartStop.MouseButton1Click:Connect(function()
                 while loopRunning do
                     stFolder = workspace:FindFirstChild("SummitTrigger")
                     if stFolder then
+						task.spawn(function()
+							logLabel.Text = "SummitTrigger found."
+						end)
 						break 
 					end
                     task.wait(0.5)
