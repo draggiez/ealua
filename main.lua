@@ -20,7 +20,7 @@ Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
 
 -- Title
 local title = Instance.new("TextLabel")
-title.Text = "Mount Yagataw Push"
+title.Text = "Expedition Antarctica"
 title.Size = UDim2.new(1, -40, 0, 30)
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
