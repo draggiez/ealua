@@ -44,7 +44,7 @@ local function touchPart(part)
         local hrp, _ = getHRP()
         if hrp then
             firetouchinterest(hrp, part, 0)
-			task.wait(0.1)
+			task.wait(0.2)
             firetouchinterest(hrp, part, 1)
             return true
         end
@@ -80,7 +80,18 @@ local function runCheckpoints()
         end)
 		task.wait(touchWait)
     end
-
+	local summit = workspace:FindFirstChild("SummitTrigger")
+	if summit and summit:IsA("BasePart") then
+	    touchPart(summit)
+		task.spawn(function()
+			logLabel.Text = "SummitTrigger touched! Sequence complete."
+		end)
+		task.wait(1)
+	else
+		task.spawn(function()
+			logLabel.Text = "SummitTrigger not found!"
+		end)
+	end	
     return true
 end
 
@@ -275,13 +286,13 @@ btnStartStop.MouseButton1Click:Connect(function()
                 end
 
                 task.spawn(function() logLabel.Text = "Checkpoint5 found! Running checkpoints..." end)
-                local success1, msg = pcall(runCheckpoints)
-                if not success1 then
+                local success, msg = pcall(runCheckpoints)
+                if not success then
                     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
                 end
 
-				-- DEBUG
-				loopRunning = false
+				task.spawn(function() logLabel.Text = "Respawning..." end)
+                respawnAndWait()
 				
                 task.spawn(function() logLabel.Text = "Cycle complete. Looping..." end)
                 task.wait(0.5)
