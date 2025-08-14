@@ -275,9 +275,20 @@ btnStartStop.MouseButton1Click:Connect(function()
                 end
 
                 task.spawn(function() logLabel.Text = "Checkpoint5 found! Running checkpoints..." end)
-                local success, msg = pcall(runCheckpoints)
-                if not success then
+                local success1, msg = pcall(runCheckpoints)
+                if not success1 then
                     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
+                end
+				
+				task.spawn(function() logLabel.Text = "Waiting for SummitTrigger..." end)
+                local summitTrigger
+                local st
+                while loopRunning do
+                    stFolder = workspace:FindFirstChild("SummitTrigger")
+                    if stFolder then
+						break 
+					end
+                    task.wait(0.5)
                 end
 				
 				local summit = workspace:FindFirstChild("SummitTrigger")
