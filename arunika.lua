@@ -279,36 +279,10 @@ btnStartStop.MouseButton1Click:Connect(function()
                 if not success1 then
                     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
                 end
-				
-				task.spawn(function() logLabel.Text = "Waiting for SummitTrigger..." end)
-                local stFolder
-                while loopRunning do
-                    stFolder = workspace:FindFirstChild("SummitTrigger")
-                    if stFolder then
-						task.spawn(function()
-							logLabel.Text = "SummitTrigger found."
-						end)
-						break 
-					end
-                    task.wait(0.5)
-                end
-				
-				local summit = workspace:FindFirstChild("SummitTrigger")
-				if summit and summit:IsA("BasePart") then
-				    task.wait(0.5)
-					touchPart(summit)
-					task.spawn(function()
-						logLabel.Text = "SummitTrigger touched! Sequence complete."
-					end)
-				else
-					task.spawn(function()
-						logLabel.Text = "SummitTrigger not found!"
-					end)
-				end				
 
-                task.spawn(function() logLabel.Text = "Respawning..." end)
-                respawnAndWait()
-
+				-- DEBUG
+				loopRunning = false
+				
                 task.spawn(function() logLabel.Text = "Cycle complete. Looping..." end)
                 task.wait(0.5)
             end
