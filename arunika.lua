@@ -281,8 +281,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                 end
 				
 				task.spawn(function() logLabel.Text = "Waiting for SummitTrigger..." end)
-                local summitTrigger
-                local st
+                local stFolder
                 while loopRunning do
                     stFolder = workspace:FindFirstChild("SummitTrigger")
                     if stFolder then
