@@ -167,7 +167,7 @@ local function startSequence()
         safeTeleport(Vector3.new(-479.40, 1633.01, 2284.17))
         task.wait(2)
         safeTeleport(Vector3.new(-85.34, 1929.01, 2114.17))
-        task.wait(2)
+        task.wait(5)
         safeTeleport(Vector3.new(2.00, 2493.01, 2043.50))
         task.wait(2)
 
