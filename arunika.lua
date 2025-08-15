@@ -301,7 +301,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                     task.wait(0.5)
                 end
 
-                task.spawn(function() logLabel.Text = "Checkpoint5 found! Running checkpoints..." end)
+                task.spawn(function() logLabel.Text = "All Checkpoints found! Touching checkpoints..." end)
                 local success, msg = pcall(runCheckpoints)
                 if not success then
                     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
