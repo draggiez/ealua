@@ -80,7 +80,9 @@ local function runCheckpoints()
         -- Tambahan: Touch semua part di radius
         local nearbyParts = workspace:GetPartBoundsInRadius(cp.Position, touchRadius)
         for _, part in ipairs(nearbyParts) do
-            touchPart(part)
+            if not part:IsA("Seat") and not part:IsA("VehicleSeat") and not part.Name:lower():find("bed") then
+                touchPart(part)
+            end
         end
 
         task.spawn(function()
