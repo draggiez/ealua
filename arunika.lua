@@ -286,15 +286,17 @@ btnStartStop.MouseButton1Click:Connect(function()
                     char:WaitForChild("HumanoidRootPart")
                 end
 
-                task.spawn(function() logLabel.Text = "Waiting for Checkpoint5 to load..." end)
+                task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
 				task.wait(2)
                 local checkpointsFolder
                 local cp5
+			    local cp3
                 while loopRunning do
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
+					    cp3 = checkpointsFolder:FindFirstChild("Checkpoint3")
                         cp5 = checkpointsFolder:FindFirstChild("Checkpoint5")
-                        if cp5 then break end
+                        if cp3 and cp5 then break end
                     end
                     task.wait(0.5)
                 end
