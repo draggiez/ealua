@@ -45,15 +45,11 @@ local function touchPart(part)
         local hrp, _ = getHRP()
         if hrp then
             firetouchinterest(hrp, part, 0)
-            task.wait(0.2)
+            task.wait(0.1)
             firetouchinterest(hrp, part, 1)
-            task.wait(0.2)
-            firetouchinterest(hrp, part, 0)
-            task.wait(0.2)
+            task.wait(0.1)
             firetouchinterest(hrp, part, 1)
-            task.wait(0.2)
-            firetouchinterest(hrp, part, 0)
-            task.wait(0.2)
+            task.wait(0.1)
             firetouchinterest(hrp, part, 1)
             return true
         end
