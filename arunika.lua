@@ -7,6 +7,7 @@ local loopRunning = false
 -- Default delay values (seconds)
 local respawnWait = 10
 local touchWait = 2
+local touchRadius = 25 -- radius touch (baru)
 
 -- Utility to get HumanoidRootPart safely
 local function getHRP()
@@ -44,7 +45,7 @@ local function touchPart(part)
         local hrp, _ = getHRP()
         if hrp then
             firetouchinterest(hrp, part, 0)
-			task.wait(0.1)
+            task.wait(0.1)
             firetouchinterest(hrp, part, 1)
             return true
         end
@@ -52,7 +53,7 @@ local function touchPart(part)
     return false
 end
 
--- Run checkpoint + summit sequence
+-- Run checkpoint + summit sequence (modif: tambah radius touch)
 local function runCheckpoints()
     local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
     if not checkpointsFolder then
@@ -71,26 +72,39 @@ local function runCheckpoints()
         local numB = tonumber(b.Name:match("%d+")) or 0
         return numA < numB
     end)
-	
+
     for i, cp in ipairs(checkpoints) do
+        -- Touch part checkpoint langsung
         touchPart(cp)
+
+        -- Tambahan: Touch semua part di radius
+        local nearbyParts = workspace:GetPartBoundsInRadius(cp.Position, touchRadius)
+        for _, part in ipairs(nearbyParts) do
+            touchPart(part)
+        end
+
         task.spawn(function()
-            logLabel.Text = string.format("Touched %s (%d/%d)", cp.Name, i, #checkpoints)
+            logLabel.Text = string.format("Touched %s + radius (%d/%d)", cp.Name, i, #checkpoints)
         end)
-		task.wait(touchWait)
+        task.wait(touchWait)
     end
-	local summit = workspace:FindFirstChild("SummitTrigger")
-	if summit and summit:IsA("BasePart") then
-	    touchPart(summit)
-		task.spawn(function()
-			logLabel.Text = "SummitTrigger touched! Sequence complete."
-		end)
-		task.wait(0.5)
-	else
-		task.spawn(function()
-			logLabel.Text = "SummitTrigger not found!"
-		end)
-	end	
+
+    local summit = workspace:FindFirstChild("SummitTrigger")
+    if summit and summit:IsA("BasePart") then
+        touchPart(summit)
+        local nearbyParts = workspace:GetPartBoundsInRadius(summit.Position, touchRadius)
+        for _, part in ipairs(nearbyParts) do
+            touchPart(part)
+        end
+        task.spawn(function()
+            logLabel.Text = "SummitTrigger touched! Sequence complete."
+        end)
+        task.wait(0.5)
+    else
+        task.spawn(function()
+            logLabel.Text = "SummitTrigger not found!"
+        end)
+    end 
     return true
 end
 
@@ -99,8 +113,8 @@ local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.Name = "GodGPT_LoopGui"
 
 local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 260, 0, 160)
-frame.Position = UDim2.new(0.5, -130, 0.5, -65)
+frame.Size = UDim2.new(0, 260, 0, 180) -- tinggi diperbesar
+frame.Position = UDim2.new(0.5, -130, 0.5, -75)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -172,6 +186,7 @@ btnClose.BorderSizePixel = 0
 local closeCorner = Instance.new("UICorner", btnClose)
 closeCorner.CornerRadius = UDim.new(0, 6)
 
+-- Respawn delay label & input
 local respawnLabel = Instance.new("TextLabel", frame)
 respawnLabel.Size = UDim2.new(0.45, -10, 0, 18)
 respawnLabel.Position = UDim2.new(0.05, 0, 0, 105)
@@ -192,10 +207,10 @@ respawnInput.TextSize = 13
 respawnInput.TextXAlignment = Enum.TextXAlignment.Center
 respawnInput.Text = tostring(respawnWait)
 respawnInput.ClearTextOnFocus = false
-respawnInput.ClipsDescendants = true
 local respawnCorner = Instance.new("UICorner", respawnInput)
 respawnCorner.CornerRadius = UDim.new(0, 5)
 
+-- Touch delay label & input
 local touchLabel = Instance.new("TextLabel", frame)
 touchLabel.Size = UDim2.new(0.45, -10, 0, 18)
 touchLabel.Position = UDim2.new(0.05, 0, 0, 125)
@@ -216,9 +231,32 @@ touchInput.TextSize = 13
 touchInput.TextXAlignment = Enum.TextXAlignment.Center
 touchInput.Text = tostring(touchWait)
 touchInput.ClearTextOnFocus = false
-touchInput.ClipsDescendants = true
 local touchCorner = Instance.new("UICorner", touchInput)
 touchCorner.CornerRadius = UDim.new(0, 5)
+
+-- Touch radius label & input (baru)
+local radiusLabel = Instance.new("TextLabel", frame)
+radiusLabel.Size = UDim2.new(0.45, -10, 0, 18)
+radiusLabel.Position = UDim2.new(0.05, 0, 0, 145)
+radiusLabel.BackgroundTransparency = 1
+radiusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+radiusLabel.Font = Enum.Font.Gotham
+radiusLabel.TextSize = 13
+radiusLabel.Text = "Touch Radius:"
+radiusLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local radiusInput = Instance.new("TextBox", frame)
+radiusInput.Size = UDim2.new(0.4, 0, 0, 18)
+radiusInput.Position = UDim2.new(0.52, 0, 0, 145)
+radiusInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+radiusInput.TextColor3 = Color3.fromRGB(230, 230, 230)
+radiusInput.Font = Enum.Font.Gotham
+radiusInput.TextSize = 13
+radiusInput.TextXAlignment = Enum.TextXAlignment.Center
+radiusInput.Text = tostring(touchRadius)
+radiusInput.ClearTextOnFocus = false
+local radiusCorner = Instance.new("UICorner", radiusInput)
+radiusCorner.CornerRadius = UDim.new(0, 5)
 
 -- Update delay variables on input
 respawnInput.FocusLost:Connect(function(enterPressed)
@@ -245,6 +283,20 @@ touchInput.FocusLost:Connect(function(enterPressed)
             end)
         else
             touchInput.Text = tostring(touchWait)
+        end
+    end
+end)
+
+radiusInput.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        local val = tonumber(radiusInput.Text)
+        if val and val >= 0 then
+            touchRadius = val
+            task.spawn(function()
+                logLabel.Text = ("Touch radius set to %.2f studs"):format(touchRadius)
+            end)
+        else
+            radiusInput.Text = tostring(touchRadius)
         end
     end
 end)
@@ -290,9 +342,9 @@ btnStartStop.MouseButton1Click:Connect(function()
                     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
                 end
 
-				task.spawn(function() logLabel.Text = "Respawning..." end)
+                task.spawn(function() logLabel.Text = "Respawning..." end)
                 respawnAndWait()
-				
+                
                 task.spawn(function() logLabel.Text = "Cycle complete. Looping..." end)
                 task.wait(0.5)
             end
@@ -306,4 +358,3 @@ btnClose.MouseButton1Click:Connect(function()
     runner = nil
     screenGui:Destroy()
 end)
-
