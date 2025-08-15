@@ -6,25 +6,24 @@ local player = Players.LocalPlayer
 --// GUI Setup
 local CoreGui = game:GetService("CoreGui")
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "CheckpointScanner"
+screenGui.Name = "CoordinateTeleporter"
 screenGui.Parent = CoreGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 120) -- lebih kecil karena tanpa scan
-frame.Position = UDim2.new(0.5, -150, 0.5, -60)
+frame.Size = UDim2.new(0, 300, 0, 180)
+frame.Position = UDim2.new(0.5, -150, 0.5, -90)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.BorderSizePixel = 0
 frame.Parent = screenGui
 frame.Active = true
 frame.Draggable = true
 
-local uiCorner = Instance.new("UICorner", frame)
-uiCorner.CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, -40, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 0)
-title.Text = "Coordinate Viewer"
+title.Text = "Coordinate Teleporter"
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -45,6 +44,7 @@ closeBtn.MouseButton1Click:Connect(function()
 	screenGui:Destroy()
 end)
 
+-- Label koordinat realtime
 local coordLabel = Instance.new("TextLabel")
 coordLabel.Size = UDim2.new(1, -20, 0, 20)
 coordLabel.Position = UDim2.new(0, 10, 0, 40)
@@ -85,6 +85,73 @@ copyBtn.MouseButton1Click:Connect(function()
 				copyBtn.Text = "Copy Coordinates"
 			end)
 		end
+	end
+end)
+
+-- Input koordinat manual
+local inputBox = Instance.new("TextBox")
+inputBox.Size = UDim2.new(1, -20, 0, 25)
+inputBox.Position = UDim2.new(0, 10, 0, 105)
+inputBox.PlaceholderText = "Enter coordinates: X, Y, Z"
+inputBox.Text = ""
+inputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+inputBox.Font = Enum.Font.Gotham
+inputBox.TextSize = 12
+inputBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+inputBox.ClearTextOnFocus = false
+inputBox.Parent = frame
+Instance.new("UICorner", inputBox).CornerRadius = UDim.new(0, 6)
+
+-- Tombol Safe Teleport
+local teleportBtn = Instance.new("TextButton")
+teleportBtn.Size = UDim2.new(1, -20, 0, 25)
+teleportBtn.Position = UDim2.new(0, 10, 0, 135)
+teleportBtn.Text = "Safe Teleport"
+teleportBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+teleportBtn.Font = Enum.Font.GothamBold
+teleportBtn.TextSize = 12
+teleportBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+teleportBtn.Parent = frame
+Instance.new("UICorner", teleportBtn).CornerRadius = UDim.new(0, 6)
+
+local function isGroundLoaded(targetPos, checkRadius)
+	for _, part in ipairs(workspace:GetPartBoundsInRadius(targetPos, checkRadius)) do
+		if part.CanCollide and not part:IsDescendantOf(player.Character) then
+			return true
+		end
+	end
+	return false
+end
+
+teleportBtn.MouseButton1Click:Connect(function()
+	local coords = {}
+	for num in string.gmatch(inputBox.Text, "[-%d%.]+") do
+		table.insert(coords, tonumber(num))
+	end
+
+	if #coords == 3 then
+		local char = player.Character
+		if char and char:FindFirstChild("HumanoidRootPart") then
+			local targetPos = Vector3.new(coords[1], coords[2], coords[3])
+
+			-- Tunggu sampai tanah di area tersebut termuat
+			local tries = 0
+			while not isGroundLoaded(targetPos, 10) and tries < 50 do
+				task.wait(0.1)
+				tries += 1
+			end
+
+			char:MoveTo(targetPos)
+			teleportBtn.Text = "Teleported!"
+			task.delay(1, function()
+				teleportBtn.Text = "Safe Teleport"
+			end)
+		end
+	else
+		teleportBtn.Text = "Invalid Input"
+		task.delay(1, function()
+			teleportBtn.Text = "Safe Teleport"
+		end)
 	end
 end)
 
