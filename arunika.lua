@@ -77,8 +77,6 @@ local function runCheckpoints()
         task.spawn(function()
             logLabel.Text = string.format("Touched %s (%d/%d)", cp.Name, i, #checkpoints)
         end)
-        task.spawn(function() logLabel.Text = "Respawning..." end)
-        respawnAndWait()    
 		task.wait(touchWait)
     end
 	local summit = workspace:FindFirstChild("SummitTrigger")
@@ -87,7 +85,7 @@ local function runCheckpoints()
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger touched! Sequence complete."
 		end)
-		task.wait(0.5)
+		task.wait(1)
 	else
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger not found!"
