@@ -88,7 +88,7 @@ end
 local function waitForRespawn()
     if not player.Character or not player.Character:FindFirstChild("Humanoid") or player.Character.Humanoid.Health <= 0 then
         player.CharacterAdded:Wait()
-        task.wait(4)
+        task.wait(5)
     end
 end
 
