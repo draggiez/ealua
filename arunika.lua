@@ -5,7 +5,7 @@ local teleportPos = Vector3.new(104.05, 162.43, -39.15)
 local loopRunning = false
 
 -- Default delay values (seconds)
-local respawnWait = 1
+local respawnWait = 2
 local touchWait = 50
 
 -- Utility to get HumanoidRootPart safely
@@ -287,6 +287,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                 end
 
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint5 to load..." end)
+				task.wait(2)
                 local checkpointsFolder
                 local cp5
                 while loopRunning do
