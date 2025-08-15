@@ -5,8 +5,8 @@ local teleportPos = Vector3.new(104.05, 162.43, -39.15)
 local loopRunning = false
 
 -- Default delay values (seconds)
-local respawnWait = 10
-local touchWait = 2
+local respawnWait = 1
+local touchWait = 50
 
 -- Utility to get HumanoidRootPart safely
 local function getHRP()
@@ -85,7 +85,7 @@ local function runCheckpoints()
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger touched! Sequence complete."
 		end)
-		task.wait(1)
+		task.wait(0.5)
 	else
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger not found!"
@@ -262,6 +262,20 @@ btnStartStop.MouseButton1Click:Connect(function()
         btnStartStop.Text = "Stop"
         runner = coroutine.create(function()
             while loopRunning do
+				local start = workspace:FindFirstChild("StartTimeTrigger")
+				if start and start:IsA("BasePart") then
+	    			touchPart(start)
+					task.spawn(function()
+						logLabel.Text = "StartTimeTrigger touched! Sequence start."
+					end)
+					task.wait(0.5)
+				else
+					task.spawn(function()
+						logLabel.Text = "StartTimeTrigger not found!"
+					end)
+				end
+
+				task.wait(0.5)
                 task.spawn(function() logLabel.Text = "Teleporting..." end)
                 local hrp, char = getHRP()
                 if hrp then
@@ -273,7 +287,6 @@ btnStartStop.MouseButton1Click:Connect(function()
                 end
 
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint5 to load..." end)
-                task.wait(2)
                 local checkpointsFolder
                 local cp5
                 while loopRunning do
