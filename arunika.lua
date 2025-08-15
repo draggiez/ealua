@@ -47,10 +47,6 @@ local function touchPart(part)
             firetouchinterest(hrp, part, 0)
             task.wait(0.1)
             firetouchinterest(hrp, part, 1)
-            task.wait(0.1)
-            firetouchinterest(hrp, part, 1)
-            task.wait(0.1)
-            firetouchinterest(hrp, part, 1)
             return true
         end
     end
