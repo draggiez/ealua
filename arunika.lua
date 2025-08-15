@@ -287,7 +287,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                 end
 
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
-				task.wait(2)
+				task.wait(1)
                 local checkpointsFolder
                 local cp5
 			    local cp3
