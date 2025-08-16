@@ -131,14 +131,14 @@ local function safeTeleport(pos)
     local platform = Instance.new("Part")
     platform.Anchored = true
     platform.Size = Vector3.new(10, 1, 10)
-    platform.Position = pos + Vector3.new(0, 20, 0)
+    platform.Position = pos + Vector3.new(0, 10, 0)
     platform.Transparency = 1
     platform.CanCollide = true
     platform.Parent = workspace
 
     hrp.CFrame = platform.CFrame + Vector3.new(0, 3, 0)
 
-    local timeout = 2
+    local timeout = 1
     local startTime = tick()
     while tick() - startTime < timeout do
         if isGroundLoaded(pos, 15) then
