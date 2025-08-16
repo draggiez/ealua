@@ -94,6 +94,20 @@ end)
 -- Variabel kontrol
 local running = false
 
+-- Touch part with delay
+local function touchPart(part)
+    if part and part:IsA("BasePart") then
+        local hrp, _ = getHRP()
+        if hrp then
+            firetouchinterest(hrp, part, 0)
+			task.wait(0.1)
+            firetouchinterest(hrp, part, 1)
+            return true
+        end
+    end
+    return false
+end
+
 -- Fungsi Game
 local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -211,8 +225,17 @@ local function startSequence()
         task.wait(0.5)
         safeTeleport(Vector3.new(-1701.05, 812.52, -1399.99))
         task.wait(0.5)
-        safeTeleport(Vector3.new(-1971.53, 842.13, -1671.81))
-        task.wait(0.5)
+        --safeTeleport(Vector3.new(-1971.53, 842.13, -1671.81))
+        --task.wait(0.5)
+        local summitGate = workspace:FindFirstChild("SummitGate")
+	        if summitGate and summit:IsA("BasePart") then
+	            touchPart(summitGate)
+		        addLog("Found summitGate", "📍")
+		        task.wait(0.5)
+	        else
+		        addLog("summitGate not found", "📍")
+		    end)
+	    end	
         --walkToCoordinate(Vector3.new(-1767.20, 815.87, -1426.06))
         --walkToCoordinate(Vector3.new(-1787.36, 821.48, -1446.14))
         --walkToCoordinate(Vector3.new(-1882.56, 770.27, -1445.49))
