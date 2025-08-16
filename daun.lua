@@ -236,6 +236,7 @@ local function startSequence()
 		        addLog("summitGate not found", "📍")
 		    end)
 	    end	
+        task.wait(0.5)
         --walkToCoordinate(Vector3.new(-1767.20, 815.87, -1426.06))
         --walkToCoordinate(Vector3.new(-1787.36, 821.48, -1446.14))
         --walkToCoordinate(Vector3.new(-1882.56, 770.27, -1445.49))
