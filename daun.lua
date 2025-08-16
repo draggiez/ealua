@@ -228,13 +228,12 @@ local function startSequence()
         --safeTeleport(Vector3.new(-1971.53, 842.13, -1671.81))
         --task.wait(0.5)
         local summitGate = workspace:FindFirstChild("SummitGate")
-	        if summitGate and summitGate:IsA("BasePart") then
-	            touchPart(summitGate)
-		        addLog("Found summitGate", "📍")
-		        task.wait(0.5)
-	        else
-		        addLog("summitGate not found", "📍")
-		    end)
+	    if summitGate and summitGate:IsA("BasePart") then
+	        touchPart(summitGate)
+		    addLog("Found summitGate", "📍")
+		    task.wait(0.5)
+	    else
+		    addLog("summitGate not found", "📍")
 	    end	
         task.wait(0.5)
         --walkToCoordinate(Vector3.new(-1767.20, 815.87, -1426.06))
