@@ -1,4 +1,4 @@
-60local Players = game:GetService("Players")
+local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local teleportPos = Vector3.new(77.41, 5.24, -60.53)
