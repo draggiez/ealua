@@ -139,7 +139,7 @@ local function safeTeleport(pos)
     end
 
     local finalCFrame = CFrame.new(pos + Vector3.new(0, 3, 0))
-    local leftOffset = finalCFrame.RightVector * -6
+    local leftOffset = finalCFrame.RightVector * -5
     hrp.CFrame = finalCFrame + leftOffset
     platform:Destroy()
 
