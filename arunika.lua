@@ -1,4 +1,4 @@
-local Players = game:GetService("Players")
+60local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local teleportPos = Vector3.new(77.41, 5.24, -60.53)
@@ -6,7 +6,7 @@ local loopRunning = false
 
 -- Default delay values (seconds)
 local respawnWait = 2
-local touchWait = 50
+local touchWait = 60
 
 -- Utility to get HumanoidRootPart safely
 local function getHRP()
