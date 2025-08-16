@@ -107,7 +107,7 @@ frame.Active = true
 frame.Draggable = true
 frame.Name = "MainFrame"
 frame.ClipsDescendants = true
-frame.AnchorPoint = Vector2.new(0.5, 0.5)
+
 
 local uiCorner = Instance.new("UICorner", frame)
 uiCorner.CornerRadius = UDim.new(0, 12)
