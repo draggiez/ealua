@@ -138,7 +138,9 @@ local function safeTeleport(pos)
         task.wait(0.05)
     end
 
-    hrp.CFrame = CFrame.new(pos + Vector3.new(0, 3, 0))
+    local finalCFrame = CFrame.new(pos + Vector3.new(0, 3, 0))
+    local leftOffset = finalCFrame.RightVector * -3
+    hrp.CFrame = finalCFrame + leftOffset
     platform:Destroy()
 
     pcall(function()
