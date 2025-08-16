@@ -262,6 +262,7 @@ btnStartStop.MouseButton1Click:Connect(function()
         btnStartStop.Text = "Stop"
         runner = coroutine.create(function()
             while loopRunning do
+				task.wait(0.5)
 				local start = workspace:FindFirstChild("StartTimeTrigger")
 				if start and start:IsA("BasePart") then
 	    			touchPart(start)
