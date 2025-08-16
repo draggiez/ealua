@@ -5,7 +5,7 @@ local player = Players.LocalPlayer
 --// GUI Setup
 local CoreGui = game:GetService("CoreGui")
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "Sibuatan Push"
+screenGui.Name = "SimpleTeleporter"
 screenGui.Parent = CoreGui
 
 local frame = Instance.new("Frame")
@@ -22,7 +22,7 @@ Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, -40, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 0)
-title.Text = "Talobanua"
+title.Text = "Sibuatan Push"
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
