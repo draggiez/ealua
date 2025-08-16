@@ -35,7 +35,7 @@ local function respawnAndWait()
     end
     local char = player.Character or player.CharacterAdded:Wait()
     char:WaitForChild("HumanoidRootPart")
-    task.wait(0.5)
+    task.wait(4)
 end
 
 -- Touch part with delay
