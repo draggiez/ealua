@@ -88,7 +88,7 @@ end
 local function waitForRespawn()
     if not player.Character or not player.Character:FindFirstChild("Humanoid") or player.Character.Humanoid.Health <= 0 then
         player.CharacterAdded:Wait()
-        task.wait(68)
+        task.wait(78)
     end
 end
 
@@ -189,7 +189,7 @@ local function startSequence()
         if humanoid then
             humanoid.Health = 0
         end
-        task.wait(68)
+        task.wait(78)
     end
     addLog("Loop dihentikan", "🛑")
 end
