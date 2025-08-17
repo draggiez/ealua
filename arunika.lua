@@ -100,7 +100,7 @@ screenGui.Name = "GodGPT_LoopGui"
 
 local frame = Instance.new("Frame", screenGui)
 frame.Size = UDim2.new(0, 260, 0, 160)
-frame.Position = UDim2.new(0.5, 0, 0, 0)
+frame.Position = UDim2.new(1, 0, 0, 0)
 frame.AnchorPoint = Vector2.new(0, 0)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
