@@ -1,6 +1,5 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local TeleportService = game:GetService("TeleportService")
 
 local teleportPos = Vector3.new(77.41, 5.24, -60.53)
 local loopRunning = false
@@ -327,7 +326,6 @@ btnClose.MouseButton1Click:Connect(function()
 end)
 
 --================= AUTO LEAVE PART =================--
-
 local blacklist = {
     "KLT_KILAT", -- Bagus
     "YinnSTier", -- Yin
@@ -338,8 +336,7 @@ local blacklist = {
 	"exARTHA", -- Artha
 	"lelekrecing", -- Lelek
 	"yudhaprihardana", -- Dika
-	"sudrajad69",
-	"sudrajad"
+	"sudrajad69"
 }
 
 local function checkPlayer(p)
@@ -349,16 +346,20 @@ local function checkPlayer(p)
     end
 end
 
--- Cek yang sudah ada
-for _, p in pairs(Players:GetPlayers()) do
-    if p ~= player then
-        checkPlayer(p)
-    end
-end
-
--- Cek saat ada yang join
-Players.PlayerAdded:Connect(function(p)
-    if p ~= player then
-        checkPlayer(p)
-    end
+task.spawn(function()
+    while true do
+		-- Cek yang sudah ada
+		for _, p in pairs(Players:GetPlayers()) do
+		    if p ~= player then
+		        checkPlayer(p)
+		    end
+		end
+		-- Cek saat ada yang join
+		Players.PlayerAdded:Connect(function(p)
+		    if p ~= player then
+		        checkPlayer(p)
+		    end
+		end)
+		task.wait(1)
+	end
 end)
