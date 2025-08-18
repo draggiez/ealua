@@ -319,12 +319,6 @@ btnStartStop.MouseButton1Click:Connect(function()
     end
 end)
 
-btnClose.MouseButton1Click:Connect(function()
-    loopRunning = false
-    runner = nil
-    screenGui:Destroy()
-end)
-
 --================= AUTO LEAVE PART =================--
 local blacklist = {
     "KLT_KILAT", -- Bagus
@@ -340,27 +334,34 @@ local blacklist = {
 	"sudrajad"
 }
 
-local function checkPlayer(p)
-    if table.find(blacklist, p.Name) then
-        addLog("Keluar karena " .. p.Name .. " join!", "🚨")
-        player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
-    end
-end
-
 task.spawn(function()
     while true do
 		-- Cek yang sudah ada
 		for _, p in pairs(Players:GetPlayers()) do
 		    if p ~= player then
-		        checkPlayer(p)
+		        if table.find(blacklist, p.Name) then
+        			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
+    			end
 		    end
 		end
 		-- Cek saat ada yang join
 		Players.PlayerAdded:Connect(function(p)
 		    if p ~= player then
-		        checkPlayer(p)
+		         if table.find(blacklist, p.Name) then
+        			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
+    			end
 		    end
 		end)
 		task.wait(1)
 	end
 end)
+
+btnClose.MouseButton1Click:Connect(function()
+    loopRunning = false
+    runner = nil
+    screenGui:Destroy()
+end)
+
+
