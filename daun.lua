@@ -155,7 +155,18 @@ local function safeTeleport(pos)
 
     hrp.CFrame = CFrame.new(pos + Vector3.new(0, 3, 0))
     platform:Destroy()
-
+    
+    -- Jalan ke kiri 3 stud (animasi pelan)
+    local step = 0.5 -- ukuran langkah tiap frame
+    local total = 3  -- total jarak
+    local moved = 0
+    while moved < total and running do
+        local cf = hrp.CFrame
+        hrp.CFrame = cf + (cf.RightVector * -step) -- ke kiri
+        moved += step
+        task.wait(0.1)
+    end
+        
     pcall(function()
         humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
         humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true)
