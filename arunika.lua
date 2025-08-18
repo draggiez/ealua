@@ -337,7 +337,8 @@ local blacklist = {
 	"EclairEcr", -- Ecr
 	"exARTHA", -- Artha
 	"lelekrecing", -- Lelek
-	"yudhaprihardana" -- Dika
+	"yudhaprihardana", -- Dika
+	"sudrajad69"
 }
 
 local function checkPlayer(p)
