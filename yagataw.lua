@@ -3,6 +3,7 @@ local Players = game:GetService("Players")
 local PathfindingService = game:GetService("PathfindingService")
 local player = Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
+local TeleportService = game:GetService("TeleportService")
 
 --// GUI Setup
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
@@ -210,4 +211,31 @@ end)
 closeButton.MouseButton1Click:Connect(function()
     running = false
     screenGui:Destroy()
+end)
+
+--================= AUTO LEAVE PART =================--
+local blacklist = {
+    "yourneimeses", -- ganti dengan username target
+    "altrabillious"
+}
+
+local function checkPlayer(p)
+    if table.find(blacklist, p.Name) then
+        addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        TeleportService:Teleport(0) -- kick ke menu
+    end
+end
+
+-- Cek yang sudah ada
+for _, p in pairs(Players:GetPlayers()) do
+    if p ~= player then
+        checkPlayer(p)
+    end
+end
+
+-- Cek saat ada yang join
+Players.PlayerAdded:Connect(function(p)
+    if p ~= player then
+        checkPlayer(p)
+    end
 end)
