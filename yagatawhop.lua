@@ -33,7 +33,7 @@ local function findServerWithOnePlayer()
     local data = HttpService:JSONDecode(response)
 
     for _, server in ipairs(data.data) do
-        if server.playing <= 5 and server.id ~= game.JobId then
+        if server.playing <= 7 and server.id ~= game.JobId then
             return server.id
         end
     end
@@ -44,7 +44,7 @@ end
 local function checkAndHop()
     while task.wait(10) do -- cek tiap 20 detik
         local playerCount = #Players:GetPlayers()
-        if playerCount > 6 then
+        if playerCount > 8 then
             updateLabel("Cari server sepi...", Color3.fromRGB(200, 50, 50)) -- merah
             local serverId = findServerWithOnePlayer()
             if serverId then
