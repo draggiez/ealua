@@ -8,6 +8,44 @@ local loopRunning = false
 local respawnWait = 2
 local touchWait = 60
 
+--================= AUTO LEAVE PART =================--
+local blacklist = {
+    "KLT_KILAT", -- Bagus
+    "YinnSTier", -- Yin
+	"zyuuo00", -- Izaki
+	"ziiKT7", -- Zii
+	"dikaading", -- Akid
+	"EclairEcr", -- Ecr
+	"exARTHA", -- Artha
+	"lelekrecing", -- Lelek
+	"yudhaprihardana", -- Dika
+	"sudrajad69",
+	"sudrajad"
+}
+
+local function cekPlayer()
+	-- Cek yang sudah ada
+	for _, p in pairs(Players:GetPlayers()) do
+	    if p ~= player then
+		    if table.find(blacklist, p.Name) then
+				--print("✅ Player ditemukan:", p.Name)	
+        		addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        		player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu	
+			end
+		end
+	end
+	-- Cek saat ada yang join
+	Players.PlayerAdded:Connect(function(p)
+		if p ~= player then
+		    if table.find(blacklist, p.Name) then
+				--print("✅ Player ditemukan:", p.Name)	
+        		addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        		player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
+			end
+		end
+	end)
+end	
+
 -- Utility to get HumanoidRootPart safely
 local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -16,6 +54,7 @@ end
 
 -- Respawn function with delay
 local function respawnAndWait()
+	cekPlayer()
     task.wait(respawnWait)
     if player and player.Character then
         local success = pcall(function()
@@ -36,6 +75,7 @@ local function respawnAndWait()
     local char = player.Character or player.CharacterAdded:Wait()
     char:WaitForChild("HumanoidRootPart")
     task.wait(5)
+	cekPlayer()
 end
 
 -- Touch part with delay
@@ -54,6 +94,7 @@ end
 
 -- Run checkpoint + summit sequence
 local function runCheckpoints()
+	cekPlayer()
     local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
     if not checkpointsFolder then
         return false, "No 'Checkpoints' folder found!"
@@ -77,6 +118,7 @@ local function runCheckpoints()
         task.spawn(function()
             logLabel.Text = string.format("Touched %s (%d/%d)", cp.Name, i, #checkpoints)
         end)
+		cekPlayer()
 		task.wait(touchWait)
     end
 	local summit = workspace:FindFirstChild("SummitTrigger")
@@ -85,8 +127,10 @@ local function runCheckpoints()
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger touched! Sequence complete."
 		end)
+		cekPlayer()
 		task.wait(0.5)
 	else
+		cekPlayer()
 		task.spawn(function()
 			logLabel.Text = "SummitTrigger not found!"
 		end)
@@ -263,25 +307,31 @@ btnStartStop.MouseButton1Click:Connect(function()
         btnStartStop.Text = "Stop"
         runner = coroutine.create(function()
             while loopRunning do
+				cekPlayer()
 				local start = workspace:FindFirstChild("StartTimeTrigger")
 				if start and start:IsA("BasePart") then
 	    			touchPart(start)
 					task.spawn(function()
 						logLabel.Text = "StartTimeTrigger touched! Sequence start."
 					end)
+					cekPlayer()
 					task.wait(0.5)
 				else
+					cekPlayer()
 					task.spawn(function()
 						logLabel.Text = "StartTimeTrigger not found!"
 					end)
 				end
 
 				task.wait(0.5)
+				cekPlayer()
                 task.spawn(function() logLabel.Text = "Teleporting..." end)
                 local hrp, char = getHRP()
                 if hrp then
+					cekPlayer()
                     hrp.CFrame = CFrame.new(teleportPos)
                 else
+					cekPlayer()
                     task.spawn(function() logLabel.Text = "Waiting for character..." end)
                     char = player.Character or player.CharacterAdded:Wait()
                     char:WaitForChild("HumanoidRootPart")
@@ -299,11 +349,13 @@ btnStartStop.MouseButton1Click:Connect(function()
                         cp5 = checkpointsFolder:FindFirstChild("Checkpoint5")
                         if cp3 and cp5 then break end
                     end
+					cekPlayer()
                     task.wait(0.5)
                 end
 
                 task.spawn(function() logLabel.Text = "All Checkpoints found! Touching checkpoints..." end)
                 local success, msg = pcall(runCheckpoints)
+				cekPlayer()
                 if not success then
                     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
                 end
@@ -317,51 +369,6 @@ btnStartStop.MouseButton1Click:Connect(function()
         end)
         coroutine.resume(runner)
     end
-end)
-
---================= AUTO LEAVE PART =================--
-local blacklist = {
-    "KLT_KILAT", -- Bagus
-    "YinnSTier", -- Yin
-	"zyuuo00", -- Izaki
-	"ziiKT7", -- Zii
-	"dikaading", -- Akid
-	"EclairEcr", -- Ecr
-	"exARTHA", -- Artha
-	"lelekrecing", -- Lelek
-	"yudhaprihardana", -- Dika
-	"sudrajad69",
-	"sudrajad"
-}
-
-task.spawn(function()
-    while true do
-		-- Cek yang sudah ada
-		for _, p in pairs(Players:GetPlayers()) do
-		    if p ~= player then
-		        if table.find(blacklist, p.Name) then
-					print("✅ Player ditemukan:", p.Name)	
-        			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
-        			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
-				else
-					print("✅ Player aman:", p.Name)	
-				end
-		    end
-		end
-		-- Cek saat ada yang join
-		Players.PlayerAdded:Connect(function(p)
-		    if p ~= player then
-		        if table.find(blacklist, p.Name) then
-					print("✅ Player ditemukan:", p.Name)	
-        			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
-        			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
-    			else
-					print("✅ Player aman:", p.Name)	
-				end
-		    end
-		end)
-		task.wait(1)
-	end
 end)
 
 btnClose.MouseButton1Click:Connect(function()
