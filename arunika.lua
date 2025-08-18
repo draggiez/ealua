@@ -340,6 +340,7 @@ task.spawn(function()
 		for _, p in pairs(Players:GetPlayers()) do
 		    if p ~= player then
 		        if table.find(blacklist, p.Name) then
+					print("✅ Player ditemukan:", p.Name)	
         			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
         			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
 				else
@@ -351,6 +352,7 @@ task.spawn(function()
 		Players.PlayerAdded:Connect(function(p)
 		    if p ~= player then
 		        if table.find(blacklist, p.Name) then
+					print("✅ Player ditemukan:", p.Name)	
         			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
         			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
     			else
