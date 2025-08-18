@@ -3,7 +3,6 @@ local Players = game:GetService("Players")
 local PathfindingService = game:GetService("PathfindingService")
 local player = Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
-local TeleportService = game:GetService("TeleportService")
 
 --// GUI Setup
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
@@ -75,6 +74,46 @@ Instance.new("UICorner", logLabel).CornerRadius = UDim.new(0, 8)
 local function addLog(text, emoji)
     logLabel.Text = (emoji or "ℹ️") .. " " .. os.date("[%H:%M:%S] ") .. text
 end
+
+--================= AUTO LEAVE PART =================--
+local blacklist = {
+    "yourneimeses", -- owner
+    "altrabillious", -- admin
+    "punisher_040302",
+    "KimoyS",
+    "Ottanto10",
+    "H_YPAL",
+    "kguha0",
+    "freakzy232",
+    "lullaby871",
+    "DRSiahaan6",
+    "Tyrant1008",
+    "sakew17",
+    "B3RRI1",
+    "B3RRl1",
+    "Bee111z",
+    "ezweyy",
+    "a_jijik16"
+}
+-- Player Join Listener
+Players.PlayerAdded:Connect(function(p)
+    if p ~= player and table.find(blacklist, p.Name) then
+        warn("Keluar karena " .. p.Name .. " join!")
+        player:Kick("Keluar karena " .. p.Name .. " join!") 
+    end
+end)
+
+-- Cek Player yang sudah ada
+local function cekPlayer()
+	for _, p in pairs(Players:GetPlayers()) do
+	    if p ~= player then
+		    if table.find(blacklist, p.Name) then
+        		addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        		player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu	
+			end
+		end
+	end
+end	
 
 -- Variabel kontrol
 local running = false
@@ -213,29 +252,9 @@ closeButton.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
---================= AUTO LEAVE PART =================--
-local blacklist = {
-    "yourneimeses", -- ganti dengan username target
-    "altrabillious"
-}
-
-local function checkPlayer(p)
-    if table.find(blacklist, p.Name) then
-        addLog("Keluar karena " .. p.Name .. " join!", "🚨")
-        TeleportService:Teleport(0) -- kick ke menu
-    end
-end
-
--- Cek yang sudah ada
-for _, p in pairs(Players:GetPlayers()) do
-    if p ~= player then
-        checkPlayer(p)
-    end
-end
-
--- Cek saat ada yang join
-Players.PlayerAdded:Connect(function(p)
-    if p ~= player then
-        checkPlayer(p)
-    end
+task.spawn(function()
+    while true do
+		cekPlayer()
+		task.wait(1)
+	end
 end)
