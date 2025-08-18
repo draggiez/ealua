@@ -343,7 +343,7 @@ local blacklist = {
 local function checkPlayer(p)
     if table.find(blacklist, p.Name) then
         addLog("Keluar karena " .. p.Name .. " join!", "🚨")
-        TeleportService:Teleport(0) -- kick ke menu
+        player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
     end
 end
 
