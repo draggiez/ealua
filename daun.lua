@@ -70,6 +70,31 @@ logLabel.Text = "💤 Siap digunakan..."
 logLabel.Parent = mainFrame
 Instance.new("UICorner", logLabel).CornerRadius = UDim.new(0, 8)
 
+--================= AUTO LEAVE PART =================--
+local blacklist = {
+    "Revenanxx",
+    "bagusgokil"
+}
+-- Player Join Listener
+Players.PlayerAdded:Connect(function(p)
+    if p ~= player and table.find(blacklist, p.Name) then
+        warn("Keluar karena " .. p.Name .. " join!")
+        player:Kick("Keluar karena " .. p.Name .. " join!") 
+    end
+end)
+
+-- Cek Player yang sudah ada
+local function cekPlayer()
+	for _, p in pairs(Players:GetPlayers()) do
+	    if p ~= player then
+		    if table.find(blacklist, p.Name) then
+        		addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        		player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu	
+			end
+		end
+	end
+end	
+
 -- Fungsi Log
 local function addLog(text, emoji)
     logLabel.Text = (emoji or "ℹ️") .. " " .. os.date("[%H:%M:%S] ") .. text
@@ -263,4 +288,11 @@ end)
 closeButton.MouseButton1Click:Connect(function()
     running = false
     screenGui:Destroy()
+end)
+
+task.spawn(function()
+    while true do
+		cekPlayer()
+		task.wait(1)
+	end
 end)
