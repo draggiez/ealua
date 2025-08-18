@@ -158,7 +158,7 @@ local function safeTeleport(pos)
     
     -- Jalan ke kiri 3 stud (animasi pelan)
     local step = 0.5 -- ukuran langkah tiap frame
-    local total = 3  -- total jarak
+    local total = 4  -- total jarak
     local moved = 0
     while moved < total and running do
         local cf = hrp.CFrame
@@ -219,7 +219,7 @@ local function startSequence()
         safeTeleport(Vector3.new(-1203.19, 257.56, -487.08))
         task.wait(0.7)
         safeTeleport(Vector3.new(-1399.29, 574.22, -949.93))
-        task.wait(1)
+        task.wait(2)
         safeTeleport(Vector3.new(-1701.05, 812.52, -1399.99))
         task.wait(0.7)
         safeTeleport(Vector3.new(-1971.53, 842.13, -1671.81))
