@@ -342,16 +342,20 @@ task.spawn(function()
 		        if table.find(blacklist, p.Name) then
         			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
         			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
-    			end
+				else
+					print("✅ Player aman:", p.Name)	
+				end
 		    end
 		end
 		-- Cek saat ada yang join
 		Players.PlayerAdded:Connect(function(p)
 		    if p ~= player then
-		         if table.find(blacklist, p.Name) then
+		        if table.find(blacklist, p.Name) then
         			addLog("Keluar karena " .. p.Name .. " join!", "🚨")
         			player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu
-    			end
+    			else
+					print("✅ Player aman:", p.Name)	
+				end
 		    end
 		end)
 		task.wait(1)
