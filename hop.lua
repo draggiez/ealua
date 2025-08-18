@@ -42,7 +42,7 @@ end
 
 --// Fungsi cek dan hop
 local function checkAndHop()
-    while task.wait(20) do -- cek tiap 20 detik
+    while task.wait(2) do -- cek tiap 20 detik
         local playerCount = #Players:GetPlayers()
         if playerCount > 2 then
             updateLabel("Cari server sepi...", Color3.fromRGB(200, 50, 50)) -- merah
