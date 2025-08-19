@@ -1,5 +1,6 @@
 --// Services
 local Players = game:GetService("Players")
+Players.CharacterAutoLoads = false
 local PathfindingService = game:GetService("PathfindingService")
 local player = Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
@@ -132,6 +133,15 @@ local running = false
 local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
     return char:WaitForChild("HumanoidRootPart"), char
+end
+
+local function respawnChar()
+    player:LoadCharacter()
+    -- Bisa langsung atur posisi biar nggak jatuh dulu
+    task.wait()
+    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character:MoveTo(Vector3.new(0, 3, 0)) -- spawn di posisi yang diinginkan
+    end
 end
 
 local function waitForRespawn()
@@ -271,11 +281,12 @@ local function startSequence()
         task.wait(0.7)
 
         addLog("Respawn...", "💀")
-        local hrp, char = getHRP()
-        local humanoid = char:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.Health = 0
-        end
+        -- local hrp, char = getHRP()
+        -- local humanoid = char:FindFirstChildOfClass("Humanoid")
+        -- if humanoid then
+        --     humanoid.Health = 0
+        -- end
+		respawnChar()
         task.wait(5)
     end
     addLog("Loop dihentikan", "🛑")
