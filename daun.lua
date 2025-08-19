@@ -1,6 +1,5 @@
 --// Services
 local Players = game:GetService("Players")
-Players.CharacterAutoLoads = false
 local PathfindingService = game:GetService("PathfindingService")
 local player = Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
@@ -134,25 +133,6 @@ local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
     return char:WaitForChild("HumanoidRootPart"), char
 end
-
--- RESPAWN
-player.CharacterAdded:Connect(function(char)
-    local animate = char:FindFirstChild("Animate")
-    if animate then
-        animate:Destroy() -- hapus supaya nggak ada animasi bawaan
-    end
-end)
-
--- SKIP DEATH ANIMATION
-player.CharacterAdded:Connect(function(char)
-    local humanoid = char:WaitForChild("Humanoid")
-    humanoid.HealthChanged:Connect(function(hp)
-        if hp <= 0 then
-            player:LoadCharacter() -- skip death anim, langsung respawn
-        end
-    end)
-end)
---
 
 local function waitForRespawn()
     if not player.Character or not player.Character:FindFirstChild("Humanoid") or player.Character.Humanoid.Health <= 0 then
