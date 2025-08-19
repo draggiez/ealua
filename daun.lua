@@ -73,6 +73,15 @@ Instance.new("UICorner", logLabel).CornerRadius = UDim.new(0, 8)
 --================= AUTO LEAVE PART =================--
 local blacklist = {
     "Revenanxx",
+	"revenanxc",
+	"revenanxxxx",
+	"Revenanx_slayers",
+	"RevenanX",
+	"Revenanx19",
+	"Revenanxt",
+	"Revenanxt450",
+	"RevenanXD",
+	"Revenanx56",
     "bagusgokil"
 }
 -- Player Join Listener
