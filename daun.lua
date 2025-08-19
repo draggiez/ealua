@@ -135,6 +135,14 @@ local function getHRP()
     return char:WaitForChild("HumanoidRootPart"), char
 end
 
+-- RESPAWN
+player.CharacterAdded:Connect(function(char)
+    local animate = char:FindFirstChild("Animate")
+    if animate then
+        animate:Destroy() -- hapus supaya nggak ada animasi bawaan
+    end
+end)
+
 local function respawnChar()
     player:LoadCharacter()
     -- Bisa langsung atur posisi biar nggak jatuh dulu
@@ -143,6 +151,7 @@ local function respawnChar()
         player.Character:MoveTo(Vector3.new(0, 3, 0)) -- spawn di posisi yang diinginkan
     end
 end
+--
 
 local function waitForRespawn()
     if not player.Character or not player.Character:FindFirstChild("Humanoid") or player.Character.Humanoid.Health <= 0 then
