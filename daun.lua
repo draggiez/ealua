@@ -143,14 +143,15 @@ player.CharacterAdded:Connect(function(char)
     end
 end)
 
-local function respawnChar()
-    player:LoadCharacter()
-    -- Bisa langsung atur posisi biar nggak jatuh dulu
-    task.wait()
-    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        player.Character:MoveTo(Vector3.new(0, 3, 0)) -- spawn di posisi yang diinginkan
-    end
-end
+-- SKIP DEATH ANIMATION
+player.CharacterAdded:Connect(function(char)
+    local humanoid = char:WaitForChild("Humanoid")
+    humanoid.HealthChanged:Connect(function(hp)
+        if hp <= 0 then
+            player:LoadCharacter() -- skip death anim, langsung respawn
+        end
+    end)
+end)
 --
 
 local function waitForRespawn()
@@ -290,12 +291,11 @@ local function startSequence()
         task.wait(0.7)
 
         addLog("Respawn...", "💀")
-        -- local hrp, char = getHRP()
-        -- local humanoid = char:FindFirstChildOfClass("Humanoid")
-        -- if humanoid then
-        --     humanoid.Health = 0
-        -- end
-		respawnChar()
+        local hrp, char = getHRP()
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.Health = 0
+        end
         task.wait(5)
     end
     addLog("Loop dihentikan", "🛑")
