@@ -94,7 +94,8 @@ local blacklist = {
     "Bee111z",
     "ezweyy",
     "a_jijik16",
-	"notgellly"
+	"notgellly",
+	"relife_za"
 }
 -- Player Join Listener
 Players.PlayerAdded:Connect(function(p)
