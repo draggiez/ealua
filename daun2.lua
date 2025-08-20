@@ -320,14 +320,14 @@ btnStartStop.MouseButton1Click:Connect(function()
                     if checkpointsFolder then
 					    cp1 = checkpointsFolder:FindFirstChild("1")
                         if cp1 then 
-							cp1 = game:GetService("workspace").Checkpoints.1
+							cp1 = workspace.Checkpoints.1
 							break 
 						end
                     end
                     task.wait(0.5)
                 end
                 task.spawn(function() logLabel.Text = "CP1 Touched" end)    
-                local success1, msg = pcall(touchPart(cp1))
+                touchPart(cp1)
                 if not success1 then
                     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
                 end
@@ -339,7 +339,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                     if checkpointsFolder then
 						cp2 = checkpointsFolder:FindFirstChild("2")
                         if cp2 then 
-							cp2 = game:GetService("workspace").Checkpoints.2
+							cp2 = workspace.Checkpoints.2
 							break 
 						end
                     end
@@ -358,7 +358,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                     if checkpointsFolder then
 					    cp3 = checkpointsFolder:FindFirstChild("3")
                         if cp3 then 
-							cp3 = game:GetService("workspace").Checkpoints.3
+							cp3 = workspace.Checkpoints.3
 							break 
 						end
                     end
@@ -377,7 +377,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                     if checkpointsFolder then
 						cp4 = checkpointsFolder:FindFirstChild("4")
                         if cp4 then 
-							cp4 = game:GetService("workspace").Checkpoints.4
+							cp4 = workspace.Checkpoints.4
 							break 
 						end
                     end
