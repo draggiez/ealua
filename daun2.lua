@@ -319,74 +319,63 @@ btnStartStop.MouseButton1Click:Connect(function()
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
 					    cp1 = checkpointsFolder:FindFirstChild("1")
-                        if cp1 then
-							break 
-						end
+                        if cp1 then break end
                     end
                     task.wait(0.5)
                 end
-                touchPart(cp1)
                 task.spawn(function() logLabel.Text = "CP1 Touched" end)    
-      --           if not success1 then
-      --               task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
-      --           end
+                local success1, msg = pcall(touchPart(workspace.Checkpoints.1))
+                if not success1 then
+                    task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
+                end
             
-      --           task.wait(touchWait)
-      --           task.spawn(function() logLabel.Text = "Waiting for Checkpoint1 to load..." end)
-      --           while loopRunning do
-      --               checkpointsFolder = workspace:FindFirstChild("Checkpoints")
-      --               if checkpointsFolder then
-						-- cp2 = checkpointsFolder:FindFirstChild("2")
-      --                   if cp2 then 
-						-- 	cp2 = workspace.Checkpoints.2
-						-- 	break 
-						-- end
-      --               end
-      --               task.wait(0.5)
-      --           end
-      --           task.spawn(function() logLabel.Text = "CP2 Touched" end)    
-      --           local success2, msg = pcall(touchPart(cp2))
-      --           if not success2 then
-      --               task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
-      --           end
+                -- task.wait(touchWait)
+                -- task.spawn(function() logLabel.Text = "Waiting for Checkpoint1 to load..." end)
+                -- while loopRunning do
+                --     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
+                --     if checkpointsFolder then
+					           --    cp2 = checkpointsFolder:FindFirstChild("2")
+                --         if cp2 then break end
+                --     end
+                --     task.wait(0.5)
+                -- end
+                -- task.spawn(function() logLabel.Text = "CP2 Touched" end)    
+                -- local success2, msg = pcall(touchPart(cp2))
+                -- if not success2 then
+                --     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
+                -- end
 
-      --           task.wait(touchWait)
-      --           task.spawn(function() logLabel.Text = "Waiting for Checkpoint1 to load..." end)
-      --           while loopRunning do
-      --               checkpointsFolder = workspace:FindFirstChild("Checkpoints")
-      --               if checkpointsFolder then
-					 --    cp3 = checkpointsFolder:FindFirstChild("3")
-      --                   if cp3 then 
-						-- 	cp3 = workspace.Checkpoints.3
-						-- 	break 
-						-- end
-      --               end
-      --               task.wait(0.5)
-      --           end
-      --           task.spawn(function() logLabel.Text = "CP3 Touched" end)    
-      --           local success3, msg = pcall(touchPart(cp3))
-      --           if not success3 then
-      --               task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
-      --           end
+                -- task.wait(touchWait)
+                -- task.spawn(function() logLabel.Text = "Waiting for Checkpoint1 to load..." end)
+                -- while loopRunning do
+                --     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
+                --     if checkpointsFolder then
+					           --    cp3 = checkpointsFolder:FindFirstChild("3")
+                --         if cp3 then break end
+                --     end
+                --     task.wait(0.5)
+                -- end
+                -- task.spawn(function() logLabel.Text = "CP3 Touched" end)    
+                -- local success3, msg = pcall(touchPart(cp3))
+                -- if not success3 then
+                --     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
+                -- end
 
-      --           task.wait(touchWait)
-      --           task.spawn(function() logLabel.Text = "Waiting for Checkpoint1 to load..." end)
-      --           while loopRunning do
-      --               checkpointsFolder = workspace:FindFirstChild("Checkpoints")
-      --               if checkpointsFolder then
-						-- cp4 = checkpointsFolder:FindFirstChild("4")
-      --                   if cp4 then 
-						-- 	cp4 = workspace.Checkpoints.4
-						-- 	break 
-						-- end
-      --               end
-      --               task.wait(0.5)
-      --           end
-      --           task.spawn(function() logLabel.Text = "CP4 Touched" end)    
-      --           local success4, msg = pcall(touchPart(cp4))
-      --           if not success4 then
-      --               task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
-      --           end
+                -- task.wait(touchWait)
+                -- task.spawn(function() logLabel.Text = "Waiting for Checkpoint1 to load..." end)
+                -- while loopRunning do
+                --     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
+                --     if checkpointsFolder then
+					           --    cp4 = checkpointsFolder:FindFirstChild("4")
+                --         if cp4 then break end
+                --     end
+                --     task.wait(0.5)
+                -- end
+                -- task.spawn(function() logLabel.Text = "CP4 Touched" end)    
+                -- local success4, msg = pcall(touchPart(cp4))
+                -- if not success4 then
+                --     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
+                -- end
 
 				task.spawn(function() logLabel.Text = "Respawning..." end)
                 respawnAndWait()
@@ -411,6 +400,3 @@ task.spawn(function()
 		task.wait(1)
 	end
 end)
-
-
-
