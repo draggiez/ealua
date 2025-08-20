@@ -323,11 +323,11 @@ btnStartStop.MouseButton1Click:Connect(function()
                     end
                     task.wait(0.5)
                 end
-                -- task.spawn(function() logLabel.Text = "CP1 Touched" end)    
-                -- local success1, msg = pcall(touchPart(workspace.Checkpoints.1))
-                -- if not success1 then
-                --     task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
-                -- end
+                task.spawn(function() logLabel.Text = "Touhcing CP1" end)    
+                local success1, msg = pcall(touchPart(workspace.Checkpoints.1))
+                if not success1 then
+                    task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
+                end
             
                 -- task.wait(touchWait)
                 -- task.spawn(function() logLabel.Text = "Waiting for Checkpoint1 to load..." end)
