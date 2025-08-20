@@ -249,15 +249,15 @@ local function startSequence()
     while running do
         addLog("Loop dimulai", "🚀")
         safeTeleport(Vector3.new(-621.72, 241.65, -383.89))
-        task.wait(0.7)
+        task.wait(30)
         safeTeleport(Vector3.new(-1203.19, 257.56, -487.08))
-        task.wait(0.7)
+        task.wait(30)
         safeTeleport(Vector3.new(-1399.29, 574.22, -949.93))
-        task.wait(2)
+        task.wait(30)
         safeTeleport(Vector3.new(-1701.05, 812.52, -1399.99))
-        task.wait(0.7)
+        task.wait(30)
         safeTeleport(Vector3.new(-1971.53, 842.13, -1671.81))
-        task.wait(0.7)
+        task.wait(30)
         --walkToCoordinate(Vector3.new(-1767.20, 815.87, -1426.06))
         --walkToCoordinate(Vector3.new(-1787.36, 821.48, -1446.14))
         --walkToCoordinate(Vector3.new(-1882.56, 770.27, -1445.49))
@@ -276,7 +276,7 @@ local function startSequence()
         if humanoid then
             humanoid.Health = 0
         end
-        task.wait(5)
+        task.wait(30)
     end
     addLog("Loop dihentikan", "🛑")
 end
