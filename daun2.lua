@@ -1,12 +1,12 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local teleportPos = Vector3.new(77.41, 5.24, -60.53)
+local teleportPos1 = Vector3.new(-692.18, 29.23, -688.35)
 local loopRunning = false
 
 -- Default delay values (seconds)
 local respawnWait = 2
-local touchWait = 60
+local touchWait = 2
 
 --================= AUTO LEAVE PART =================--
 local blacklist = {
