@@ -319,8 +319,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
 					    cp1 = checkpointsFolder:FindFirstChild("1")
-                        if cp1 then 
-							cp1 = workspace.Checkpoints.1
+                        if cp1 then
 							break 
 						end
                     end
