@@ -310,7 +310,7 @@ btnStartStop.MouseButton1Click:Connect(function()
 
                 local checkpointsFolder
                 local cp1
-      			    local cp2
+      			local cp2
                 local cp3
                 local cp4
 
@@ -318,8 +318,11 @@ btnStartStop.MouseButton1Click:Connect(function()
                 while loopRunning do
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
-					              cp1 = checkpointsFolder:FindFirstChild("1")
-                        if cp1 then break end
+					    cp1 = checkpointsFolder:FindFirstChild("1")
+                        if cp1 then 
+							cp1 = game:GetService("workspace").Checkpoints.1
+							break 
+						end
                     end
                     task.wait(0.5)
                 end
@@ -334,8 +337,11 @@ btnStartStop.MouseButton1Click:Connect(function()
                 while loopRunning do
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
-					              cp2 = checkpointsFolder:FindFirstChild("2")
-                        if cp2 then break end
+						cp2 = checkpointsFolder:FindFirstChild("2")
+                        if cp2 then 
+							cp2 = game:GetService("workspace").Checkpoints.2
+							break 
+						end
                     end
                     task.wait(0.5)
                 end
@@ -350,8 +356,11 @@ btnStartStop.MouseButton1Click:Connect(function()
                 while loopRunning do
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
-					              cp3 = checkpointsFolder:FindFirstChild("3")
-                        if cp3 then break end
+					    cp3 = checkpointsFolder:FindFirstChild("3")
+                        if cp3 then 
+							cp3 = game:GetService("workspace").Checkpoints.3
+							break 
+						end
                     end
                     task.wait(0.5)
                 end
@@ -366,8 +375,11 @@ btnStartStop.MouseButton1Click:Connect(function()
                 while loopRunning do
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
-					              cp4 = checkpointsFolder:FindFirstChild("4")
-                        if cp4 then break end
+						cp4 = checkpointsFolder:FindFirstChild("4")
+                        if cp4 then 
+							cp4 = game:GetService("workspace").Checkpoints.4
+							break 
+						end
                     end
                     task.wait(0.5)
                 end
