@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-
+local TweenService = game:GetService("TweenService")
 local teleportPos = Vector3.new(77.41, 5.24, -60.53)
 local loopRunning = false
 
@@ -330,9 +330,16 @@ btnStartStop.MouseButton1Click:Connect(function()
         			end
         		task.wait(0.2)
     			end
+				local tweenInfo = TweenInfo.new(
+    				2, -- durasi (2 detik)
+    				Enum.EasingStyle.Quad, -- gaya animasi
+    				Enum.EasingDirection.Out
+				)
+				local goal = {CFrame = CFrame.new(teleportPos)}
                 local hrp, char = getHRP()
                 if hrp then
-                    hrp.CFrame = CFrame.new(teleportPos)
+					local tween = TweenService:Create(hrp, tweenInfo, goal)
+					tween:Play()
                 else
                     task.spawn(function() logLabel.Text = "Waiting for character..." end)
                     char = player.Character or player.CharacterAdded:Wait()
