@@ -42,6 +42,16 @@ local function cekPlayer()
 	end
 end	
 
+-- loaded ground
+local function isGroundLoaded(targetPos, checkRadius)
+    for _, part in ipairs(workspace:GetPartBoundsInRadius(targetPos, checkRadius)) do
+        if part.CanCollide and part:IsA("BasePart") and part.Anchored then
+            return true
+        end
+    end
+    return false
+end
+
 -- Utility to get HumanoidRootPart safely
 local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -312,6 +322,14 @@ btnStartStop.MouseButton1Click:Connect(function()
 
 				task.wait(0.5)
                 task.spawn(function() logLabel.Text = "Teleporting..." end)
+				local timeout = 2
+    			local startTime = tick()
+    			while tick() - startTime < timeout do
+        			if isGroundLoaded(teleportPos, 15) then
+            			break
+        			end
+        		task.wait(0.2)
+    			end
                 local hrp, char = getHRP()
                 if hrp then
                     hrp.CFrame = CFrame.new(teleportPos)
