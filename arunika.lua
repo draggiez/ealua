@@ -322,16 +322,16 @@ btnStartStop.MouseButton1Click:Connect(function()
 
 				task.wait(0.5)
                 task.spawn(function() logLabel.Text = "Teleporting..." end)
-				local timeout = 2
-    			local startTime = tick()
-    			while tick() - startTime < timeout do
-        			if isGroundLoaded(teleportPos, 15) then
-            			break
-        			end
-        		task.wait(0.2)
-    			end
+				-- local timeout = 2
+    -- 			local startTime = tick()
+    -- 			while tick() - startTime < timeout do
+    --     			if isGroundLoaded(teleportPos, 15) then
+    --         			break
+    --     			end
+    --     		task.wait(0.2)
+    -- 			end
 				local tweenInfo = TweenInfo.new(
-    				2, -- durasi (2 detik)
+    				1, -- durasi (2 detik)
     				Enum.EasingStyle.Quad, -- gaya animasi
     				Enum.EasingDirection.Out
 				)
