@@ -331,7 +331,7 @@ btnStartStop.MouseButton1Click:Connect(function()
     --     		task.wait(0.2)
     -- 			end
 				local tweenInfo = TweenInfo.new(
-    				1, -- durasi (2 detik)
+    				0.5, -- durasi (2 detik)
     				Enum.EasingStyle.Quad, -- gaya animasi
     				Enum.EasingDirection.Out
 				)
