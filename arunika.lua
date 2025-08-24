@@ -329,23 +329,23 @@ btnStartStop.MouseButton1Click:Connect(function()
         			if isGroundLoaded(teleportPos, 15) then
             			break
         			end
-        		task.wait(0.2)
+        			task.wait(0.2)
     			end
                 local hrp, char = getHRP()
-				local tweenInfo = TweenInfo.new(
-					1, -- durasi tween (detik)
-					Enum.EasingStyle.Quad, -- gaya easing
-					Enum.EasingDirection.Out
-				)	
-				local goal = {CFrame = CFrame.new(teleportPos + Vector3.new(0, 3, 0))} -- kasih offset dikit biar ga nyangkut
-				local tween = TweenService:Create(hrp, tweenInfo, goal)
-				if hrp then
-                   tween:Play()
-				else
-                    task.spawn(function() logLabel.Text = "Waiting for character..." end)
-                    char = player.Character or player.CharacterAdded:Wait()
-                    char:WaitForChild("HumanoidRootPart")
-                end			
+				-- if hrp then
+				-- 	local tweenInfo = TweenInfo.new(
+				-- 		1, -- durasi tween (detik)
+				-- 		Enum.EasingStyle.Quad, -- gaya easing
+				-- 		Enum.EasingDirection.Out
+				-- 	)	
+				-- 	local goal = {CFrame = CFrame.new(teleportPos + Vector3.new(0, 3, 0))}
+				-- 	local tween = TweenService:Create(hrp, tweenInfo, goal)
+				-- 	tween:Play()
+				-- else
+    --                 task.spawn(function() logLabel.Text = "Waiting for character..." end)
+    --                 char = player.Character or player.CharacterAdded:Wait()
+    --                 char:WaitForChild("HumanoidRootPart")
+    --             end			
 
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
 				task.wait(1)
