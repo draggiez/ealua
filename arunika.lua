@@ -85,7 +85,7 @@ end
 -- Touch part with delay
 local function touchPart(part)
     if part and part:IsA("BasePart") then
-        local hrp, _ = getHRP()
+        local hrp, _ = ()
         if hrp then
             firetouchinterest(hrp, part, 0)
 			task.wait(0.1)
@@ -330,14 +330,24 @@ btnStartStop.MouseButton1Click:Connect(function()
         			end
         		task.wait(0.2)
     			end
+				local savedPosition = nil	
                 local hrp, char = getHRP()
-                if hrp then
-                    hrp.CFrame = CFrame.new(teleportPos)
-                else
-                    task.spawn(function() logLabel.Text = "Waiting for character..." end)
-                    char = player.Character or player.CharacterAdded:Wait()
-                    char:WaitForChild("HumanoidRootPart")
-                end
+                -- savedPosition = hrp.Position
+				local tweenInfo = TweenInfo.new(
+					1.5, -- durasi tween (detik)
+					Enum.EasingStyle.Quad, -- gaya easing
+					Enum.EasingDirection.Out
+				)	
+				local goal = {CFrame = CFrame.new(teleportPos + Vector3.new(0, 3, 0))} -- kasih offset dikit biar ga nyangkut
+				local tween = TweenService:Create(hrp, tweenInfo, goal)
+				tween:Play()
+				-- if hrp then
+    --                 hrp.CFrame = CFrame.new(teleportPos)
+    --             else
+    --                 task.spawn(function() logLabel.Text = "Waiting for character..." end)
+    --                 char = player.Character or player.CharacterAdded:Wait()
+    --                 char:WaitForChild("HumanoidRootPart")
+    --             end
 
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
 				task.wait(1)
