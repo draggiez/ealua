@@ -60,7 +60,12 @@ layout.Padding = UDim.new(0, 5)
 
 --// List Koordinat
 local positions = {
-	["Puncak Atin"] = Vector3.new(781.14, 2165.46, 3921.42)
+	--["Puncak Atin"] = Vector3.new(781.14, 2165.46, 3921.42),
+	["Antarctica C1"] = Vector3.new(-3719.05, 225.01, 235.91),
+	["Antarctica C2"] = Vector3.new(1789.10, 105.45, -137.75),
+	["Antarctica C3"] = Vector3.new(5890.47, 321.01, -18.91),
+	["Antarctica C4"] = Vector3.new(8992.67, 595.64, 102.70),
+	["Antarctica END"] = Vector3.new(10995.21, 549.17, 114.78)
 }
 
 --// Tween Teleport Function
