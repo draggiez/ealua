@@ -25,7 +25,7 @@ Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, -40, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 0)
-title.Text = "Coordinate Teleporter"
+title.Text = "Coordinate Tween"
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -151,7 +151,7 @@ end)
 local hopBtn = Instance.new("TextButton")
 hopBtn.Size = UDim2.new(1, -20, 0, 35)
 hopBtn.Position = UDim2.new(0, 10, 1, -45)
-hopBtn.Text = "🌐 Rejoin Empty Server"
+hopBtn.Text = "🔄 Rejoin Empty Server"
 hopBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 hopBtn.Font = Enum.Font.GothamBold
 hopBtn.TextSize = 14
