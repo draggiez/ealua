@@ -2,6 +2,7 @@
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
 local player = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 
@@ -11,8 +12,8 @@ screenGui.Name = "CoordinateTeleporter"
 screenGui.Parent = CoreGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 150)
-frame.Position = UDim2.new(0.5, -150, 0.5, -150)
+frame.Size = UDim2.new(0, 300, 0, 190)
+frame.Position = UDim2.new(0.5, -150, 0.5, -170)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.BorderSizePixel = 0
 frame.Parent = screenGui
@@ -24,7 +25,7 @@ Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, -40, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 0)
-title.Text = "Tween Tween"
+title.Text = "Coordinate Teleporter"
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -47,7 +48,7 @@ end)
 
 --// Scroll untuk list koordinat
 local scrollFrame = Instance.new("ScrollingFrame")
-scrollFrame.Size = UDim2.new(1, -20, 1, -90)
+scrollFrame.Size = UDim2.new(1, -20, 1, -130)
 scrollFrame.Position = UDim2.new(0, 10, 0, 40)
 scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 scrollFrame.BackgroundTransparency = 1
@@ -98,11 +99,43 @@ layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 	scrollFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
 end)
 
---// Tombol Rejoin
+--// Fungsi cari server kosong
+local function findEmptyServer()
+	local servers = {}
+	local cursor = ""
+
+	while true do
+		local req = game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"..(cursor ~= "" and "&cursor="..cursor or ""))
+		local data = HttpService:JSONDecode(req)
+
+		for _, server in ipairs(data.data) do
+			if type(server.playing) == "number" and type(server.maxPlayers) == "number" then
+				if server.playing < server.maxPlayers and server.id ~= game.JobId then
+					table.insert(servers, server)
+				end
+			end
+		end
+
+		if data.nextPageCursor then
+			cursor = data.nextPageCursor
+		else
+			break
+		end
+	end
+
+	-- cari server dengan player paling sedikit
+	table.sort(servers, function(a,b)
+		return a.playing < b.playing
+	end)
+
+	return servers[1] -- ambil server terkosong
+end
+
+--// Tombol Rejoin Server sama
 local rejoinBtn = Instance.new("TextButton")
 rejoinBtn.Size = UDim2.new(1, -20, 0, 35)
-rejoinBtn.Position = UDim2.new(0, 10, 1, -45)
-rejoinBtn.Text = "🔄 Rejoin Server"
+rejoinBtn.Position = UDim2.new(0, 10, 1, -85)
+rejoinBtn.Text = "🔄 Rejoin Current Server"
 rejoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 rejoinBtn.Font = Enum.Font.GothamBold
 rejoinBtn.TextSize = 14
@@ -112,4 +145,25 @@ Instance.new("UICorner", rejoinBtn).CornerRadius = UDim.new(0, 6)
 
 rejoinBtn.MouseButton1Click:Connect(function()
 	TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, player)
+end)
+
+--// Tombol Rejoin Empty Server
+local hopBtn = Instance.new("TextButton")
+hopBtn.Size = UDim2.new(1, -20, 0, 35)
+hopBtn.Position = UDim2.new(0, 10, 1, -45)
+hopBtn.Text = "🌐 Rejoin Empty Server"
+hopBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+hopBtn.Font = Enum.Font.GothamBold
+hopBtn.TextSize = 14
+hopBtn.BackgroundColor3 = Color3.fromRGB(46, 139, 87)
+hopBtn.Parent = frame
+Instance.new("UICorner", hopBtn).CornerRadius = UDim.new(0, 6)
+
+hopBtn.MouseButton1Click:Connect(function()
+	local targetServer = findEmptyServer()
+	if targetServer then
+		TeleportService:TeleportToPlaceInstance(game.PlaceId, targetServer.id, player)
+	else
+		warn("Tidak ada server kosong yang ditemukan")
+	end
 end)
