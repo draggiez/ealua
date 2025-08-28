@@ -6,7 +6,7 @@ local loopRunning = false
 
 -- Default delay values (seconds)
 local respawnWait = 2
-local touchWait = 60
+local touchWait = 80
 
 --================= AUTO LEAVE PART =================--
 local blacklist = {
@@ -161,7 +161,7 @@ local titleShadow = Instance.new("TextLabel", frame)
 titleShadow.Size = UDim2.new(1, -20, 0, 28)
 titleShadow.Position = UDim2.new(0, 11, 0, 6)
 titleShadow.BackgroundTransparency = 1
-titleShadow.Text = "⚡ Arunika Push"
+titleShadow.Text = "⚡ Ravika Push"
 titleShadow.TextXAlignment = Enum.TextXAlignment.Left
 titleShadow.TextColor3 = Color3.new(0, 0, 0)
 titleShadow.TextTransparency = 0.6
@@ -173,7 +173,7 @@ local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, -20, 0, 28)
 title.Position = UDim2.new(0, 10, 0, 5)
 title.BackgroundTransparency = 1
-title.Text = "⚡ Arunika Push"
+title.Text = "⚡ Ravika Push"
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
 title.TextScaled = true
