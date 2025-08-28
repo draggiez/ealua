@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
-local teleportPos = Vector3.new(37.34, 74.57, -165.62)
+local teleportPos = Vector3.new(37.34, 77.57, -165.62)
 local loopRunning = false
 
 -- Default delay values (seconds)
@@ -356,9 +356,10 @@ btnStartStop.MouseButton1Click:Connect(function()
                     checkpointsFolder = workspace:FindFirstChild("Checkpoints")
                     if checkpointsFolder then
                         cp1 = checkpointsFolder:FindFirstChild("Checkpoint1")
-					              cp3 = checkpointsFolder:FindFirstChild("Checkpoint3")
+					    cp3 = checkpointsFolder:FindFirstChild("Checkpoint3")
                         cp5 = checkpointsFolder:FindFirstChild("Checkpoint5")
-                        if cp1 and cp3 and cp5 then break end
+                        cp7 = checkpointsFolder:FindFirstChild("Checkpoint7")
+                        if cp1 and cp3 and cp5 and cp7 then break end
                     end
                     task.wait(0.5)
                 end
