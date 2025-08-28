@@ -352,22 +352,47 @@ btnStartStop.MouseButton1Click:Connect(function()
 
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
 				task.wait(1)
-                local checkpointsFolder
-                local cp1
-                local cp5
-			          local cp3
-                while loopRunning do
-                    checkpointsFolder = workspace:FindFirstChild("Checkpoints")
-                    if checkpointsFolder then
-                        cp1 = checkpointsFolder:FindFirstChild("Checkpoint1")
-					    cp3 = checkpointsFolder:FindFirstChild("Checkpoint3")
-                        cp5 = checkpointsFolder:FindFirstChild("Checkpoint5")
-                        cp7 = checkpointsFolder:FindFirstChild("Checkpoint7")
-                        if cp1 and cp3 and cp5 and cp7 then break end
-                    end
-                    task.wait(0.5)
-                end
-
+    --             local checkpointsFolder
+    --             local cp1
+    --             local cp2
+			 --    local cp3
+				-- local cp4
+				-- local cp5
+				-- local cp6
+				-- local cp7
+    --             while loopRunning do
+    --                 checkpointsFolder = workspace:FindFirstChild("Checkpoints")
+    --                 if checkpointsFolder then
+    --                     cp1 = checkpointsFolder:FindFirstChild("Checkpoint1")
+				-- 	    cp2 = checkpointsFolder:FindFirstChild("Checkpoint2")
+				-- 		cp3 = checkpointsFolder:FindFirstChild("Checkpoint3")
+    --                     cp4 = checkpointsFolder:FindFirstChild("Checkpoint4")
+				-- 		cp5 = checkpointsFolder:FindFirstChild("Checkpoint5")
+    --                     cp6 = checkpointsFolder:FindFirstChild("Checkpoint6")
+				-- 		cp7 = checkpointsFolder:FindFirstChild("Checkpoint7")
+    --                     if cp1 and cp2 and cp3 and cp4 and cp5 and cp6 and cp7 then break end
+    --                 end
+    --                 task.wait(0.5)
+    --             end
+				
+				local checkpoints = {}
+				while loopRunning do
+				    local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
+				    if checkpointsFolder then
+				        local allFound = true
+				        checkpoints = {}
+				        for i = 1, 7 do
+				            local cp = checkpointsFolder:FindFirstChild("Checkpoint"..i)
+				            if not cp then
+				                allFound = false
+				                break
+				            end
+				            checkpoints[i] = cp
+				        end
+				        if allFound then break end
+				    end
+				    task.wait(0.5)
+				end
                 task.spawn(function() logLabel.Text = "All Checkpoints found! Touching checkpoints..." end)
                 local success, msg = pcall(runCheckpoints)
                 if not success then
