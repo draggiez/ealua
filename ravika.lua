@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
-local teleportPos = Vector3.new(37.34, 85.57, -165.62)
+local teleportPos = Vector3.new(61, 93, -113)
 local loopRunning = false
 
 -- Default delay values (seconds)
