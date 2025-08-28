@@ -340,6 +340,10 @@ btnStartStop.MouseButton1Click:Connect(function()
                 if hrp then
 					local tween = TweenService:Create(hrp, tweenInfo, goal)
 					tween:Play()
+					task.wait(0.2)
+					tween:Play()
+					task.wait(0.2)
+					tween:Play()
                 else
                     task.spawn(function() logLabel.Text = "Waiting for character..." end)
                     char = player.Character or player.CharacterAdded:Wait()
