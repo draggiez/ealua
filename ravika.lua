@@ -6,7 +6,7 @@ local loopRunning = false
 
 -- Default delay values (seconds)
 local respawnWait = 2
-local touchWait = 80
+local touchWait = 100
 
 --================= AUTO LEAVE PART =================--
 local blacklist = {
