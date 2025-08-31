@@ -373,7 +373,7 @@ btnStartStop.MouseButton1Click:Connect(function()
                     char = player.Character or player.CharacterAdded:Wait()
                     char:WaitForChild("HumanoidRootPart")
                 end
-						
+				hrp, char = getHRP()
 				local originalCFrame = hrp.CFrame
 				for _, pos in ipairs(checkpointsCamera) do
     				renderAtPosition(pos)
