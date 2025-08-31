@@ -332,7 +332,7 @@ btnStartStop.MouseButton1Click:Connect(function()
     --     		task.wait(0.2)
     -- 			end
 				local tweenInfo = TweenInfo.new(
-    				0.5, -- durasi (2 detik)
+    				1, -- durasi (2 detik)
     				Enum.EasingStyle.Quad, -- gaya animasi
     				Enum.EasingDirection.Out
 				)
@@ -340,10 +340,6 @@ btnStartStop.MouseButton1Click:Connect(function()
                 local hrp, char = getHRP()
                 if hrp then
 					local tween = TweenService:Create(hrp, tweenInfo, goal)
-					tween:Play()
-					task.wait(0.2)
-					tween:Play()
-					task.wait(0.2)
 					tween:Play()
                 else
                     task.spawn(function() logLabel.Text = "Waiting for character..." end)
