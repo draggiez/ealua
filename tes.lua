@@ -8,6 +8,11 @@ local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local hrp = character:WaitForChild("HumanoidRootPart")
 
+--// Anti Fall Damage
+humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+
 -- Posisi asli
 local originalCFrame = hrp.CFrame
 
