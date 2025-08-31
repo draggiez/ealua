@@ -6,6 +6,7 @@ local StarterGui = game:GetService("StarterGui")
 --// Player setup
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
 local hrp = character:WaitForChild("HumanoidRootPart")
 
 --// Anti Fall Damage
