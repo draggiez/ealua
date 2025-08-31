@@ -1,8 +1,15 @@
+--// Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
---local teleportPos = Vector3.new(61, 93, -113)
+
+--// Player Setup
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+-- local teleportPos = Vector3.new(61, 93, -113)
 local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local loopRunning = false
 
@@ -58,22 +65,6 @@ local function cekPlayer()
 	end
 end	
 
--- loaded ground
-local function isGroundLoaded(targetPos, checkRadius)
-    for _, part in ipairs(workspace:GetPartBoundsInRadius(targetPos, checkRadius)) do
-        if part.CanCollide and part:IsA("BasePart") and part.Anchored then
-            return true
-        end
-    end
-    return false
-end
-
--- Utility to get HumanoidRootPart safely
-local function getHRP()
-    local char = player.Character or player.CharacterAdded:Wait()
-    return char:FindFirstChild("HumanoidRootPart"), char
-end
-
 -- Respawn function with delay
 local function respawnAndWait()
     task.wait(respawnWait)
@@ -98,35 +89,44 @@ local function respawnAndWait()
     task.wait(5)
 end
 
--- Touch part with delay
 local function touchPart(part)
-    if part and part:IsA("BasePart") then
-        local hrp, _ = getHRP()
-        if hrp then
-            firetouchinterest(hrp, part, 0)
-			task.wait(0.1)
-            firetouchinterest(hrp, part, 1)
-            return true
-        end
+    if part and part:IsA("BasePart") and hrp then
+        -- mulai sentuh
+        firetouchinterest(hrp, part, 0)
+        task.wait(0.1)
+        -- akhiri sentuh
+        firetouchinterest(hrp, part, 1)
+        return true
     end
     return false
 end
 
-local function renderAtPosition(pos)
+-- Touch part with delay
+-- local function touchPart(part)
+--     if part and part:IsA("BasePart") then
+--         local hrp, _ = getHRP()
+--         if hrp then
+--             firetouchinterest(hrp, part, 0)
+-- 			task.wait(0.1)
+--             firetouchinterest(hrp, part, 1)
+--             return true
+--         end
+--     end
+--     return false
+-- end
+
+local function renderAtPosition(pos, index, total)
     local flying = true
     local conn
 
-    -- Pasang loop RenderStepped
     conn = RunService.RenderStepped:Connect(function()
         if flying then
-            hrps.CFrame = CFrame.new(pos + Vector3.new(0, 5, 0)) -- +5 biar ga nembus tanah
+            hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
         end
     end)
 
-    -- Tunggu map kebuka
     task.wait(renderWait)
 
-    -- Stop fly
     flying = false
     conn:Disconnect()
 end
@@ -171,6 +171,16 @@ local function runCheckpoints()
 		end)
 	end	
     return true
+end
+
+local function freezeCharacter()
+    hrp.Anchored = true
+    humanoid.PlatformStand = true
+end
+
+local function unfreezeCharacter()
+    hrp.Anchored = false
+    humanoid.PlatformStand = false
 end
 
 -- GUI Setup (Dark Mode)
@@ -364,7 +374,6 @@ btnStartStop.MouseButton1Click:Connect(function()
     				Enum.EasingDirection.Out
 				)
 				local goal = {CFrame = CFrame.new(teleportPos)}
-                local hrp, char = getHRP()
                 if hrp then
 					local tween = TweenService:Create(hrp, tweenInfo, goal)
 					tween:Play()
@@ -373,11 +382,13 @@ btnStartStop.MouseButton1Click:Connect(function()
                     char = player.Character or player.CharacterAdded:Wait()
                     char:WaitForChild("HumanoidRootPart")
                 end
-				hrp, char = getHRP()
+				
 				local originalCFrame = hrp.CFrame
-				for _, pos in ipairs(checkpointsCamera) do
+				freezeCharacter()
+				for i, pos in ipairs(checkpointsCamera) do
     				renderAtPosition(pos)
 				end
+				unfreezeCharacter()		
 				hrp.CFrame = originalCFrame
 				
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
