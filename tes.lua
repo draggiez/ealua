@@ -24,6 +24,13 @@ local checkpoints = {
 
 local renderWait = 3 -- lama nunggu tiap titik
 
+local function freezeHumanoid()
+    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+end
+
+local function unfreezeHumanoid()
+    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+end
 --// GUI Setup
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "RenderProgressGui"
@@ -74,9 +81,12 @@ local function flyTo(pos, index, total)
 end
 
 -- Loop semua koordinat
+freezeHumanoid()
+
 for i, pos in ipairs(checkpoints) do
     flyTo(pos, i, #checkpoints)
 end
+unfreezeHumanoid()
 
 -- Balik ke posisi asli
 hrp.CFrame = originalCFrame
