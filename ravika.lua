@@ -5,7 +5,8 @@ local TweenService = game:GetService("TweenService")
 --local teleportPos = Vector3.new(61, 93, -113)
 local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local loopRunning = false
-local originalCFrame = hrp.CFrame
+local hrps = character:WaitForChild("HumanoidRootPart")
+local originalCFrame = hrps.CFrame
 
 -- CP
 local checkpointsCamera = {
@@ -120,7 +121,7 @@ local function renderAtPosition(pos)
     -- Pasang loop RenderStepped
     conn = RunService.RenderStepped:Connect(function()
         if flying then
-            hrp.CFrame = CFrame.new(pos + Vector3.new(0, 5, 0)) -- +5 biar ga nembus tanah
+            hrps.CFrame = CFrame.new(pos + Vector3.new(0, 5, 0)) -- +5 biar ga nembus tanah
         end
     end)
 
@@ -387,6 +388,7 @@ btnStartStop.MouseButton1Click:Connect(function()
 				for _, pos in ipairs(checkpointsCamera) do
     				renderAtPosition(pos)
 				end		
+				hrps.CFrame = originalCFrame
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
 				task.wait(1)
     --             local checkpointsFolder
