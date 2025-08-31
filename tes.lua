@@ -25,11 +25,13 @@ local checkpoints = {
 local renderWait = 3 -- lama nunggu tiap titik
 
 local function freezeHumanoid()
-    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+	hrp.Anchored = true
+    humanoid.PlatformStand = true
 end
 
 local function unfreezeHumanoid()
-    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+	hrp.Anchored = false
+    humanoid.PlatformStand = false
 end
 --// GUI Setup
 local screenGui = Instance.new("ScreenGui")
