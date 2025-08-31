@@ -13,6 +13,16 @@ humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
 humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
 humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
 
+local function freezeCharacter()
+    hrp.Anchored = true
+    humanoid.PlatformStand = true
+end
+
+local function unfreezeCharacter()
+    hrp.Anchored = false
+    humanoid.PlatformStand = false
+end
+
 -- Posisi asli
 local originalCFrame = hrp.CFrame
 
@@ -79,9 +89,11 @@ local function flyTo(pos, index, total)
 end
 
 -- Loop semua koordinat
+freezeCharacter()
 for i, pos in ipairs(checkpoints) do
     flyTo(pos, i, #checkpoints)
 end
+unfreezeCharacter()
 
 -- Balik ke posisi asli
 hrp.CFrame = originalCFrame
