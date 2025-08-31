@@ -342,8 +342,6 @@ btnStartStop.MouseButton1Click:Connect(function()
         btnStartStop.Text = "Stop"
         runner = coroutine.create(function()
             while loopRunning do
-				local hrp, char = getHRP()
-				local originalCFrame = hrp.CFrame
 				local start = workspace:FindFirstChild("StartTimeTrigger")
 				if start and start:IsA("BasePart") then
 	    			touchPart(start)
@@ -359,14 +357,6 @@ btnStartStop.MouseButton1Click:Connect(function()
 
 				task.wait(0.5)
                 task.spawn(function() logLabel.Text = "Teleporting..." end)
-				-- local timeout = 2
-    -- 			local startTime = tick()
-    -- 			while tick() - startTime < timeout do
-    --     			if isGroundLoaded(teleportPos, 15) then
-    --         			break
-    --     			end
-    --     		task.wait(0.2)
-    -- 			end
 
 				local tweenInfo = TweenInfo.new(
     				1, -- durasi (2 detik)
@@ -374,7 +364,7 @@ btnStartStop.MouseButton1Click:Connect(function()
     				Enum.EasingDirection.Out
 				)
 				local goal = {CFrame = CFrame.new(teleportPos)}
-                
+                local hrp, char = getHRP()
                 if hrp then
 					local tween = TweenService:Create(hrp, tweenInfo, goal)
 					tween:Play()
@@ -383,12 +373,11 @@ btnStartStop.MouseButton1Click:Connect(function()
                     char = player.Character or player.CharacterAdded:Wait()
                     char:WaitForChild("HumanoidRootPart")
                 end
-
-				-- Jalankan render ke semua koordinat
+						
+				local originalCFrame = hrp.CFrame
 				for _, pos in ipairs(checkpointsCamera) do
     				renderAtPosition(pos)
 				end
-						
 				hrp.CFrame = originalCFrame
 				
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
