@@ -51,16 +51,10 @@ progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 progressBar.BorderSizePixel = 0
 
---// Freeze & Unfreeze biar anti fall damage
-local function freezeCharacter()
-    hrp.Anchored = true
-    humanoid.PlatformStand = true
-end
-
-local function unfreezeCharacter()
-    hrp.Anchored = false
-    humanoid.PlatformStand = false
-end
+--// Anti Fall Damage
+humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
 
 --// Render Function
 local function flyTo(pos, index, total)
@@ -85,11 +79,9 @@ local function flyTo(pos, index, total)
 end
 
 --// Jalankan proses render
-freezeCharacter()
 for i, pos in ipairs(checkpoints) do
     flyTo(pos, i, #checkpoints)
 end
-unfreezeCharacter()
 
 -- Kembali ke posisi asli
 hrp.CFrame = originalCFrame
