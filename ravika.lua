@@ -1,9 +1,25 @@
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 --local teleportPos = Vector3.new(61, 93, -113)
 local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local loopRunning = false
+local originalCFrame = hrp.CFrame
+
+-- CP
+local checkpointsCamera = {
+    Vector3.new(-782.99, 87.03, -650.32), -- cp1
+    Vector3.new(-985.72, 182.07, -81.32), -- cp2
+    Vector3.new(-952.87, 178.25, 809.87),-- cp3
+    Vector3.new(797.29, 184.63, 875.85),-- cp4
+    Vector3.new(973.33, 97.97, 135.15),-- cp5
+	Vector3.new(980.60, 112.06, -535.60),-- cp6
+	Vector3.new(402.23, 121.33, -229.17),-- cp7
+}
+
+-- Lama nunggu di tiap titik (detik)
+local renderWait = 5
 
 -- Default delay values (seconds)
 local respawnWait = 2
@@ -95,6 +111,25 @@ local function touchPart(part)
         end
     end
     return false
+end
+
+local function renderAtPosition(pos)
+    local flying = true
+    local conn
+
+    -- Pasang loop RenderStepped
+    conn = RunService.RenderStepped:Connect(function()
+        if flying then
+            hrp.CFrame = CFrame.new(pos + Vector3.new(0, 5, 0)) -- +5 biar ga nembus tanah
+        end
+    end)
+
+    -- Tunggu map kebuka
+    task.wait(renderWait)
+
+    -- Stop fly
+    flying = false
+    conn:Disconnect()
 end
 
 -- Run checkpoint + summit sequence
@@ -331,6 +366,7 @@ btnStartStop.MouseButton1Click:Connect(function()
     --     			end
     --     		task.wait(0.2)
     -- 			end
+
 				local tweenInfo = TweenInfo.new(
     				1, -- durasi (2 detik)
     				Enum.EasingStyle.Quad, -- gaya animasi
@@ -347,6 +383,10 @@ btnStartStop.MouseButton1Click:Connect(function()
                     char:WaitForChild("HumanoidRootPart")
                 end
 
+				-- Jalankan render ke semua koordinat
+				for _, pos in ipairs(checkpointsCamera) do
+    				renderAtPosition(pos)
+				end		
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
 				task.wait(1)
     --             local checkpointsFolder
