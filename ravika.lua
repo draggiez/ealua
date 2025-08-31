@@ -382,28 +382,6 @@ btnStartStop.MouseButton1Click:Connect(function()
 				
                 task.spawn(function() logLabel.Text = "Waiting for Checkpoint to load..." end)
 				task.wait(1)
-    --             local checkpointsFolder
-    --             local cp1
-    --             local cp2
-			 --    local cp3
-				-- local cp4
-				-- local cp5
-				-- local cp6
-				-- local cp7
-    --             while loopRunning do
-    --                 checkpointsFolder = workspace:FindFirstChild("Checkpoints")
-    --                 if checkpointsFolder then
-    --                     cp1 = checkpointsFolder:FindFirstChild("Checkpoint1")
-				-- 	    cp2 = checkpointsFolder:FindFirstChild("Checkpoint2")
-				-- 		cp3 = checkpointsFolder:FindFirstChild("Checkpoint3")
-    --                     cp4 = checkpointsFolder:FindFirstChild("Checkpoint4")
-				-- 		cp5 = checkpointsFolder:FindFirstChild("Checkpoint5")
-    --                     cp6 = checkpointsFolder:FindFirstChild("Checkpoint6")
-				-- 		cp7 = checkpointsFolder:FindFirstChild("Checkpoint7")
-    --                     if cp1 and cp2 and cp3 and cp4 and cp5 and cp6 and cp7 then break end
-    --                 end
-    --                 task.wait(0.5)
-    --             end
 				
 				local checkpoints = {}
 				while loopRunning do
