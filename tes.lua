@@ -1,16 +1,17 @@
 --// Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
 
+--// Player setup
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
 local hrp = character:WaitForChild("HumanoidRootPart")
 
--- Simpan posisi asli
+-- Posisi asli
 local originalCFrame = hrp.CFrame
 
--- Daftar koordinat untuk render
+-- Daftar koordinat (contoh beberapa titik)
 local checkpoints = {
     Vector3.new(-782.99, 87.03, -650.32), -- cp1
     Vector3.new(-985.72, 182.07, -81.32), -- cp2
@@ -21,50 +22,44 @@ local checkpoints = {
 	Vector3.new(402.23, 121.33, -229.17)-- cp7
 }
 
-local renderWait = 3 -- waktu tunggu di tiap koordinat
+local renderWait = 3 -- lama nunggu tiap titik
 
 --// GUI Setup
-local screenGui = Instance.new("ScreenGui", player.PlayerGui)
-local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 320, 0, 100)
-frame.Position = UDim2.new(0.5, -160, 0.1, 0)
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "RenderProgressGui"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 80)
+frame.Position = UDim2.new(0.5, -150, 0.1, 0)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.BackgroundTransparency = 0.2
-frame.BorderSizePixel = 0
+frame.Parent = screenGui
 
-local label = Instance.new("TextLabel", frame)
-label.Size = UDim2.new(1, 0, 0.5, 0)
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 0.6, 0)
+label.Position = UDim2.new(0, 0, 0, 0)
 label.BackgroundTransparency = 1
 label.TextColor3 = Color3.fromRGB(255, 255, 255)
 label.Font = Enum.Font.SourceSansBold
 label.TextSize = 20
 label.Text = "Render Progress"
+label.Parent = frame
 
-local progressBarBg = Instance.new("Frame", frame)
-progressBarBg.Size = UDim2.new(1, -10, 0.25, 0)
-progressBarBg.Position = UDim2.new(0, 5, 0.65, 0)
-progressBarBg.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-progressBarBg.BorderSizePixel = 0
-
-local progressBar = Instance.new("Frame", progressBarBg)
-progressBar.Size = UDim2.new(0, 0, 1, 0)
+local progressBar = Instance.new("Frame")
+progressBar.Size = UDim2.new(0, 0, 0.3, 0)
+progressBar.Position = UDim2.new(0, 0, 0.65, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 progressBar.BorderSizePixel = 0
+progressBar.Parent = frame
 
---// Anti Fall Damage
-humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
-humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
-
---// Render Function
+-- Fungsi render ke titik
 local function flyTo(pos, index, total)
     local flying = true
     local conn
 
-    label.Text = string.format("(%d/%d) Rendering: %s", index, total, tostring(pos))
-    progressBar:TweenSize(UDim2.new(index/total, 0, 1, 0), "Out", "Quad", 0.5, true)
-
-    print(string.format("[DEBUG] (%d/%d) Fly ke %s", index, total, tostring(pos)))
+    label.Text = string.format("(%d/%d) Render: %s", index, total, tostring(pos))
+    progressBar.Size = UDim2.new(index/total, 0, 0.3, 0)
 
     conn = RunService.RenderStepped:Connect(function()
         if flying then
@@ -78,16 +73,14 @@ local function flyTo(pos, index, total)
     conn:Disconnect()
 end
 
---// Jalankan proses render
+-- Loop semua koordinat
 for i, pos in ipairs(checkpoints) do
     flyTo(pos, i, #checkpoints)
 end
 
--- Kembali ke posisi asli
+-- Balik ke posisi asli
 hrp.CFrame = originalCFrame
-label.Text = "Selesai Render!"
-progressBar:TweenSize(UDim2.new(1, 0, 1, 0), "Out", "Quad", 0.5, true)
 
+label.Text = "Selesai render semua titik!"
 task.wait(2)
 screenGui:Destroy()
-print("[DEBUG] Render selesai dan balik ke posisi awal")
