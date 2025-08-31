@@ -376,6 +376,11 @@ btnStartStop.MouseButton1Click:Connect(function()
 				local goal = {CFrame = CFrame.new(teleportPos)}
                 if hrp then
 					local tween = TweenService:Create(hrp, tweenInfo, goal)
+					tween.Completed:Connect(function()
+    					print("Tween selesai!")
+    					print("Posisi HRP baru:", hrp.Position)
+    					print("CFrame HRP baru:", hrp.CFrame)
+					end)
 					tween:Play()
                 else
                     task.spawn(function() logLabel.Text = "Waiting for character..." end)
