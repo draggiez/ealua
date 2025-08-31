@@ -375,11 +375,30 @@ btnStartStop.MouseButton1Click:Connect(function()
 				)
 				local goal = {CFrame = CFrame.new(teleportPos)}
                 if hrp then
+					-- local tween = TweenService:Create(hrp, tweenInfo, goal)
+					-- tween.Completed:Connect(function()
+    	-- 				print("Tween selesai!")
+    	-- 				print("Posisi HRP baru:", hrp.Position)
+    	-- 				print("CFrame HRP baru:", hrp.CFrame)
+					-- end)
+					-- tween:Play()
 					local tween = TweenService:Create(hrp, tweenInfo, goal)
-					tween.Completed:Connect(function()
-    					print("Tween selesai!")
-    					print("Posisi HRP baru:", hrp.Position)
-    					print("CFrame HRP baru:", hrp.CFrame)
+					tween.Completed:Once(function(playbackState)
+					    if playbackState == Enum.PlaybackState.Completed then
+					        print("Tween selesai!")
+					        local finalCFrame = hrp.CFrame
+					        print("Posisi HRP baru:", hrp.Position)
+					        print("CFrame HRP baru:", finalCFrame)
+					
+					        -- pakai finalCFrame di sini
+					        originalCFrame = finalCFrame
+					        freezeCharacter()
+					        for i, pos in ipairs(checkpointsCamera) do
+					            renderAtPosition(pos)
+					        end
+					        unfreezeCharacter()
+					        hrp.CFrame = originalCFrame
+					    end
 					end)
 					tween:Play()
                 else
