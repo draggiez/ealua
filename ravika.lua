@@ -250,10 +250,6 @@ local function runLoop()
 		    renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
 		end
 		unfreezeCharacter()
-		
-		-- Balik ke teleportPos setelah selesai render semua titik
-		hrp, char = getHRP()
-		hrp.CFrame = teleportPos
 		task.wait(2)
 		--=======================================
 		
