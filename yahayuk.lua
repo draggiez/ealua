@@ -2,6 +2,8 @@
 
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
 
 --// Workspace checkpoints
 local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
@@ -14,7 +16,6 @@ local function fireTouch(part1, part2)
 end
 
 local function killCharacter()
-    local char = player.Character or player.CharacterAdded:Wait()
     local humanoid = char:FindFirstChildOfClass("Humanoid")
     if humanoid then
         humanoid.Health = 0
@@ -81,39 +82,47 @@ local loopRunning = false
 local function runLoop()
 	loopRunning = true
 	while loopRunning do
-		local char = player.Character or player.CharacterAdded:Wait()
-		local hrp = char:WaitForChild("HumanoidRootPart")
+		
 			-- CP1
 			local cp1 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP1"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp1)
-			local msg = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name)
-			logBox.Text = msg
+			local msg1 = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name)
+			logBox.Text = msg1
 			killCharacter()
+			task.wait(5)
+			
 			-- CP2
 			local cp2 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP2"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp2)
-			local msg = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name)
-			logBox.Text = msg
+			local msg2 = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name)
+			logBox.Text = msg2
 			killCharacter()
-		-- CP3
+			task.wait(5)
+		
+			-- CP3
 			local cp3 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP3"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp3)
-			local msg = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name)
-			logBox.Text = msg
+			local msg3 = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name)
+			logBox.Text = msg3
 			killCharacter()
-		-- CP4
+			task.wait(5)
+
+			-- CP4
 			local cp4 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP4"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp4)
-			local msg = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name)
-			logBox.Text = msg
+			local msg4 = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name)
+			logBox.Text = msg4
 			killCharacter()
-		-- CP5
+			task.wait(5)
+
+			-- CP5
 			local cp5 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP5"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp5)
-			local msg = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
-			logBox.Text = msg
+			local msg5 = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
+			logBox.Text = msg5
 			killCharacter()
-	
+			task.wait(5)
+
 	end
 end
 
