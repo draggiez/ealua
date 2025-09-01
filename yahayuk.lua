@@ -74,15 +74,15 @@ local function runLoop()
 	while loopRunning do
 		local char = player.Character or player.CharacterAdded:Wait()
 		local hrp = char:WaitForChild("HumanoidRootPart")
-		local cp = workspace:WaitForChild("Checkpoints") 
+		-- local cp = workspace:WaitForChild("Checkpoints") 
 
-		-- CP1
-		local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
-		fireTouch(hrp, cp1)
-		local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-		logBox.Text = msg
-		player:LoadCharacter()
-		task.wait(5)
+		-- -- CP1
+		-- local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
+		-- fireTouch(hrp, cp1)
+		-- local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+		-- logBox.Text = msg
+		-- player:LoadCharacter()
+		-- task.wait(5)
 	end
 end
 
