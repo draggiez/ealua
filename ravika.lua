@@ -85,19 +85,45 @@ local function fireTouch(part1, part2)
 end
 
 --============== RENDER =================--
-local function renderAtPosition(pos, index, total)
-    local flying = true
-    local conn
-
-    conn = RunService.RenderStepped:Connect(function()
-        if flying then
+local renderConn
+local rendering = false
+local function startRender(pos)
+    stopRender()
+    rendering = true
+    renderConn = RunService.RenderStepped:Connect(function()
+        if rendering then
             hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
         end
     end)
-    task.wait(renderWait)
-    flying = false
-    conn:Disconnect()
 end
+
+function stopRender()
+    rendering = false
+    if renderConn then
+        renderConn:Disconnect()
+        renderConn = nil
+    end
+end
+
+local function renderAtPosition(pos)
+    startRender(pos)
+    task.wait(renderWait)
+    stopRender()
+end
+-- --============== RENDER =================--
+-- local function renderAtPosition(pos, index, total)
+--     local flying = true
+--     local conn
+
+--     conn = RunService.RenderStepped:Connect(function()
+--         if flying then
+--             hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
+--         end
+--     end)
+--     task.wait(renderWait)
+--     flying = false
+--     conn:Disconnect()
+-- end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
