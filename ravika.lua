@@ -25,12 +25,7 @@ local checkpointsCamera = {
 }
 
 -- Lama nunggu di tiap titik (detik)
-local renderWait = 5
-
--- Default delay values (seconds)
-local respawnWait = 2
-local touchWait = 90
-
+local renderWait = 2
 
 --================= AUTO LEAVE PART =================--
 -- [Blacklist]
@@ -209,7 +204,7 @@ local function runLoop()
 		logBox.Text = "Teleporting"
 		local hrp, char = getHRP()
 		tweenHRP(hrp, teleportPos)
-		task.wait(5)
+		task.wait(2)
 
 		--=======================================
 		hrp, char = getHRP()
@@ -220,7 +215,7 @@ local function runLoop()
 		end
 		unfreezeCharacter()		
 		hrp.CFrame = originalCFrame
-		task.wait(1)
+		task.wait(2)
 		--=======================================
 		
 		-- CP1
@@ -270,9 +265,9 @@ local function runLoop()
 		local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
 		fireTouch(hrp, summit)
 		logBox.Text = "FireTouch ke Summit"
-		task.wait(5)
+		task.wait(2)
 		killCharacter()
-		task.wait(10)
+		task.wait(5)
 	end
 end
 -- Event tombol
