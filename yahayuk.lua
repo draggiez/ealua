@@ -13,26 +13,13 @@ local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 1)
 end
 
-local function respawnAndWait()
-    if player and player.Character then
-        local success = pcall(function()
-            player:LoadCharacter()
-        end)
-        if not success then
-            local char = player.Character
-            if char then
-                local humanoid = char:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid.Health = 0
-                end
-            end
-        end
-    else
-        player.CharacterAdded:Wait()
-    end
+local function killCharacter()
     local char = player.Character or player.CharacterAdded:Wait()
-    char:WaitForChild("HumanoidRootPart")
-    task.wait(5)
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Health = 0
+        print("Karakter dibunuh paksa, respawn...")
+    end
 end
 
 --// GUI
@@ -101,31 +88,31 @@ local function runLoop()
 			fireTouch(hrp, cp1)
 			local msg = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name)
 			logBox.Text = msg
-			respawnAndWait()
+			killCharacter()
 			-- CP2
 			local cp2 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP2"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp2)
 			local msg = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name)
 			logBox.Text = msg
-			respawnAndWait()
+			killCharacter()
 		-- CP3
 			local cp3 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP3"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp3)
 			local msg = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name)
 			logBox.Text = msg
-			respawnAndWait()
+			killCharacter()
 		-- CP4
 			local cp4 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP4"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp4)
 			local msg = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name)
 			logBox.Text = msg
-			respawnAndWait()
+			killCharacter()
 		-- CP5
 			local cp5 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP5"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp5)
 			local msg = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
 			logBox.Text = msg
-			respawnAndWait()
+			killCharacter()
 	
 	end
 end
