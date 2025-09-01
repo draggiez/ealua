@@ -85,6 +85,7 @@ end
 
 -- Run checkpoint + summit sequence
 local function runCheckpoints()
+	task.spawn(function() logLabel.Text = "TESTTTT" end)
     local checkpointsFolder = workspace:WaitForChild("Checkpoints")
     local summit = workspace:WaitForChild("SummitPart")
   
