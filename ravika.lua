@@ -26,7 +26,7 @@ local checkpointsCamera = {
 }
 
 -- Lama nunggu di tiap titik (detik)
-local renderWait = 5
+local renderWait = 2
 
 --================= AUTO LEAVE PART =================--
 -- [Blacklist]
