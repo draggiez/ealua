@@ -87,28 +87,33 @@ end
 
 -- Run checkpoint + summit sequence
 local function runCheckpoints()
-    local checkpointsFolder = workspace:WaitForChild("Checkpoints")
-    local summit = workspace:WaitForChild("SummitPart")
+	local ok, err = pcall(function()
+        local checkpointsFolder = workspace:WaitForChild("Checkpoints")
+    	local summit = workspace:WaitForChild("SummitPart")
   
-    -- daftar checkpoint
-    local checkpoints = {}
+    	-- daftar checkpoint
+    	local checkpoints = {}
     
-    -- ambil CP1 sampai CP5 otomatis
-    for i = 1, 5 do
-    	local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
-    	table.insert(checkpoints, cp)
+    	-- ambil CP1 sampai CP5 otomatis
+    	for i = 1, 5 do
+    		local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
+    		table.insert(checkpoints, cp)
+    	end
+	    
+	    -- fungsi eksekusi berurutan
+	    for i, cp in ipairs(checkpoints) do
+	      task.spawn(function() logLabel.Text = string.format("Touched %s (%d/%d)", cp.Name, i, #checkpoints) end)
+	    	touchPart(cp)          -- sentuh cp
+	    	task.wait(touchWait)   -- tunggu
+	    	respawnAndWait()       -- respawn
+	    end   
+		task.spawn(function() logLabel.Text = "Touched Summit!" end)
+		touchPart(summit)
+		respawnAndWait()
+    end)
+    if not ok then
+        warn("runCheckpoints error: ", err)
     end
-    
-    -- fungsi eksekusi berurutan
-    for i, cp in ipairs(checkpoints) do
-      task.spawn(function() logLabel.Text = string.format("Touched %s (%d/%d)", cp.Name, i, #checkpoints) end)
-    	touchPart(cp)          -- sentuh cp
-    	task.wait(touchWait)   -- tunggu
-    	respawnAndWait()       -- respawn
-    end   
-	task.spawn(function() logLabel.Text = "Touched Summit!" end)
-	touchPart(summit)
-	respawnAndWait()
 end
 
 -- GUI Setup (Dark Mode)
@@ -279,10 +284,7 @@ btnStartStop.MouseButton1Click:Connect(function()
         btnStartStop.Text = "Stop"
         runner = coroutine.create(function()
             while loopRunning do
-				local success, msg = pcall(runCheckpoints)
-                if not success then
-                    task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
-                end
+				runCheckpoints()
             end
         end)
         coroutine.resume(runner)
