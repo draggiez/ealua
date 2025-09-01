@@ -233,6 +233,7 @@ local function runLoop()
 		task.wait(2)
 
 		--=======================================
+		hrp, char = getHRP()
 		freezeCharacter()
 		for i, pos in ipairs(checkpointsCamera) do
     		renderAtPosition(pos)
