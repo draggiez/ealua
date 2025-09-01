@@ -13,7 +13,7 @@ local hrp = character:WaitForChild("HumanoidRootPart")
 -- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local loopRunning = false
 local respawnWait = 1
-local touchWait = 60
+local touchWait = 2
 
 --================= AUTO LEAVE PART =================--
 local blacklist = {
