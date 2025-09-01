@@ -242,7 +242,7 @@ btnStart.MouseButton1Click:Connect(function()
 				local cp5 = cp:WaitForChild("CP5"):WaitForChild("TouchPart") 
 				local summit = workspace:WaitForChild("SummitPart")
 				
-				logLabel.Text = string.format("Touching CP%d...", i)
+				logLabel.Text = "Touching CP1"
 				touchPart(cp1)
 				task.wait(touchWait)
 				respawnAndWait()
