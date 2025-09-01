@@ -168,8 +168,6 @@ local function runLoop()
 			local cp2 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP2"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp2)
 			logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name)
-			task.wait(2)
-			killCharacter()
 			task.wait(30)
 		
 			-- CP3
@@ -191,8 +189,6 @@ local function runLoop()
 			local cp5 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP5"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp5)
 			logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
-			task.wait(2)	
-			killCharacter()	
 			task.wait(60)
 		
 			-- Summit
@@ -202,7 +198,7 @@ local function runLoop()
 			logBox.Text = "FireTouch ke Summit"
 			task.wait(2)
 			killCharacter()
-			task.wait(15)
+			task.wait(10)
 	end
 end
 
