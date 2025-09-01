@@ -80,38 +80,6 @@ local function touchPart(part)
 	end
 end
 
--- Main Runner
-local function runCheckpoints()
-	local checkpointsFolder = workspace:WaitForChild("Checkpoints")
-	local summit = workspace:WaitForChild("SummitPart")
-
-	local checkpoints = {}
-	for i = 1, 5 do
-		local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
-		table.insert(checkpoints, cp)
-	end
-
-	for i, cp in ipairs(checkpoints) do
-		if not loopRunning then return end
-		logLabel.Text = string.format("Touching CP%d...", i)
-		touchPart(cp)
-
-		-- tunggu dengan break check
-		for t = 1, touchWait do
-			if not loopRunning then return end
-			task.wait(1)
-		end
-
-		respawnAndWait()
-	end
-
-	if not loopRunning then return end
-	logLabel.Text = "Touching Summit..."
-	touchPart(summit)
-	respawnAndWait()
-	logLabel.Text = "Finished cycle!"
-end
-
 --====================================================--
 -- GUI Setup
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
@@ -266,7 +234,34 @@ btnStart.MouseButton1Click:Connect(function()
 		logLabel.Text = "Running..."
 		runner = coroutine.create(function()
 			while loopRunning do
-				runCheckpoints()
+				local checkpointsFolder = workspace:WaitForChild("Checkpoints")
+				local summit = workspace:WaitForChild("SummitPart")
+
+				local checkpoints = {}
+				for i = 1, 5 do
+					local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
+					table.insert(checkpoints, cp)
+				end
+			
+				for i, cp in ipairs(checkpoints) do
+					if not loopRunning then return end
+					logLabel.Text = string.format("Touching CP%d...", i)
+					touchPart(cp)
+			
+					-- tunggu dengan break check
+					for t = 1, touchWait do
+						if not loopRunning then return end
+						task.wait(1)
+					end
+			
+					respawnAndWait()
+				end
+			
+				if not loopRunning then return end
+				logLabel.Text = "Touching Summit..."
+				touchPart(summit)
+				respawnAndWait()
+				logLabel.Text = "Finished cycle!"
 			end
 		end)
 		coroutine.resume(runner)
