@@ -74,48 +74,15 @@ local function runLoop()
 	while loopRunning do
 		local char = player.Character or player.CharacterAdded:Wait()
 		local hrp = char:WaitForChild("HumanoidRootPart")
-			local cp = workspace:WaitForChild("Checkpoints") 
+		local cp = workspace:WaitForChild("Checkpoints") 
 
-			-- CP1
-			local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
-			fireTouch(hrp, cp1)
-			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-			logBox.Text = msg
-			player:LoadCharacter()
-			task.wait(5)
-
-			-- CP2
-			local cp2 = cp:WaitForChild("CP2"):WaitForChild("TouchPart") 
-			fireTouch(hrp, cp2)
-			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-			logBox.Text = msg
-			player:LoadCharacter()
-			task.wait(5)
-
-			-- CP3
-			local cp3 = cp:WaitForChild("CP3"):WaitForChild("TouchPart") 
-			fireTouch(hrp, cp3)
-			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-			logBox.Text = msg
-			player:LoadCharacter()
-			task.wait(5)
-			
-			-- CP4
-			local cp4 = cp:WaitForChild("CP4"):WaitForChild("TouchPart") 
-			fireTouch(hrp, cp4)
-			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-			logBox.Text = msg
-			player:LoadCharacter()
-			task.wait(5)
-
-			-- CP5
-			local cp5 = cp:WaitForChild("CP5"):WaitForChild("TouchPart") 
-			fireTouch(hrp, cp5)
-			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-			logBox.Text = msg
-			player:LoadCharacter()
-			task.wait(5)
-		end
+		-- CP1
+		local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
+		fireTouch(hrp, cp1)
+		local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+		logBox.Text = msg
+		player:LoadCharacter()
+		task.wait(5)
 	end
 end
 
