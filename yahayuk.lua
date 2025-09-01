@@ -189,10 +189,11 @@ local function runLoop()
 			fireTouch(hrp, cp5)
 			task.wait(2)
 			logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
-			
-			hrp, char = getHRP()
-	       	tweenHRP(hrp, CFrame.new(-805.50, 379.81, -217.39))
 			task.wait(60)
+		
+			hrp, char = getHRP()
+	       	tweenHRP(hrp, CFrame.new(-680.14, 862.35, -520.19))
+			task.wait(5)
 		
 			-- Summit
 			hrp, char = getHRP()	
