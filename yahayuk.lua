@@ -7,6 +7,24 @@ local player = Players.LocalPlayer
 local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
 local summit = workspace:FindFirstChild("SummitPart")
 
+-- Kumpulin CP (hanya yang ada)
+local checkpoints = {}
+if checkpointsFolder then
+	for i = 1, 5 do
+		local cp = checkpointsFolder:FindFirstChild("CP"..i)
+		if cp and cp:FindFirstChild("TouchPart") then
+			table.insert(checkpoints, cp.TouchPart)
+			print("✅ Masukin", cp.Name)
+		else
+			warn("⚠️ CP"..i.." atau TouchPart tidak ketemu, dilewati")
+		end
+	end
+end
+if summit then
+	table.insert(checkpoints, summit)
+	print("✅ SummitPart dimasukkan")
+end
+
 -- Fungsi FireTouch
 local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 0)
@@ -74,15 +92,15 @@ local function runLoop()
 	while loopRunning do
 		local char = player.Character or player.CharacterAdded:Wait()
 		local hrp = char:WaitForChild("HumanoidRootPart")
-		-- local cp = workspace:WaitForChild("Checkpoints") 
 
-		-- -- CP1
-		-- local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
-		-- fireTouch(hrp, cp1)
-		-- local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-		-- logBox.Text = msg
-		-- player:LoadCharacter()
-		-- task.wait(5)
+		for _, cp in ipairs(checkpoints) do
+			if not loopRunning then break end
+			fireTouch(hrp, cp)
+			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+			print(msg)
+			logBox.Text = msg
+			task.wait(1)
+		end
 	end
 end
 
