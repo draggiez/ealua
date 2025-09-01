@@ -26,6 +26,40 @@ local function getHRP()
 	return char:WaitForChild("HumanoidRootPart"), char
 end
 
+--================= AUTO LEAVE PART =================--
+local blacklist = {
+    "kigenteji", 
+    "Parasite954", 
+	"gynessey",
+	"8ululf",
+	"nevada233445", 
+	"FERNRIRSTARBOY999",
+	"GAV1NSKIE", 
+	"NotHuman1149", 
+	"WakRians88",
+	"OwenLeins",
+	"Ramoy_0404"
+}
+-- Player Join Listener
+Players.PlayerAdded:Connect(function(p)
+    if p ~= player and table.find(blacklist, p.Name) then
+        warn("Keluar karena " .. p.Name .. " join!")
+        player:Kick("Keluar karena " .. p.Name .. " join!") 
+    end
+end)
+
+-- Cek Player yang sudah ada
+local function cekPlayer()
+	for _, p in pairs(Players:GetPlayers()) do
+	    if p ~= player then
+		    if table.find(blacklist, p.Name) then
+        		addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        		player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu	
+			end
+		end
+	end
+end	
+
 --// GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -37,6 +71,9 @@ frame.Size = UDim2.new(0, 300, 0, 180)
 frame.Position = UDim2.new(0, 20, 0.5, -90)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Parent = screenGui
+frame.Active = true
+frame.Draggable = true
+frame.ClipsDescendants = true
 
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
@@ -77,6 +114,27 @@ logBox.TextSize = 14
 logBox.TextXAlignment = Enum.TextXAlignment.Left
 logBox.Text = "Log: Ready"
 logBox.Parent = frame
+
+-- Tambahkan tombol Close dan Minimize
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 0)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.Font = Enum.Font.SourceSansBold
+closeBtn.TextSize = 16
+closeBtn.Parent = frame
+
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+minimizeBtn.Position = UDim2.new(1, -70, 0, 0)
+minimizeBtn.Text = "_"
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+minimizeBtn.TextColor3 = Color3.new(1,1,1)
+minimizeBtn.Font = Enum.Font.SourceSansBold
+minimizeBtn.TextSize = 16
+minimizeBtn.Parent = frame
 
 -- State loop
 local loopRunning = false
@@ -152,4 +210,66 @@ end)
 stopBtn.MouseButton1Click:Connect(function()
 	loopRunning = false
 	logBox.Text = "Loop dihentikan"
+end)
+
+-- Close GUI
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+-- Minimize GUI (toggle frame visibility except title bar)
+local minimized = false
+minimizeBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    for _, child in ipairs(frame:GetChildren()) do
+        if child ~= title and child ~= closeBtn and child ~= minimizeBtn then
+            child.Visible = not minimized
+        end
+    end
+    -- Optional: adjust frame size when minimized
+    if minimized then
+        frame.Size = UDim2.new(0, 300, 0, 35)
+    else
+        frame.Size = UDim2.new(0, 300, 0, 180)
+    end
+end)
+
+-- Make frame draggable
+local UserInputService = game:GetService("UserInputService")
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        if dragging and dragStart then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do
+		cekPlayer()
+		task.wait(1)
+	end
 end)
