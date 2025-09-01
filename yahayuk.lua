@@ -93,7 +93,7 @@ local function runLoop()
 			logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name)
 			task.wait(2)	
 			killCharacter()
-			task.wait(20)
+			task.wait(15)
 			
 			-- CP2
 			hrp, char = getHRP()
@@ -102,7 +102,7 @@ local function runLoop()
 			logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name)
 			task.wait(2)	
 			killCharacter()
-			task.wait(30)
+			task.wait(15)
 		
 			-- CP3
 			hrp, char = getHRP()
@@ -111,7 +111,7 @@ local function runLoop()
 			logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name)
 			task.wait(2)
 			killCharacter()
-			task.wait(40)
+			task.wait(15)
 
 			-- CP4
 			hrp, char = getHRP()
@@ -120,7 +120,7 @@ local function runLoop()
 			logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name)
 			task.wait(2)
 			killCharacter()
-			task.wait(50)
+			task.wait(15)
 
 			-- CP5
 			hrp, char = getHRP()	
@@ -129,7 +129,7 @@ local function runLoop()
 			logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
 			task.wait(2)
 			killCharacter()
-			task.wait(20)
+			task.wait(15)
 		
 			-- Summit
 			hrp, char = getHRP()	
