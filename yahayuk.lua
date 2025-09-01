@@ -146,9 +146,6 @@ minimizeBtn.Parent = frame
 -- State loop
 local loopRunning = false
 
---local pos = Vector3.new(-92.47, 48.39, 116.86)
-local pos = Vector3.new(-377.77, 108.82, -26.18)
-
 -- Loop function
 local function runLoop()
 	loopRunning = true
@@ -193,6 +190,9 @@ local function runLoop()
 			logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
 			task.wait(60)
 		
+			hrp, char = getHRP()
+	       	tweenHRP(hrp, CFrame.new(-377.77, 108.82, -26.18))
+			
 			-- Summit
 			hrp, char = getHRP()	
 			local summit = workspace:FindFirstChild("SummitPart")
