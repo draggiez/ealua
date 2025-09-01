@@ -22,6 +22,7 @@ local checkpointsCamera = {
     Vector3.new(973.33, 97.97, 135.15),-- cp5
 	Vector3.new(980.60, 112.06, -535.60),-- cp6
 	Vector3.new(402.23, 121.33, -229.17),-- cp7
+	Vector3.new(61, 93, -113),-- cp7
 }
 
 -- Lama nunggu di tiap titik (detik)
