@@ -7,24 +7,6 @@ local player = Players.LocalPlayer
 local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
 local summit = workspace:FindFirstChild("SummitPart")
 
--- Kumpulin CP (hanya yang ada)
-local checkpoints = {}
-if checkpointsFolder then
-	for i = 1, 5 do
-		local cp = checkpointsFolder:FindFirstChild("CP"..i)
-		if cp and cp:FindFirstChild("TouchPart") then
-			table.insert(checkpoints, cp.TouchPart)
-			print("✅ Masukin", cp.Name)
-		else
-			warn("⚠️ CP"..i.." atau TouchPart tidak ketemu, dilewati")
-		end
-	end
-end
-if summit then
-	table.insert(checkpoints, summit)
-	print("✅ SummitPart dimasukkan")
-end
-
 -- Fungsi FireTouch
 local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 0)
@@ -87,66 +69,55 @@ logBox.Parent = frame
 local loopRunning = false
 
 -- Loop function
--- Fungsi untuk ambil checkpoints terbaru
-local function getCheckpoints()
-	local cps = {}
-	local folder = workspace:FindFirstChild("Checkpoints")
-	if folder then
-		for i = 1, 5 do
-			local cp = folder:FindFirstChild("CP"..i)
-			if cp and cp:FindFirstChild("TouchPart") then
-				table.insert(cps, cp.TouchPart)
-			end
-		end
-	end
-	local summit = workspace:FindFirstChild("SummitPart")
-	if summit then
-		table.insert(cps, summit)
-	end
-	return cps
-end
-
--- Loop function
 local function runLoop()
 	loopRunning = true
+	while loopRunning do
+		local char = player.Character or player.CharacterAdded:Wait()
+		local hrp = char:WaitForChild("HumanoidRootPart")
+			local cp = workspace:WaitForChild("Checkpoints") 
 
-	for i = 1, 6 do -- 5 CP + Summit
-		if not loopRunning then break end
-
-		-- scan ulang CP
-		local cps = getCheckpoints()
-		local cp = cps[i]
-		if cp then
-			-- pastikan character ready
-			local char = player.Character or player.CharacterAdded:Wait()
-			local hrp = char:WaitForChild("HumanoidRootPart")
-
-			-- sentuh CP
-			fireTouch(hrp, cp)
-			local msg = "Scan & Touch -> " .. (cp.Parent.Name or cp.Name)
-			print(msg)
+			-- CP1
+			local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
+			fireTouch(hrp, cp1)
+			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
 			logBox.Text = msg
-		else
-			logBox.Text = "⚠️ CP"..i.." tidak ditemukan"
-			warn("Checkpoint "..i.." tidak ditemukan")
+			player:LoadCharacter()
+			task.wait(5)
+
+			-- CP2
+			local cp2 = cp:WaitForChild("CP2"):WaitForChild("TouchPart") 
+			fireTouch(hrp, cp2)
+			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+			logBox.Text = msg
+			player:LoadCharacter()
+			task.wait(5)
+
+			-- CP3
+			local cp3 = cp:WaitForChild("CP3"):WaitForChild("TouchPart") 
+			fireTouch(hrp, cp3)
+			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+			logBox.Text = msg
+			player:LoadCharacter()
+			task.wait(5)
+			
+			-- CP4
+			local cp4 = cp:WaitForChild("CP4"):WaitForChild("TouchPart") 
+			fireTouch(hrp, cp4)
+			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+			logBox.Text = msg
+			player:LoadCharacter()
+			task.wait(5)
+
+			-- CP5
+			local cp5 = cp:WaitForChild("CP5"):WaitForChild("TouchPart") 
+			fireTouch(hrp, cp5)
+			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+			logBox.Text = msg
+			player:LoadCharacter()
+			task.wait(5)
 		end
-
-		-- respawn setelah CP
-		player:LoadCharacter()
-		char.Humanoid.Health = 0
-		logBox.Text = "Respawning..."
-		print("Respawning...")
-
-		-- tunggu karakter baru ready
-		player.CharacterAdded:Wait()
-
-		task.wait(1) -- jeda supaya stabil
 	end
-
-	loopRunning = false
-	logBox.Text = "✅ Semua CP selesai discan"
 end
-
 
 -- Event tombol
 startBtn.MouseButton1Click:Connect(function()
