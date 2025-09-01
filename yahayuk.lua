@@ -234,34 +234,18 @@ btnStart.MouseButton1Click:Connect(function()
 		logLabel.Text = "Running..."
 		runner = coroutine.create(function()
 			while loopRunning do
-				local checkpointsFolder = workspace:WaitForChild("Checkpoints")
+				local cp = workspace:WaitForChild("Checkpoints") 
+				local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
+				local cp2 = cp:WaitForChild("CP2"):WaitForChild("TouchPart") 
+				local cp3 = cp:WaitForChild("CP3"):WaitForChild("TouchPart") 
+				local cp4 = cp:WaitForChild("CP4"):WaitForChild("TouchPart") 
+				local cp5 = cp:WaitForChild("CP5"):WaitForChild("TouchPart") 
 				local summit = workspace:WaitForChild("SummitPart")
-
-				local checkpoints = {}
-				for i = 1, 5 do
-					local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
-					table.insert(checkpoints, cp)
-				end
-			
-				for i, cp in ipairs(checkpoints) do
-					if not loopRunning then return end
-					logLabel.Text = string.format("Touching CP%d...", i)
-					touchPart(cp)
-			
-					-- tunggu dengan break check
-					for t = 1, touchWait do
-						if not loopRunning then return end
-						task.wait(1)
-					end
-			
-					respawnAndWait()
-				end
-			
-				if not loopRunning then return end
-				logLabel.Text = "Touching Summit..."
-				touchPart(summit)
+				
+				logLabel.Text = string.format("Touching CP%d...", i)
+				touchPart(cp1)
+				task.wait(touchWait)
 				respawnAndWait()
-				logLabel.Text = "Finished cycle!"
 			end
 		end)
 		coroutine.resume(runner)
