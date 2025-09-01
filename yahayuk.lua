@@ -4,12 +4,13 @@ local Players = game:GetService("Players")
 --// Player
 local player = Players.LocalPlayer
 
---// Variabel
+--// Variables
 local loopRunning = false
 local respawnWait = 1
 local touchWait = 5
 local runner
 local minimized = false
+local logLabel
 
 --================= AUTO LEAVE PART =================--
 local blacklist = {
@@ -46,7 +47,7 @@ local function cekPlayer()
 	end
 end	
 --====================================================--
--- Fungsi Respawn
+-- Respawn Function
 local function respawnAndWait()
 	task.wait(respawnWait)
 	if player and player.Character then
@@ -68,7 +69,7 @@ local function respawnAndWait()
 	task.wait(2)
 end
 
--- Fungsi FireTouch
+-- FireTouch Function
 local function touchPart(part)
 	local char = player.Character or player.CharacterAdded:Wait()
 	local hrp = char:WaitForChild("HumanoidRootPart")
@@ -79,7 +80,7 @@ local function touchPart(part)
 	end
 end
 
--- Fungsi Run Checkpoints
+-- Main Runner
 local function runCheckpoints()
 	local checkpointsFolder = workspace:WaitForChild("Checkpoints")
 	local summit = workspace:WaitForChild("SummitPart")
@@ -94,10 +95,17 @@ local function runCheckpoints()
 		if not loopRunning then return end
 		logLabel.Text = string.format("Touching CP%d...", i)
 		touchPart(cp)
-		task.wait(touchWait)
+
+		-- tunggu dengan break check
+		for t = 1, touchWait do
+			if not loopRunning then return end
+			task.wait(1)
+		end
+
 		respawnAndWait()
 	end
 
+	if not loopRunning then return end
 	logLabel.Text = "Touching Summit..."
 	touchPart(summit)
 	respawnAndWait()
@@ -105,22 +113,21 @@ local function runCheckpoints()
 end
 
 --====================================================--
--- GUI SETUP
+-- GUI Setup
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.Name = "CheckpointGui"
 
 local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 280, 0, 180)
+frame.Size = UDim2.new(0, 280, 0, 200)
 frame.Position = UDim2.new(0, 50, 0, 100)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
-
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
 -- Title
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, -60, 0, 30)
+title.Size = UDim2.new(1, -70, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 5)
 title.BackgroundTransparency = 1
 title.Text = "⚡ Checkpoint Runner"
@@ -154,7 +161,7 @@ Instance.new("UICorner", btnMin).CornerRadius = UDim.new(0, 5)
 -- Log Label
 logLabel = Instance.new("TextLabel", frame)
 logLabel.Size = UDim2.new(0.9, 0, 0, 30)
-logLabel.Position = UDim2.new(0.05, 0, 0, 50)
+logLabel.Position = UDim2.new(0.05, 0, 0, 45)
 logLabel.BackgroundTransparency = 1
 logLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
 logLabel.Font = Enum.Font.Gotham
@@ -162,10 +169,56 @@ logLabel.TextSize = 14
 logLabel.TextXAlignment = Enum.TextXAlignment.Left
 logLabel.Text = "Press Start..."
 
+-- Respawn Delay Input
+local respawnLabel = Instance.new("TextLabel", frame)
+respawnLabel.Size = UDim2.new(0.45, -10, 0, 20)
+respawnLabel.Position = UDim2.new(0.05, 0, 0, 80)
+respawnLabel.BackgroundTransparency = 1
+respawnLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+respawnLabel.Font = Enum.Font.Gotham
+respawnLabel.TextSize = 13
+respawnLabel.Text = "Respawn Delay (s):"
+respawnLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local respawnInput = Instance.new("TextBox", frame)
+respawnInput.Size = UDim2.new(0.4, 0, 0, 20)
+respawnInput.Position = UDim2.new(0.52, 0, 0, 80)
+respawnInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+respawnInput.TextColor3 = Color3.fromRGB(230, 230, 230)
+respawnInput.Font = Enum.Font.Gotham
+respawnInput.TextSize = 13
+respawnInput.TextXAlignment = Enum.TextXAlignment.Center
+respawnInput.Text = tostring(respawnWait)
+respawnInput.ClearTextOnFocus = false
+Instance.new("UICorner", respawnInput).CornerRadius = UDim.new(0, 5)
+
+-- Touch Delay Input
+local touchLabel = Instance.new("TextLabel", frame)
+touchLabel.Size = UDim2.new(0.45, -10, 0, 20)
+touchLabel.Position = UDim2.new(0.05, 0, 0, 105)
+touchLabel.BackgroundTransparency = 1
+touchLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+touchLabel.Font = Enum.Font.Gotham
+touchLabel.TextSize = 13
+touchLabel.Text = "Touch Delay (s):"
+touchLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local touchInput = Instance.new("TextBox", frame)
+touchInput.Size = UDim2.new(0.4, 0, 0, 20)
+touchInput.Position = UDim2.new(0.52, 0, 0, 105)
+touchInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+touchInput.TextColor3 = Color3.fromRGB(230, 230, 230)
+touchInput.Font = Enum.Font.Gotham
+touchInput.TextSize = 13
+touchInput.TextXAlignment = Enum.TextXAlignment.Center
+touchInput.Text = tostring(touchWait)
+touchInput.ClearTextOnFocus = false
+Instance.new("UICorner", touchInput).CornerRadius = UDim.new(0, 5)
+
 -- Start/Stop Button
 local btnStart = Instance.new("TextButton", frame)
 btnStart.Size = UDim2.new(0.9, 0, 0, 35)
-btnStart.Position = UDim2.new(0.05, 0, 0, 100)
+btnStart.Position = UDim2.new(0.05, 0, 0, 140)
 btnStart.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
 btnStart.TextColor3 = Color3.new(1,1,1)
 btnStart.Font = Enum.Font.GothamBold
@@ -175,6 +228,30 @@ Instance.new("UICorner", btnStart).CornerRadius = UDim.new(0, 8)
 
 --====================================================--
 -- BUTTON HANDLERS
+
+respawnInput.FocusLost:Connect(function(enterPressed)
+	if enterPressed then
+		local val = tonumber(respawnInput.Text)
+		if val and val >= 0 then
+			respawnWait = val
+			logLabel.Text = ("Respawn delay = %ds"):format(respawnWait)
+		else
+			respawnInput.Text = tostring(respawnWait)
+		end
+	end
+end)
+
+touchInput.FocusLost:Connect(function(enterPressed)
+	if enterPressed then
+		local val = tonumber(touchInput.Text)
+		if val and val >= 0 then
+			touchWait = val
+			logLabel.Text = ("Touch delay = %ds"):format(touchWait)
+		else
+			touchInput.Text = tostring(touchWait)
+		end
+	end
+end)
 
 btnStart.MouseButton1Click:Connect(function()
 	if loopRunning then
@@ -203,7 +280,7 @@ end)
 
 btnMin.MouseButton1Click:Connect(function()
 	if minimized then
-		frame.Size = UDim2.new(0, 280, 0, 180)
+		frame.Size = UDim2.new(0, 280, 0, 200)
 		minimized = false
 	else
 		frame.Size = UDim2.new(0, 280, 0, 40)
