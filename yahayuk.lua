@@ -234,6 +234,7 @@ btnStart.MouseButton1Click:Connect(function()
 		logLabel.Text = "Running..."
 		runner = coroutine.create(function()
 			while loopRunning do
+				logLabel.Text = "Touching CP1"
 				local cp = workspace:WaitForChild("Checkpoints") 
 				local cp1 = cp:WaitForChild("CP1"):WaitForChild("TouchPart") 
 				local cp2 = cp:WaitForChild("CP2"):WaitForChild("TouchPart") 
