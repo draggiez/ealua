@@ -150,7 +150,7 @@ local function runLoop()
 	    		Enum.EasingStyle.Quad, -- gaya animasi
 	    		Enum.EasingDirection.Out
 			)
-			local goal = {CFrame = CFrame.new(teleportPos)}
+			local goal = {CFrame = CFrame.new(pos)}
 			local hrp, char = getHRP()
 	        if hrp then
 				local tween = TweenService:Create(hrp, tweenInfo, goal)
