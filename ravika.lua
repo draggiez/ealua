@@ -233,14 +233,13 @@ local function runLoop()
 		task.wait(2)
 
 		--=======================================
-		hrp, char = getHRP()
-		local originalCFrame = hrp.CFrame
 		freezeCharacter()
 		for i, pos in ipairs(checkpointsCamera) do
     		renderAtPosition(pos)
+			task.wait(0.5)
 		end
 		unfreezeCharacter()		
-		hrp.CFrame = originalCFrame
+		hrp.CFrame = teleportPos
 		task.wait(2)
 		--=======================================
 		
@@ -255,7 +254,7 @@ local function runLoop()
 		local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
 		fireTouch(hrp, cp2)
 		logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name).."2"
-		task.wait()
+		task.wait(10)
 		-- CP3
 		hrp, char = getHRP()
 		local cp3 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint3") 
