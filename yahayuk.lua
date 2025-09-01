@@ -133,6 +133,7 @@ local function runLoop()
 
 		-- respawn setelah CP
 		player:LoadCharacter()
+		char.Humanoid.Health = 0
 		logBox.Text = "Respawning..."
 		print("Respawning...")
 
