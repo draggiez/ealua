@@ -103,7 +103,10 @@ local function runCheckpoints()
     	touchPart(cp)          -- sentuh cp
     	task.wait(touchWait)   -- tunggu
     	respawnAndWait()       -- respawn
-    end        
+    end   
+	task.spawn(function() logLabel.Text = "Touched Summit!" end)
+	touchPart(summit)
+	respawnAndWait()
 end
 
 -- GUI Setup (Dark Mode)
