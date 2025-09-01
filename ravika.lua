@@ -84,33 +84,43 @@ local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 1)
 end
 
---============== RENDER =================--
-local renderConn
-local rendering = false
-local function startRender(pos)
-	local hrp, char = getHRP()
-    stopRender()
-    rendering = true
-    renderConn = RunService.RenderStepped:Connect(function()
-        if rendering then
-            hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
-        end
-    end)
-end
+local function renderAtPosition(pos)
+    local duration = renderWait  -- lama waktu render (detik)
+    local startTime = tick()
 
-function stopRender()
-    rendering = false
-    if renderConn then
-        renderConn:Disconnect()
-        renderConn = nil
+    -- Loop per-frame
+    while tick() - startTime < duration do
+        RunService.RenderStepped:Wait()
+        hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
     end
 end
+-- --============== RENDER =================--
+-- local renderConn
+-- local rendering = false
+-- local function startRender(pos)
+-- 	local hrp, char = getHRP()
+--     stopRender()
+--     rendering = true
+--     renderConn = RunService.RenderStepped:Connect(function()
+--         if rendering then
+--             hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
+--         end
+--     end)
+-- end
 
-local function renderAtPosition(pos)
-    startRender(pos)
-    task.wait(renderWait)
-    stopRender()
-end
+-- function stopRender()
+--     rendering = false
+--     if renderConn then
+--         renderConn:Disconnect()
+--         renderConn = nil
+--     end
+-- end
+
+-- local function renderAtPosition(pos)
+--     startRender(pos)
+--     task.wait(renderWait)
+--     stopRender()
+-- end
 -- --============== RENDER =================--
 -- local function renderAtPosition(pos, index, total)
 --     local flying = true
@@ -234,13 +244,14 @@ local function runLoop()
 		task.wait(2)
 
 		--=======================================
-		
+		hrp, char = getHRP()
 		freezeCharacter()
 		for i, pos in ipairs(checkpointsCamera) do
-    		renderAtPosition(pos)
-			task.wait(0.5)
+		    renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
 		end
-		unfreezeCharacter()		
+		unfreezeCharacter()
+		
+		-- Balik ke teleportPos setelah selesai render semua titik
 		hrp.CFrame = teleportPos
 		task.wait(2)
 		--=======================================
