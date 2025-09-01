@@ -187,12 +187,13 @@ local function runLoop()
 			hrp, char = getHRP()	
 			local cp5 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP5"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp5)
+			task.wait(2)
 			logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
-			task.wait(60)
-		
+			
 			hrp, char = getHRP()
 	       	tweenHRP(hrp, CFrame.new(-805.50, 379.81, -217.39))
-			
+			task.wait(60)
+		
 			-- Summit
 			hrp, char = getHRP()	
 			local summit = workspace:FindFirstChild("SummitPart")
