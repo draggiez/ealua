@@ -14,6 +14,7 @@ local function fireTouch(part1, part2)
 end
 
 local function killCharacter()
+	local char = player.Character or player.CharacterAdded:Wait()
     local humanoid = char:FindFirstChildOfClass("Humanoid")
     if humanoid then
         humanoid.Health = 0
