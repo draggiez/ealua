@@ -1,19 +1,15 @@
 --// Services
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
 
---// Player Setup
+--// Player
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local hrp = character:WaitForChild("HumanoidRootPart")
 
--- local teleportPos = Vector3.new(61, 93, -113)
--- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
+--// Variabel
 local loopRunning = false
 local respawnWait = 1
-local touchWait = 2
+local touchWait = 5
+local runner
+local minimized = false
 
 --================= AUTO LEAVE PART =================--
 local blacklist = {
@@ -29,6 +25,7 @@ local blacklist = {
 	"sudrajad69",
 	"sudrajad"
 }
+
 -- Player Join Listener
 Players.PlayerAdded:Connect(function(p)
     if p ~= player and table.find(blacklist, p.Name) then
@@ -48,258 +45,168 @@ local function cekPlayer()
 		end
 	end
 end	
-
--- Respawn function with delay
+--====================================================--
+-- Fungsi Respawn
 local function respawnAndWait()
-    task.wait(respawnWait)
-    if player and player.Character then
-        local success = pcall(function()
-            player:LoadCharacter()
-        end)
-        if not success then
-            local char = player.Character
-            if char then
-                local humanoid = char:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid.Health = 0
-                end
-            end
-        end
-    else
-        player.CharacterAdded:Wait()
-    end
-    local char = player.Character or player.CharacterAdded:Wait()
-    char:WaitForChild("HumanoidRootPart")
-    task.wait(5)
+	task.wait(respawnWait)
+	if player and player.Character then
+		local ok = pcall(function()
+			player:LoadCharacter()
+		end)
+		if not ok then
+			local char = player.Character
+			if char then
+				local hum = char:FindFirstChildOfClass("Humanoid")
+				if hum then hum.Health = 0 end
+			end
+		end
+	else
+		player.CharacterAdded:Wait()
+	end
+	local char = player.Character or player.CharacterAdded:Wait()
+	char:WaitForChild("HumanoidRootPart")
+	task.wait(2)
 end
 
+-- Fungsi FireTouch
 local function touchPart(part)
 	local char = player.Character or player.CharacterAdded:Wait()
-    local hrpNow = char:WaitForChild("HumanoidRootPart")
-    if part and part:IsA("BasePart") and hrp then
-        firetouchinterest(hrp, part, 0)
-        task.wait(0.1)
-        firetouchinterest(hrp, part, 1)
-        return true
-    end
-    return false
+	local hrp = char:WaitForChild("HumanoidRootPart")
+	if part and part:IsA("BasePart") then
+		firetouchinterest(hrp, part, 0)
+		task.wait(0.1)
+		firetouchinterest(hrp, part, 1)
+	end
 end
 
--- Run checkpoint + summit sequence
+-- Fungsi Run Checkpoints
 local function runCheckpoints()
-	local ok, err = pcall(function()
-        local checkpointsFolder = workspace:WaitForChild("Checkpoints")
-    	local summit = workspace:WaitForChild("SummitPart")
-  
-    	-- daftar checkpoint
-    	local checkpoints = {}
-    
-    	-- ambil CP1 sampai CP5 otomatis
-    	for i = 1, 5 do
-    		local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
-    		table.insert(checkpoints, cp)
-    	end
-	    
-	    -- fungsi eksekusi berurutan
-	    for i, cp in ipairs(checkpoints) do
-	      task.spawn(function() logLabel.Text = string.format("Touched %s (%d/%d)", cp.Name, i, #checkpoints) end)
-	    	touchPart(cp)          -- sentuh cp
-	    	task.wait(touchWait)   -- tunggu
-	    	respawnAndWait()       -- respawn
-	    end   
-		task.spawn(function() logLabel.Text = "Touched Summit!" end)
-		touchPart(summit)
+	local checkpointsFolder = workspace:WaitForChild("Checkpoints")
+	local summit = workspace:WaitForChild("SummitPart")
+
+	local checkpoints = {}
+	for i = 1, 5 do
+		local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
+		table.insert(checkpoints, cp)
+	end
+
+	for i, cp in ipairs(checkpoints) do
+		if not loopRunning then return end
+		logLabel.Text = string.format("Touching CP%d...", i)
+		touchPart(cp)
+		task.wait(touchWait)
 		respawnAndWait()
-    end)
-    if not ok then
-        warn("runCheckpoints error: ", err)
-    end
+	end
+
+	logLabel.Text = "Touching Summit..."
+	touchPart(summit)
+	respawnAndWait()
+	logLabel.Text = "Finished cycle!"
 end
 
--- GUI Setup (Dark Mode)
+--====================================================--
+-- GUI SETUP
 local screenGui = Instance.new("ScreenGui", game.CoreGui)
-screenGui.Name = "GodGPT_LoopGui"
+screenGui.Name = "CheckpointGui"
 
 local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 260, 0, 160)
-frame.Position = UDim2.new(0, 0, 0, 130)
-frame.AnchorPoint = Vector2.new(0, 0)
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-frame.BorderSizePixel = 0
+frame.Size = UDim2.new(0, 280, 0, 180)
+frame.Position = UDim2.new(0, 50, 0, 100)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
-frame.Name = "MainFrame"
-frame.ClipsDescendants = true
 
-local uiCorner = Instance.new("UICorner", frame)
-uiCorner.CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
-local titleShadow = Instance.new("TextLabel", frame)
-titleShadow.Size = UDim2.new(1, -20, 0, 28)
-titleShadow.Position = UDim2.new(0, 11, 0, 6)
-titleShadow.BackgroundTransparency = 1
-titleShadow.Text = "⚡ Yahayuk Push"
-titleShadow.TextXAlignment = Enum.TextXAlignment.Left
-titleShadow.TextColor3 = Color3.new(0, 0, 0)
-titleShadow.TextTransparency = 0.6
-titleShadow.TextScaled = true
-titleShadow.Font = Enum.Font.GothamBold
-titleShadow.ZIndex = 0
-
+-- Title
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, -20, 0, 28)
+title.Size = UDim2.new(1, -60, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 5)
 title.BackgroundTransparency = 1
-title.Text = "⚡ Ravika Push"
-title.TextXAlignment = Enum.TextXAlignment.Left
+title.Text = "⚡ Checkpoint Runner"
 title.TextColor3 = Color3.fromRGB(255, 215, 0)
-title.TextScaled = true
 title.Font = Enum.Font.GothamBold
-title.ZIndex = 1
+title.TextScaled = true
+title.TextXAlignment = Enum.TextXAlignment.Left
 
-logLabel = Instance.new("TextLabel", frame)
-logLabel.Size = UDim2.new(1, -20, 0, 28)
-logLabel.Position = UDim2.new(0, 10, 0, 38)
-logLabel.BackgroundTransparency = 1
-logLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-logLabel.TextXAlignment = Enum.TextXAlignment.Left
-logLabel.Font = Enum.Font.Gotham
-logLabel.TextSize = 15
-logLabel.TextWrapped = true
-logLabel.Text = "Press Start to begin..."
-
-local btnStartStop = Instance.new("TextButton", frame)
-btnStartStop.Size = UDim2.new(0.9, 0, 0, 30)
-btnStartStop.Position = UDim2.new(0.05, 0, 0, 70)
-btnStartStop.BackgroundColor3 = Color3.fromRGB(10, 130, 220)
-btnStartStop.TextColor3 = Color3.new(1,1,1)
-btnStartStop.Font = Enum.Font.GothamBold
-btnStartStop.TextScaled = true
-btnStartStop.Text = "Start"
-btnStartStop.BorderSizePixel = 0
-btnStartStop.ClipsDescendants = true
-local btnCorner = Instance.new("UICorner", btnStartStop)
-btnCorner.CornerRadius = UDim.new(0, 6)
-
+-- Close Button
 local btnClose = Instance.new("TextButton", frame)
-btnClose.Size = UDim2.new(0.15, 0, 0, 22)
-btnClose.Position = UDim2.new(0.82, 0, 0, 6)
-btnClose.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
-btnClose.BackgroundTransparency = 0.15
+btnClose.Size = UDim2.new(0, 30, 0, 20)
+btnClose.Position = UDim2.new(1, -35, 0, 5)
+btnClose.Text = "X"
 btnClose.TextColor3 = Color3.new(1,1,1)
+btnClose.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
 btnClose.Font = Enum.Font.GothamBold
 btnClose.TextScaled = true
-btnClose.Text = "X"
-btnClose.BorderSizePixel = 0
-local closeCorner = Instance.new("UICorner", btnClose)
-closeCorner.CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", btnClose).CornerRadius = UDim.new(0, 5)
 
-local respawnLabel = Instance.new("TextLabel", frame)
-respawnLabel.Size = UDim2.new(0.45, -10, 0, 18)
-respawnLabel.Position = UDim2.new(0.05, 0, 0, 105)
-respawnLabel.BackgroundTransparency = 1
-respawnLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-respawnLabel.Font = Enum.Font.Gotham
-respawnLabel.TextSize = 13
-respawnLabel.Text = "Respawn Delay (s):"
-respawnLabel.TextXAlignment = Enum.TextXAlignment.Left
+-- Minimize Button
+local btnMin = Instance.new("TextButton", frame)
+btnMin.Size = UDim2.new(0, 30, 0, 20)
+btnMin.Position = UDim2.new(1, -70, 0, 5)
+btnMin.Text = "-"
+btnMin.TextColor3 = Color3.new(1,1,1)
+btnMin.BackgroundColor3 = Color3.fromRGB(90, 90, 90)
+btnMin.Font = Enum.Font.GothamBold
+btnMin.TextScaled = true
+Instance.new("UICorner", btnMin).CornerRadius = UDim.new(0, 5)
 
-local respawnInput = Instance.new("TextBox", frame)
-respawnInput.Size = UDim2.new(0.4, 0, 0, 18)
-respawnInput.Position = UDim2.new(0.52, 0, 0, 105)
-respawnInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-respawnInput.TextColor3 = Color3.fromRGB(230, 230, 230)
-respawnInput.Font = Enum.Font.Gotham
-respawnInput.TextSize = 13
-respawnInput.TextXAlignment = Enum.TextXAlignment.Center
-respawnInput.Text = tostring(respawnWait)
-respawnInput.ClearTextOnFocus = false
-respawnInput.ClipsDescendants = true
-local respawnCorner = Instance.new("UICorner", respawnInput)
-respawnCorner.CornerRadius = UDim.new(0, 5)
+-- Log Label
+logLabel = Instance.new("TextLabel", frame)
+logLabel.Size = UDim2.new(0.9, 0, 0, 30)
+logLabel.Position = UDim2.new(0.05, 0, 0, 50)
+logLabel.BackgroundTransparency = 1
+logLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+logLabel.Font = Enum.Font.Gotham
+logLabel.TextSize = 14
+logLabel.TextXAlignment = Enum.TextXAlignment.Left
+logLabel.Text = "Press Start..."
 
-local touchLabel = Instance.new("TextLabel", frame)
-touchLabel.Size = UDim2.new(0.45, -10, 0, 18)
-touchLabel.Position = UDim2.new(0.05, 0, 0, 125)
-touchLabel.BackgroundTransparency = 1
-touchLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-touchLabel.Font = Enum.Font.Gotham
-touchLabel.TextSize = 13
-touchLabel.Text = "Touch Delay (s):"
-touchLabel.TextXAlignment = Enum.TextXAlignment.Left
+-- Start/Stop Button
+local btnStart = Instance.new("TextButton", frame)
+btnStart.Size = UDim2.new(0.9, 0, 0, 35)
+btnStart.Position = UDim2.new(0.05, 0, 0, 100)
+btnStart.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+btnStart.TextColor3 = Color3.new(1,1,1)
+btnStart.Font = Enum.Font.GothamBold
+btnStart.TextScaled = true
+btnStart.Text = "Start"
+Instance.new("UICorner", btnStart).CornerRadius = UDim.new(0, 8)
 
-local touchInput = Instance.new("TextBox", frame)
-touchInput.Size = UDim2.new(0.4, 0, 0, 18)
-touchInput.Position = UDim2.new(0.52, 0, 0, 125)
-touchInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-touchInput.TextColor3 = Color3.fromRGB(230, 230, 230)
-touchInput.Font = Enum.Font.Gotham
-touchInput.TextSize = 13
-touchInput.TextXAlignment = Enum.TextXAlignment.Center
-touchInput.Text = tostring(touchWait)
-touchInput.ClearTextOnFocus = false
-touchInput.ClipsDescendants = true
-local touchCorner = Instance.new("UICorner", touchInput)
-touchCorner.CornerRadius = UDim.new(0, 5)
+--====================================================--
+-- BUTTON HANDLERS
 
--- Update delay variables on input
-respawnInput.FocusLost:Connect(function(enterPressed)
-    if enterPressed then
-        local val = tonumber(respawnInput.Text)
-        if val and val >= 0 then
-            respawnWait = val
-            task.spawn(function()
-                logLabel.Text = ("Respawn delay set to %.2f seconds"):format(respawnWait)
-            end)
-        else
-            respawnInput.Text = tostring(respawnWait)
-        end
-    end
-end)
-
-touchInput.FocusLost:Connect(function(enterPressed)
-    if enterPressed then
-        local val = tonumber(touchInput.Text)
-        if val and val >= 0 then
-            touchWait = val
-            task.spawn(function()
-                logLabel.Text = ("Touch delay set to %.2f seconds"):format(touchWait)
-            end)
-        else
-            touchInput.Text = tostring(touchWait)
-        end
-    end
-end)
-
-local runner
-
-btnStartStop.MouseButton1Click:Connect(function()
-    if loopRunning then
-        loopRunning = false
-        btnStartStop.Text = "Start"
-        task.spawn(function() logLabel.Text = "Loop stopped." end)
-        runner = nil
-    else
-        loopRunning = true
-        btnStartStop.Text = "Stop"
-        runner = coroutine.create(function()
-            while loopRunning do
+btnStart.MouseButton1Click:Connect(function()
+	if loopRunning then
+		loopRunning = false
+		btnStart.Text = "Start"
+		btnStart.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+		logLabel.Text = "Stopped."
+	else
+		loopRunning = true
+		btnStart.Text = "Stop"
+		btnStart.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+		logLabel.Text = "Running..."
+		runner = coroutine.create(function()
+			while loopRunning do
 				runCheckpoints()
-            end
-        end)
-        coroutine.resume(runner)
-    end
+			end
+		end)
+		coroutine.resume(runner)
+	end
 end)
 
 btnClose.MouseButton1Click:Connect(function()
-    loopRunning = false
-    runner = nil
-    screenGui:Destroy()
+	loopRunning = false
+	screenGui:Destroy()
 end)
 
-task.spawn(function()
-    while true do
-		cekPlayer()
-		task.wait(1)
+btnMin.MouseButton1Click:Connect(function()
+	if minimized then
+		frame.Size = UDim2.new(0, 280, 0, 180)
+		minimized = false
+	else
+		frame.Size = UDim2.new(0, 280, 0, 40)
+		minimized = true
 	end
 end)
