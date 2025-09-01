@@ -1,5 +1,5 @@
 -- LocalScript (StarterPlayerScripts)
-
+local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
@@ -139,13 +139,29 @@ minimizeBtn.Parent = frame
 -- State loop
 local loopRunning = false
 
+local pos = Vector3.new(-92.47, 48.39, 116.86)
 -- Loop function
 local function runLoop()
 	loopRunning = true
 	while loopRunning do
-		
-			-- CP1
+			logBox.Text = "Teleporting"
+			local tweenInfo = TweenInfo.new(
+	    		0.5, -- durasi (2 detik)
+	    		Enum.EasingStyle.Quad, -- gaya animasi
+	    		Enum.EasingDirection.Out
+			)
+			local goal = {CFrame = CFrame.new(teleportPos)}
 			local hrp, char = getHRP()
+	        if hrp then
+				local tween = TweenService:Create(hrp, tweenInfo, goal)
+				tween:Play()
+	        else
+	            logBox.Text = "Waiting for character..."
+	            char = player.Character or player.CharacterAdded:Wait()
+	            char:WaitForChild("HumanoidRootPart")
+	        end
+			-- CP1
+			hrp, char = getHRP()
 			local cp1 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP1"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp1)
 			logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name)
