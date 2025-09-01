@@ -26,6 +26,13 @@ local function getHRP()
 	return char:WaitForChild("HumanoidRootPart"), char
 end
 
+local function tweenHRP(hrp, targetCFrame)
+	local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
+	tween:Play()
+	tween.Completed:Wait() -- tunggu selesai sebelum lanjut
+end
+
 --================= AUTO LEAVE PART =================--
 local blacklist = {
     "kigenteji", 
@@ -145,21 +152,9 @@ local function runLoop()
 	loopRunning = true
 	while loopRunning do
 			logBox.Text = "Teleporting"
-			local tweenInfo = TweenInfo.new(
-	    		0.5, -- durasi (2 detik)
-	    		Enum.EasingStyle.Quad, -- gaya animasi
-	    		Enum.EasingDirection.Out
-			)
-			local goal = {CFrame = CFrame.new(pos)}
 			local hrp, char = getHRP()
-	        if hrp then
-				local tween = TweenService:Create(hrp, tweenInfo, goal)
-				tween:Play()
-	        else
-	            logBox.Text = "Waiting for character..."
-	            char = player.Character or player.CharacterAdded:Wait()
-	            char:WaitForChild("HumanoidRootPart")
-	        end
+	       	tweenHRP(hrp, CFrame.new(-92.47, 48.39, 116.86))
+		
 			-- CP1
 			task.wait(10)
 			hrp, char = getHRP()
