@@ -74,6 +74,8 @@ local function respawnAndWait()
 end
 
 local function touchPart(part)
+	local char = player.Character or player.CharacterAdded:Wait()
+    local hrpNow = char:WaitForChild("HumanoidRootPart")
     if part and part:IsA("BasePart") and hrp then
         firetouchinterest(hrp, part, 0)
         task.wait(0.1)
@@ -85,7 +87,6 @@ end
 
 -- Run checkpoint + summit sequence
 local function runCheckpoints()
-	task.spawn(function() logLabel.Text = "TESTTTT" end)
     local checkpointsFolder = workspace:WaitForChild("Checkpoints")
     local summit = workspace:WaitForChild("SummitPart")
   
@@ -278,7 +279,10 @@ btnStartStop.MouseButton1Click:Connect(function()
         btnStartStop.Text = "Stop"
         runner = coroutine.create(function()
             while loopRunning do
-				      runCheckpoints()
+				local success, msg = pcall(runCheckpoints)
+                if not success then
+                    task.spawn(function() logLabel.Text = "Error: "..tostring(msg) end)
+                end
             end
         end)
         coroutine.resume(runner)
