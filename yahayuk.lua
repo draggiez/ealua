@@ -91,46 +91,52 @@ local function runLoop()
 			local cp1 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP1"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp1)
 			logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name)
+			task.wait(2)	
 			killCharacter()
-			task.wait(15)
+			task.wait(20)
 			
 			-- CP2
 			hrp, char = getHRP()
 			local cp2 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP2"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp2)
 			logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name)
+			task.wait(2)	
 			killCharacter()
-			task.wait(15)
+			task.wait(30)
 		
 			-- CP3
 			hrp, char = getHRP()
 			local cp3 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP3"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp3)
 			logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name)
+			task.wait(2)
 			killCharacter()
-			task.wait(15)
+			task.wait(40)
 
 			-- CP4
 			hrp, char = getHRP()
 			local cp4 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP4"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp4)
 			logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name)
+			task.wait(2)
 			killCharacter()
-			task.wait(15)
+			task.wait(50)
 
 			-- CP5
 			hrp, char = getHRP()	
 			local cp5 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP5"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp5)
 			logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
+			task.wait(2)
 			killCharacter()
-			task.wait(15)
+			task.wait(20)
 		
 			-- Summit
 			hrp, char = getHRP()	
 			local summit = workspace:FindFirstChild("SummitPart")
 			fireTouch(hrp, summit)
 			logBox.Text = "FireTouch ke Summit"
+			task.wait(2)
 			killCharacter()
 			task.wait(15)
 	end
