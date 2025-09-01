@@ -5,7 +5,6 @@ local player = Players.LocalPlayer
 
 --// Workspace checkpoints
 local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
-local summit = workspace:FindFirstChild("SummitPart")
 
 -- Fungsi FireTouch
 local function fireTouch(part1, part2)
@@ -93,7 +92,7 @@ local function runLoop()
 			fireTouch(hrp, cp1)
 			logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name)
 			killCharacter()
-			task.wait(10)
+			task.wait(15)
 			
 			-- CP2
 			hrp, char = getHRP()
@@ -101,7 +100,7 @@ local function runLoop()
 			fireTouch(hrp, cp2)
 			logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name)
 			killCharacter()
-			task.wait(10)
+			task.wait(15)
 		
 			-- CP3
 			hrp, char = getHRP()
@@ -109,7 +108,7 @@ local function runLoop()
 			fireTouch(hrp, cp3)
 			logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name)
 			killCharacter()
-			task.wait(10)
+			task.wait(15)
 
 			-- CP4
 			hrp, char = getHRP()
@@ -117,7 +116,7 @@ local function runLoop()
 			fireTouch(hrp, cp4)
 			logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name)
 			killCharacter()
-			task.wait(10)
+			task.wait(15)
 
 			-- CP5
 			hrp, char = getHRP()	
@@ -125,8 +124,15 @@ local function runLoop()
 			fireTouch(hrp, cp5)
 			logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name)
 			killCharacter()
-			task.wait(10)
-
+			task.wait(15)
+		
+			-- Summit
+			hrp, char = getHRP()	
+			local summit = workspace:FindFirstChild("SummitPart")
+			fireTouch(hrp, summit)
+			logBox.Text = "FireTouch ke Summit"
+			killCharacter()
+			task.wait(15)
 	end
 end
 
