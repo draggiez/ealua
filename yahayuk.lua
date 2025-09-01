@@ -191,7 +191,7 @@ local function runLoop()
 			task.wait(60)
 		
 			hrp, char = getHRP()
-	       	tweenHRP(hrp, CFrame.new(-377.77, 108.82, -26.18))
+	       	tweenHRP(hrp, CFrame.new(-805.50, 379.81, -217.39))
 			
 			-- Summit
 			hrp, char = getHRP()	
