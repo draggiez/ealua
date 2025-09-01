@@ -88,6 +88,7 @@ end
 local renderConn
 local rendering = false
 local function startRender(pos)
+	local hrp, char = getHRP()
     stopRender()
     rendering = true
     renderConn = RunService.RenderStepped:Connect(function()
@@ -233,7 +234,7 @@ local function runLoop()
 		task.wait(2)
 
 		--=======================================
-		hrp, char = getHRP()
+		
 		freezeCharacter()
 		for i, pos in ipairs(checkpointsCamera) do
     		renderAtPosition(pos)
