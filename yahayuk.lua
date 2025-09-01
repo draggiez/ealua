@@ -161,6 +161,7 @@ local function runLoop()
 	            char:WaitForChild("HumanoidRootPart")
 	        end
 			-- CP1
+			task.wait(10)
 			hrp, char = getHRP()
 			local cp1 = workspace:WaitForChild("Checkpoints"):WaitForChild("CP1"):WaitForChild("TouchPart") 
 			fireTouch(hrp, cp1)
