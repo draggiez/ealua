@@ -1,28 +1,40 @@
---// Services
+-- LocalScript (StarterPlayerScripts)
+
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 --// Workspace checkpoints
-local checkpointsFolder = workspace:WaitForChild("Checkpoints")
-local summit = workspace:WaitForChild("SummitPart")
+local checkpointsFolder = workspace:FindFirstChild("Checkpoints")
+local summit = workspace:FindFirstChild("SummitPart")
 
---// Simpan semua checkpoint ke dalam table
+-- Kumpulin CP (hanya yang ada)
 local checkpoints = {}
-for i = 1, 5 do
-	local cp = checkpointsFolder:WaitForChild("CP"..i):WaitForChild("TouchPart")
-	table.insert(checkpoints, cp)
+if checkpointsFolder then
+	for i = 1, 5 do
+		local cp = checkpointsFolder:FindFirstChild("CP"..i)
+		if cp and cp:FindFirstChild("TouchPart") then
+			table.insert(checkpoints, cp.TouchPart)
+			print("✅ Masukin", cp.Name)
+		else
+			warn("⚠️ CP"..i.." atau TouchPart tidak ketemu, dilewati")
+		end
+	end
 end
-table.insert(checkpoints, summit)
+if summit then
+	table.insert(checkpoints, summit)
+	print("✅ SummitPart dimasukkan")
+end
 
---// FireTouch function
+-- Fungsi FireTouch
 local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 0)
 	firetouchinterest(part1, part2, 1)
 end
 
---// GUI Setup
+--// GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
+screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
@@ -31,115 +43,111 @@ frame.Position = UDim2.new(0, 20, 0.5, -90)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Parent = screenGui
 
--- header
-local header = Instance.new("Frame")
-header.Size = UDim2.new(1, 0, 0, 30)
-header.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-header.Parent = frame
-
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -60, 1, 0)
-title.Position = UDim2.new(0, 5, 0, 0)
-title.BackgroundTransparency = 1
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 title.Text = "Checkpoint Toucher"
+title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
-title.TextSize = 16
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Parent = header
+title.TextSize = 18
+title.Parent = frame
 
--- close button
-local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 30, 1, 0)
-closeBtn.Position = UDim2.new(1, -30, 0, 0)
-closeBtn.Text = "X"
-closeBtn.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
-closeBtn.TextColor3 = Color3.new(1,1,1)
-closeBtn.Font = Enum.Font.SourceSansBold
-closeBtn.TextSize = 14
-closeBtn.Parent = header
-
--- minimize button
-local minBtn = Instance.new("TextButton")
-minBtn.Size = UDim2.new(0, 30, 1, 0)
-minBtn.Position = UDim2.new(1, -60, 0, 0)
-minBtn.Text = "-"
-minBtn.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
-minBtn.TextColor3 = Color3.new(1,1,1)
-minBtn.Font = Enum.Font.SourceSansBold
-minBtn.TextSize = 14
-minBtn.Parent = header
-
--- content
-local content = Instance.new("Frame")
-content.Size = UDim2.new(1, 0, 1, -30)
-content.Position = UDim2.new(0, 0, 0, 30)
-content.BackgroundTransparency = 1
-content.Parent = frame
-
-local listLayout = Instance.new("UIListLayout")
-listLayout.Padding = UDim.new(0, 5)
-listLayout.FillDirection = Enum.FillDirection.Vertical
-listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-listLayout.VerticalAlignment = Enum.VerticalAlignment.Top
-listLayout.Parent = content
-
--- tombol Start
 local startBtn = Instance.new("TextButton")
-startBtn.Size = UDim2.new(1, -10, 0, 30)
+startBtn.Size = UDim2.new(0.5, -15, 0, 30)
+startBtn.Position = UDim2.new(0, 10, 0, 40)
 startBtn.Text = "Start Loop"
 startBtn.BackgroundColor3 = Color3.fromRGB(60, 200, 100)
 startBtn.TextColor3 = Color3.new(1,1,1)
 startBtn.Font = Enum.Font.SourceSansBold
 startBtn.TextSize = 16
-startBtn.Parent = content
+startBtn.Parent = frame
 
--- tombol Stop
 local stopBtn = Instance.new("TextButton")
-stopBtn.Size = UDim2.new(1, -10, 0, 30)
+stopBtn.Size = UDim2.new(0.5, -15, 0, 30)
+stopBtn.Position = UDim2.new(0.5, 5, 0, 40)
 stopBtn.Text = "Stop Loop"
 stopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 60)
 stopBtn.TextColor3 = Color3.new(1,1,1)
 stopBtn.Font = Enum.Font.SourceSansBold
 stopBtn.TextSize = 16
-stopBtn.Parent = content
+stopBtn.Parent = frame
 
--- log box (1 baris)
 local logBox = Instance.new("TextLabel")
-logBox.Size = UDim2.new(1, -10, 0, 30)
+logBox.Size = UDim2.new(1, -20, 0, 30)
+logBox.Position = UDim2.new(0, 10, 0, 90)
 logBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 logBox.TextColor3 = Color3.new(1,1,1)
 logBox.Font = Enum.Font.Code
 logBox.TextSize = 14
 logBox.TextXAlignment = Enum.TextXAlignment.Left
-logBox.TextYAlignment = Enum.TextYAlignment.Center
 logBox.Text = "Log: Ready"
-logBox.Parent = content
+logBox.Parent = frame
 
--- loop state
+-- State loop
 local loopRunning = false
 
--- fungsi loop
-local function runLoop()
-	loopRunning = true
-	while loopRunning do
-		local char = player.Character or player.CharacterAdded:Wait()
-		local hrp = char:WaitForChild("HumanoidRootPart")
-
-		for _, cp in ipairs(checkpoints) do
-			if not loopRunning then break end
-			fireTouch(hrp, cp)
-
-			local msg = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-			print(msg)
-			logBox.Text = msg
-
-			task.wait(1) -- delay antar CP
+-- Loop function
+-- Fungsi untuk ambil checkpoints terbaru
+local function getCheckpoints()
+	local cps = {}
+	local folder = workspace:FindFirstChild("Checkpoints")
+	if folder then
+		for i = 1, 5 do
+			local cp = folder:FindFirstChild("CP"..i)
+			if cp and cp:FindFirstChild("TouchPart") then
+				table.insert(cps, cp.TouchPart)
+			end
 		end
 	end
+	local summit = workspace:FindFirstChild("SummitPart")
+	if summit then
+		table.insert(cps, summit)
+	end
+	return cps
 end
 
--- event button
+-- Loop function
+local function runLoop()
+	loopRunning = true
+
+	for i = 1, 6 do -- 5 CP + Summit
+		if not loopRunning then break end
+
+		-- scan ulang CP
+		local cps = getCheckpoints()
+		local cp = cps[i]
+		if cp then
+			-- pastikan character ready
+			local char = player.Character or player.CharacterAdded:Wait()
+			local hrp = char:WaitForChild("HumanoidRootPart")
+
+			-- sentuh CP
+			fireTouch(hrp, cp)
+			local msg = "Scan & Touch -> " .. (cp.Parent.Name or cp.Name)
+			print(msg)
+			logBox.Text = msg
+		else
+			logBox.Text = "⚠️ CP"..i.." tidak ditemukan"
+			warn("Checkpoint "..i.." tidak ditemukan")
+		end
+
+		-- respawn setelah CP
+		player:LoadCharacter()
+		logBox.Text = "Respawning..."
+		print("Respawning...")
+
+		-- tunggu karakter baru ready
+		player.CharacterAdded:Wait()
+
+		task.wait(1) -- jeda supaya stabil
+	end
+
+	loopRunning = false
+	logBox.Text = "✅ Semua CP selesai discan"
+end
+
+
+-- Event tombol
 startBtn.MouseButton1Click:Connect(function()
 	if not loopRunning then
 		task.spawn(runLoop)
@@ -149,12 +157,4 @@ end)
 stopBtn.MouseButton1Click:Connect(function()
 	loopRunning = false
 	logBox.Text = "Loop dihentikan"
-end)
-
-closeBtn.MouseButton1Click:Connect(function()
-	screenGui:Destroy()
-end)
-
-minBtn.MouseButton1Click:Connect(function()
-	content.Visible = not content.Visible
 end)
