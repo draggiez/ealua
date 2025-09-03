@@ -12,13 +12,13 @@ local teleportPos = CFrame.new(61, 93, -113)
 local loopRunning = false
 
 -- CP
-local pos1 = Vector3.new(-782.99, 87.03, -650.32), -- cp1
-local pos2 = Vector3.new(-985.72, 182.07, -81.32), -- cp2
-local pos3 = Vector3.new(-952.87, 178.25, 809.87),-- cp3
-local pos4 = Vector3.new(797.29, 184.63, 875.85),-- cp4
-local pos5 = Vector3.new(973.33, 97.97, 135.15),-- cp5
-local pos6 = Vector3.new(980.60, 112.06, -535.60),-- cp6
-local pos7 = Vector3.new(402.23, 121.33, -229.17),-- cp7
+local pos1 = Vector3.new(-782.99, 87.03, -650.32) -- cp1
+local pos2 = Vector3.new(-985.72, 182.07, -81.32) -- cp2
+local pos3 = Vector3.new(-952.87, 178.25, 809.87) -- cp3
+local pos4 = Vector3.new(797.29, 184.63, 875.85)  -- cp4
+local pos5 = Vector3.new(973.33, 97.97, 135.15)   -- cp5
+local pos6 = Vector3.new(980.60, 112.06, -535.60) -- cp6
+local pos7 = Vector3.new(402.23, 121.33, -229.17) -- cp7
 
 
 -- Lama nunggu di tiap titik (detik)
@@ -116,7 +116,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "Checkpoint touch v0.4"
+local rev = "Checkpoint touch v0.5"
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
