@@ -71,8 +71,8 @@ end
 -- end
 local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
-    local humanoid = character:WaitForChild("Humanoid")
-    local hrp = character:WaitForChild("HumanoidRootPart")
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
     return hrp, humanoid, char
 end
 --=============== KILL =================--
