@@ -1,104 +1,325 @@
 --// Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local StarterGui = game:GetService("StarterGui")
+local TweenService = game:GetService("TweenService")
 
---// Player setup
+--// Player Setup
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local hrp = character:WaitForChild("HumanoidRootPart")
 
---// Anti Fall Damage
-humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
-humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+-- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
+local basePos = Vector3.new(61, 94, -113)
+local teleportPos = CFrame.new(61, 93, -113)
+local loopRunning = false
 
+-- CP
+local pos1 = Vector3.new(-782.99, 87.03, -650.32) -- cp1
+local pos2 = Vector3.new(-985.72, 182.07, -81.32) -- cp2
+local pos3 = Vector3.new(-952.87, 178.25, 809.87) -- cp3
+local pos4 = Vector3.new(797.29, 184.63, 875.85)  -- cp4
+local pos5 = Vector3.new(973.33, 97.97, 135.15)   -- cp5
+local pos6 = Vector3.new(980.60, 112.06, -535.60) -- cp6
+local pos7 = Vector3.new(402.23, 121.33, -229.17) -- cp7
+
+
+-- Lama nunggu di tiap titik (detik)
+local renderWait = 2
+
+--================= AUTO LEAVE PART =================--
+-- [Blacklist]
+local blacklist = {
+    "KLT_KILAT", -- Bagus
+    "YinnSTier", -- Yin
+	"zyuuo00", -- Izaki
+	"ziiKT7", -- Zii
+	"dikaading", -- Akid
+	"EclairEcr", -- Ecr
+	"exARTHA", -- Artha
+	"lelekrecing", -- Lelek
+	"yudhaprihardana", -- Dika
+	"sudrajad69",
+	"sudrajad"
+}
+
+-- [Player Join Listener]
+Players.PlayerAdded:Connect(function(p)
+    if p ~= player and table.find(blacklist, p.Name) then
+        warn("Keluar karena " .. p.Name .. " join!")
+        player:Kick("Keluar karena " .. p.Name .. " join!") 
+    end
+end)
+
+-- [Get Player List]
+local function cekPlayer()
+	for _, p in pairs(Players:GetPlayers()) do
+	    if p ~= player then
+		    if table.find(blacklist, p.Name) then
+        		addLog("Keluar karena " .. p.Name .. " join!", "🚨")
+        		player:Kick("Keluar karena " .. p.Name .. " join!") -- kick ke menu	
+			end
+		end
+	end
+end	
+
+--================= HRP =================--
+local function getHRP()
+    local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    return hrp, humanoid, char
+end
+--=============== KILL =================--
+local function killCharacter()
+	local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Health = 0
+    end
+end
+
+--=============== TOUCH =================--
+local function fireTouch(part1, part2)
+	firetouchinterest(part1, part2, 0)
+	firetouchinterest(part1, part2, 1)
+end
+
+--============== RENDER =================--
+local function renderAtPosition(pos)
+	local hrp = getHRP()
+	local duration = renderWait  -- lama waktu render (detik)
+    local startTime = tick()
+
+    -- Loop per-frame
+    while tick() - startTime < duration do
+        RunService.RenderStepped:Wait()
+        hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
+    end
+end
+
+--============== TWEEN =================--
+local function tweenHRP(hrp, targetCFrame)
+	local tweenInfo = TweenInfo.new(30,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
+	tween:Play()
+	tween.Completed:Wait()
+end
+
+--============== FREEZE ===============--
 local function freezeCharacter()
+	local hrp, humanoid = getHRP()
     hrp.Anchored = true
     humanoid.PlatformStand = true
 end
 
 local function unfreezeCharacter()
+	local hrp, humanoid = getHRP()
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
 
--- Posisi asli
-local originalCFrame = hrp.CFrame
+--============= CP ====================--
+local function scanCheckpoint(cpName, pos, waitTime)
+	while loopRunning do
+		local cpFolder = workspace:FindFirstChild("CheckPoint")
+		local cp = cpFolder and cpFolder:FindFirstChild(cpName)
 
--- Daftar koordinat (contoh beberapa titik)
-local checkpoints = {
-    Vector3.new(-782.99, 87.03, -650.32), -- cp1
-    Vector3.new(-985.72, 182.07, -81.32), -- cp2
-    Vector3.new(-952.87, 178.25, 809.87),-- cp3
-    Vector3.new(797.29, 184.63, 875.85),-- cp4
-    Vector3.new(973.33, 97.97, 135.15),-- cp5
-	Vector3.new(980.60, 112.06, -535.60),-- cp6
-	Vector3.new(402.23, 121.33, -229.17)-- cp7
-}
+		if cp and cp:IsA("BasePart") then
+			local hrp, _, _ = getHRP()
+			if hrp then
+				fireTouch(hrp, cp)
+				logBox.Text = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+			end
+			task.wait(waitTime or 20) -- default 20 detik
+			break
+		else
+			logBox.Text = "Rendering " .. cpName
+			freezeCharacter()
+			renderAtPosition(pos)
+			renderAtPosition(basePos)
+			unfreezeCharacter()
+			task.wait(1)
+		end
+	end
+end
 
-local renderWait = 3 -- lama nunggu tiap titik
-
---// GUI Setup
+local rev = "Checkpoint touch v0.7  "
+--============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "RenderProgressGui"
+screenGui.Name = "CheckpointGUI"
+screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 80)
-frame.Position = UDim2.new(0.5, -150, 0.1, 0)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-frame.BackgroundTransparency = 0.2
+frame.Size = UDim2.new(0, 300, 0, 180)
+frame.Position = UDim2.new(0, 20, 0.5, -90)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Parent = screenGui
+frame.Active = true
+frame.Draggable = true
+frame.ClipsDescendants = true
 
-local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, 0, 0.6, 0)
-label.Position = UDim2.new(0, 0, 0, 0)
-label.BackgroundTransparency = 1
-label.TextColor3 = Color3.fromRGB(255, 255, 255)
-label.Font = Enum.Font.SourceSansBold
-label.TextSize = 20
-label.Text = "Render Progress"
-label.Parent = frame
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+title.Text = rev
+title.TextColor3 = Color3.new(1,1,1)
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 18
+title.Parent = frame
 
-local progressBar = Instance.new("Frame")
-progressBar.Size = UDim2.new(0, 0, 0.3, 0)
-progressBar.Position = UDim2.new(0, 0, 0.65, 0)
-progressBar.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-progressBar.BorderSizePixel = 0
-progressBar.Parent = frame
+local startBtn = Instance.new("TextButton")
+startBtn.Size = UDim2.new(0.5, -15, 0, 30)
+startBtn.Position = UDim2.new(0, 10, 0, 40)
+startBtn.Text = "Start Loop"
+startBtn.BackgroundColor3 = Color3.fromRGB(60, 200, 100)
+startBtn.TextColor3 = Color3.new(1,1,1)
+startBtn.Font = Enum.Font.SourceSansBold
+startBtn.TextSize = 16
+startBtn.Parent = frame
 
--- Fungsi render ke titik
-local function flyTo(pos, index, total)
-    local flying = true
-    local conn
+local stopBtn = Instance.new("TextButton")
+stopBtn.Size = UDim2.new(0.5, -15, 0, 30)
+stopBtn.Position = UDim2.new(0.5, 5, 0, 40)
+stopBtn.Text = "Stop Loop"
+stopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 60)
+stopBtn.TextColor3 = Color3.new(1,1,1)
+stopBtn.Font = Enum.Font.SourceSansBold
+stopBtn.TextSize = 16
+stopBtn.Parent = frame
 
-    label.Text = string.format("(%d/%d) Render: %s", index, total, tostring(pos))
-    progressBar.Size = UDim2.new(index/total, 0, 0.3, 0)
+local logBox = Instance.new("TextLabel")
+logBox.Size = UDim2.new(1, -20, 0, 30)
+logBox.Position = UDim2.new(0, 10, 0, 90)
+logBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+logBox.TextColor3 = Color3.new(1,1,1)
+logBox.Font = Enum.Font.Code
+logBox.TextSize = 14
+logBox.TextXAlignment = Enum.TextXAlignment.Left
+logBox.Text = "Log: Ready"
+logBox.Parent = frame
 
-    conn = RunService.RenderStepped:Connect(function()
-        if flying then
-            hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
+-- Tambahkan tombol Close dan Minimize
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 0)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.Font = Enum.Font.SourceSansBold
+closeBtn.TextSize = 16
+closeBtn.Parent = frame
+
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+minimizeBtn.Position = UDim2.new(1, -70, 0, 0)
+minimizeBtn.Text = "-"
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+minimizeBtn.TextColor3 = Color3.new(1,1,1)
+minimizeBtn.Font = Enum.Font.SourceSansBold
+minimizeBtn.TextSize = 16
+minimizeBtn.Parent = frame
+
+-- State loop
+local loopRunning = false
+
+-- Loop function
+local function runLoop()
+	loopRunning = true
+	while loopRunning do
+		local hrp = getHRP()
+		logBox.Text = "Teleporting"
+		tweenHRP(hrp, teleportPos)
+		task.wait(2)
+
+		scanCheckpoint("CheckPoint1", pos1, 20)
+		scanCheckpoint("CheckPoint2", pos2, 20)
+		scanCheckpoint("CheckPoint3", pos3, 20)
+		scanCheckpoint("CheckPoint4", pos4, 20)
+		scanCheckpoint("CheckPoint5", pos5, 20)
+		scanCheckpoint("CheckPoint6", pos6, 20)
+		scanCheckpoint("CheckPoint7", pos7, 20)
+		
+		--=================================================================== SUMMIT
+		hrp = getHRP()
+		local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
+		fireTouch(hrp, summit)
+		logBox.Text = "FireTouch ke Summit"
+		task.wait(2)
+
+		--=================================================================== SPAWN
+		killCharacter()
+		task.wait(5)
+	end
+end
+-- Event tombol
+startBtn.MouseButton1Click:Connect(function()
+	if not loopRunning then
+		task.spawn(runLoop)
+	end
+end)
+
+stopBtn.MouseButton1Click:Connect(function()
+	loopRunning = false
+	logBox.Text = "Loop dihentikan"
+end)
+
+-- Close GUI
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+-- Minimize GUI (toggle frame visibility except title bar)
+local minimized = false
+minimizeBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    for _, child in ipairs(frame:GetChildren()) do
+        if child ~= title and child ~= closeBtn and child ~= minimizeBtn then
+            child.Visible = not minimized
         end
-    end)
+    end
+    -- Optional: adjust frame size when minimized
+    if minimized then
+        frame.Size = UDim2.new(0, 300, 0, 35)
+    else
+        frame.Size = UDim2.new(0, 300, 0, 180)
+    end
+end)
 
-    task.wait(renderWait)
+-- Make frame draggable
+local UserInputService = game:GetService("UserInputService")
+local dragging = false
+local dragStart = nil
+local startPos = nil
 
-    flying = false
-    conn:Disconnect()
-end
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
 
--- Loop semua koordinat
-freezeCharacter()
-for i, pos in ipairs(checkpoints) do
-    flyTo(pos, i, #checkpoints)
-end
-unfreezeCharacter()
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        if dragging and dragStart then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end
+end)
 
--- Balik ke posisi asli
-hrp.CFrame = originalCFrame
-
-label.Text = "Selesai render semua titik!"
-task.wait(2)
-screenGui:Destroy()
+task.spawn(function()
+    while true do
+		cekPlayer()
+		task.wait(1)
+	end
+end)
