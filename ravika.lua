@@ -117,7 +117,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "Checkpoint touch v0.2"
+local rev = "Checkpoint touch v0.3"
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -221,51 +221,51 @@ local function runLoop()
 		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
 		fireTouch(hrp, cp1)
 		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
-		task.wait(10)
-		-- -- CP2
-		-- hrp, humanoid, char = getHRP()
-		-- local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
-		-- fireTouch(hrp, cp2)
-		-- logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name).."2"
-		-- task.wait(10)
-		-- -- CP3
-		-- hrp, humanoid, char = getHRP()
-		-- local cp3 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint3") 
-		-- fireTouch(hrp, cp3)
-		-- logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name).."3"
-		-- task.wait(10)
-		-- -- CP4
-		-- hrp, humanoid, char = getHRP()
-		-- local cp4 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint4") 
-		-- fireTouch(hrp, cp4)
-		-- logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name).."4"
-		-- task.wait(10)
-		-- -- CP5
-		-- hrp, humanoid, char = getHRP()
-		-- local cp5 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint5") 
-		-- fireTouch(hrp, cp5)
-		-- logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name).."5"
-		-- task.wait(10)
-		-- -- CP6
-		-- hrp, humanoid, char = getHRP()
-		-- local cp6 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint6") 
-		-- fireTouch(hrp, cp6)
-		-- logBox.Text = "FireTouch ke " .. (cp6.Parent.Name or cp6.Name).."6"
-		-- task.wait(10)
-		-- -- CP7
-		-- hrp, humanoid, char = getHRP()
-		-- local cp7 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint7") 
-		-- fireTouch(hrp, cp7)
-		-- logBox.Text = "FireTouch ke " .. (cp7.Parent.Name or cp7.Name).."7"
-		-- task.wait(10)
-		-- -- Summit
-		-- hrp, humanoid, char = getHRP()
-		-- local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
-		-- fireTouch(hrp, summit)
-		-- logBox.Text = "FireTouch ke Summit"
-		-- task.wait(2)
-		-- killCharacter()
-		-- task.wait(5)
+		task.wait(20)
+		-- CP2
+		hrp = getHRP()
+		local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
+		fireTouch(hrp, cp2)
+		logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name).."2"
+		task.wait(20)
+		-- CP3
+		hrp = getHRP()
+		local cp3 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint3") 
+		fireTouch(hrp, cp3)
+		logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name).."3"
+		task.wait(20)
+		-- CP4
+		hrp = getHRP()
+		local cp4 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint4") 
+		fireTouch(hrp, cp4)
+		logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name).."4"
+		task.wait(20)
+		-- CP5
+		hrp = getHRP()
+		local cp5 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint5") 
+		fireTouch(hrp, cp5)
+		logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name).."5"
+		task.wait(20)
+		-- CP6
+		hrp = getHRP()
+		local cp6 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint6") 
+		fireTouch(hrp, cp6)
+		logBox.Text = "FireTouch ke " .. (cp6.Parent.Name or cp6.Name).."6"
+		task.wait(20)
+		-- CP7
+		hrp = getHRP()
+		local cp7 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint7") 
+		fireTouch(hrp, cp7)
+		logBox.Text = "FireTouch ke " .. (cp7.Parent.Name or cp7.Name).."7"
+		task.wait(20)
+		-- Summit
+		hrp = getHRP()
+		local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
+		fireTouch(hrp, summit)
+		logBox.Text = "FireTouch ke Summit"
+		task.wait(2)
+		killCharacter()
+		task.wait(5)
 	end
 end
 -- Event tombol
