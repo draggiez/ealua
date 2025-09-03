@@ -116,7 +116,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "Checkpoint touch v0.8   "
+local rev = "Ravika Push v0.8   "
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
