@@ -139,7 +139,7 @@ end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
-	local tweenInfo = TweenInfo.new(70,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(40,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
 	tween:Play()
 	tween.Completed:Wait()
