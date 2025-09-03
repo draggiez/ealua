@@ -7,20 +7,19 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
 -- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
+local basePos = Vector3.new(61, 94, -113)
 local teleportPos = CFrame.new(61, 93, -113)
 local loopRunning = false
 
 -- CP
-local checkpointsCamera = {
-    Vector3.new(-782.99, 87.03, -650.32), -- cp1
-    Vector3.new(-985.72, 182.07, -81.32), -- cp2
-    Vector3.new(-952.87, 178.25, 809.87),-- cp3
-    Vector3.new(797.29, 184.63, 875.85),-- cp4
-    Vector3.new(973.33, 97.97, 135.15),-- cp5
-	Vector3.new(980.60, 112.06, -535.60),-- cp6
-	Vector3.new(402.23, 121.33, -229.17),-- cp7
-	Vector3.new(61, 94, -113)
-}
+local pos1 = Vector3.new(-782.99, 87.03, -650.32) -- cp1
+local pos2 = Vector3.new(-985.72, 182.07, -81.32) -- cp2
+local pos3 = Vector3.new(-952.87, 178.25, 809.87) -- cp3
+local pos4 = Vector3.new(797.29, 184.63, 875.85)  -- cp4
+local pos5 = Vector3.new(973.33, 97.97, 135.15)   -- cp5
+local pos6 = Vector3.new(980.60, 112.06, -535.60) -- cp6
+local pos7 = Vector3.new(402.23, 121.33, -229.17) -- cp7
+
 
 -- Lama nunggu di tiap titik (detik)
 local renderWait = 2
@@ -117,7 +116,33 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "Checkpoint touch v0.2"
+--============= CP ====================--
+local function scanCheckpoint(cpName, pos, waitTime)
+	local cp
+	while loopRunning do
+		local cpFolder = workspace:FindFirstChild("CheckPoint")
+		cp = cpFolder and cpFolder:FindFirstChild(cpName)
+
+		if cp and cp:IsA("BasePart") then
+			local hrp, _, _ = getHRP()
+			if hrp then
+				fireTouch(hrp, cp)
+				logBox.Text = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
+			end
+			task.wait(waitTime or 20) -- default 20 detik
+			break
+		else
+			logBox.Text = "Rendering " .. cpName
+			freezeCharacter()
+			renderAtPosition(pos)
+			renderAtPosition(basePos)
+			unfreezeCharacter()
+			task.wait(1)
+		end
+	end
+end
+
+local rev = "Checkpoint touch v0.7.1   "
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -140,6 +165,7 @@ title.Text = rev
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 18
+title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = frame
 
 local startBtn = Instance.new("TextButton")
@@ -187,7 +213,7 @@ closeBtn.Parent = frame
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
 minimizeBtn.Position = UDim2.new(1, -70, 0, 0)
-minimizeBtn.Text = "_"
+minimizeBtn.Text = "-"
 minimizeBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 minimizeBtn.TextColor3 = Color3.new(1,1,1)
 minimizeBtn.Font = Enum.Font.SourceSansBold
@@ -202,70 +228,28 @@ local function runLoop()
 	loopRunning = true
 	while loopRunning do
 		local hrp = getHRP()
-		logBox.Text = "Teleporting"
-		tweenHRP(hrp, teleportPos)
+		-- logBox.Text = "Teleporting"
+		-- tweenHRP(hrp, teleportPos)
 		task.wait(2)
 
-		--=======================================
-		logBox.Text = "Rendering"
-		freezeCharacter()
-		for i, pos in ipairs(checkpointsCamera) do
-		    renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
-		end
-		unfreezeCharacter()
-		task.wait(2)
-		--=======================================
+		scanCheckpoint("CheckPoint1", pos1, 20)
+		scanCheckpoint("CheckPoint2", pos2, 20)
+		scanCheckpoint("CheckPoint3", pos3, 20)
+		scanCheckpoint("CheckPoint4", pos4, 20)
+		scanCheckpoint("CheckPoint5", pos5, 20)
+		scanCheckpoint("CheckPoint6", pos6, 20)
+		scanCheckpoint("CheckPoint7", pos7, 20)
 		
-		-- CP1
-		hrp = getHRP()
-		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
-		fireTouch(hrp, cp1)
-		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
-		task.wait(10)
-		-- -- CP2
-		-- hrp, humanoid, char = getHRP()
-		-- local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
-		-- fireTouch(hrp, cp2)
-		-- logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name).."2"
-		-- task.wait(10)
-		-- -- CP3
-		-- hrp, humanoid, char = getHRP()
-		-- local cp3 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint3") 
-		-- fireTouch(hrp, cp3)
-		-- logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name).."3"
-		-- task.wait(10)
-		-- -- CP4
-		-- hrp, humanoid, char = getHRP()
-		-- local cp4 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint4") 
-		-- fireTouch(hrp, cp4)
-		-- logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name).."4"
-		-- task.wait(10)
-		-- -- CP5
-		-- hrp, humanoid, char = getHRP()
-		-- local cp5 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint5") 
-		-- fireTouch(hrp, cp5)
-		-- logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name).."5"
-		-- task.wait(10)
-		-- -- CP6
-		-- hrp, humanoid, char = getHRP()
-		-- local cp6 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint6") 
-		-- fireTouch(hrp, cp6)
-		-- logBox.Text = "FireTouch ke " .. (cp6.Parent.Name or cp6.Name).."6"
-		-- task.wait(10)
-		-- -- CP7
-		-- hrp, humanoid, char = getHRP()
-		-- local cp7 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint7") 
-		-- fireTouch(hrp, cp7)
-		-- logBox.Text = "FireTouch ke " .. (cp7.Parent.Name or cp7.Name).."7"
-		-- task.wait(10)
-		-- -- Summit
-		-- hrp, humanoid, char = getHRP()
+		--=================================================================== SUMMIT
+		-- hrp = getHRP()
 		-- local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
 		-- fireTouch(hrp, summit)
 		-- logBox.Text = "FireTouch ke Summit"
 		-- task.wait(2)
-		-- killCharacter()
-		-- task.wait(5)
+
+		--=================================================================== SPAWN
+		killCharacter()
+		task.wait(5)
 	end
 end
 -- Event tombol
