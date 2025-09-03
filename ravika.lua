@@ -116,8 +116,6 @@ local function unfreezeCharacter()
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
-
-local rev = "v0.2"
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -136,7 +134,7 @@ frame.ClipsDescendants = true
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
 title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-title.Text = "Ravika Push"..rev
+title.Text = "Ravika Push v0.2"
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 18
