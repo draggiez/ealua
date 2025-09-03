@@ -207,10 +207,10 @@ local function runLoop()
 
 		-- CP1
 		logBox.Text = "Rendering"
-		freezeCharacter()
-		renderAtPosition(pos1)  -- tiap titik ditahan selama renderWait detik
-		renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		unfreezeCharacter()
+		-- freezeCharacter()
+		-- renderAtPosition(pos1)  -- tiap titik ditahan selama renderWait detik
+		-- renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
+		-- unfreezeCharacter()
 		hrp = getHRP()
 		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
 		fireTouch(hrp, cp1)
