@@ -82,7 +82,7 @@ local function tweenHRP(hrp, targetCFrame)
 	tween.Completed:Wait()
 end
 
-local rev = "✨ Saranjana v0.1  "
+local rev = "✨ Mount Momo v0.1  "
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
