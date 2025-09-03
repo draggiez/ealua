@@ -249,15 +249,15 @@ local function runLoop()
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
 
-		-- --=======================================
-		-- hrp, humanoid, char = getHRP()
-		-- freezeCharacter()
-		-- for i, pos in ipairs(checkpointsCamera) do
-		--     renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
-		-- end
-		-- unfreezeCharacter()
-		-- task.wait(2)
-		-- --=======================================
+		--=======================================
+		hrp, humanoid, char = getHRP()
+		freezeCharacter()
+		for i, pos in ipairs(checkpointsCamera) do
+		    renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
+		end
+		unfreezeCharacter()
+		task.wait(2)
+		--=======================================
 		
 		-- -- CP1
 		-- hrp, humanoid, char = getHRP()
