@@ -117,7 +117,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "Checkpoint touch 1"
+local rev = "Checkpoint touch v0.2"
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -216,12 +216,12 @@ local function runLoop()
 		task.wait(2)
 		--=======================================
 		
-		-- -- CP1
-		-- hrp, humanoid, char = getHRP()
-		-- local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
-		-- fireTouch(hrp, cp1)
-		-- logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
-		-- task.wait(10)
+		-- CP1
+		hrp, humanoid, char = getHRP()
+		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
+		fireTouch(hrp, cp1)
+		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
+		task.wait(10)
 		-- -- CP2
 		-- hrp, humanoid, char = getHRP()
 		-- local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
