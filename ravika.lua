@@ -116,6 +116,8 @@ local function unfreezeCharacter()
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
+
+local rev = "Checkpoint touch 1"
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -134,7 +136,7 @@ frame.ClipsDescendants = true
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
 title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-title.Text = "Ravika Push v0.2"
+title.Text = rev
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 18
@@ -214,8 +216,8 @@ local function runLoop()
 		task.wait(2)
 		--=======================================
 		
-		-- CP1
-		-- hrp = getHRP()
+		-- -- CP1
+		-- hrp, humanoid, char = getHRP()
 		-- local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
 		-- fireTouch(hrp, cp1)
 		-- logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
