@@ -5,9 +5,9 @@ local TweenService = game:GetService("TweenService")
 
 --// Player Setup
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local hrp = character:WaitForChild("HumanoidRootPart")
+-- local character = player.Character or player.CharacterAdded:Wait()
+-- local humanoid = character:WaitForChild("Humanoid")
+-- local hrp = character:WaitForChild("HumanoidRootPart")
 
 local teleportPos = CFrame.new(61, 93, -113)
 -- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
@@ -65,11 +65,16 @@ local function cekPlayer()
 end	
 
 --================= HRP =================--
+-- local function getHRP()
+-- 	local char = player.Character or player.CharacterAdded:Wait()
+-- 	return char:WaitForChild("HumanoidRootPart"), char
+-- end
 local function getHRP()
-	local char = player.Character or player.CharacterAdded:Wait()
-	return char:WaitForChild("HumanoidRootPart"), char
+    local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local hrp = character:WaitForChild("HumanoidRootPart")
+    return hrp, humanoid, char
 end
-
 --=============== KILL =================--
 local function killCharacter()
 	local char = player.Character or player.CharacterAdded:Wait()
@@ -139,7 +144,7 @@ end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
-	local tweenInfo = TweenInfo.new(40,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(35,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
 	tween:Play()
 	tween.Completed:Wait()
@@ -240,64 +245,64 @@ local function runLoop()
 	loopRunning = true
 	while loopRunning do
 		logBox.Text = "Teleporting"
-		local hrp, char = getHRP()
+		local hrp, humanoid, char = getHRP()
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
 
 		--=======================================
-		hrp, char = getHRP()
-		--freezeCharacter()
+		hrp, humanoid, char = getHRP()
+		freezeCharacter()
 		for i, pos in ipairs(checkpointsCamera) do
 		    renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
 		end
-		--unfreezeCharacter()
+		unfreezeCharacter()
 		task.wait(2)
 		--=======================================
 		
 		-- CP1
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
 		fireTouch(hrp, cp1)
 		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
 		task.wait(10)
 		-- CP2
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
 		fireTouch(hrp, cp2)
 		logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name).."2"
 		task.wait(10)
 		-- CP3
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local cp3 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint3") 
 		fireTouch(hrp, cp3)
 		logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name).."3"
 		task.wait(10)
 		-- CP4
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local cp4 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint4") 
 		fireTouch(hrp, cp4)
 		logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name).."4"
 		task.wait(10)
 		-- CP5
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local cp5 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint5") 
 		fireTouch(hrp, cp5)
 		logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name).."5"
 		task.wait(10)
 		-- CP6
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local cp6 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint6") 
 		fireTouch(hrp, cp6)
 		logBox.Text = "FireTouch ke " .. (cp6.Parent.Name or cp6.Name).."6"
 		task.wait(10)
 		-- CP7
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local cp7 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint7") 
 		fireTouch(hrp, cp7)
 		logBox.Text = "FireTouch ke " .. (cp7.Parent.Name or cp7.Name).."7"
 		task.wait(10)
 		-- Summit
-		hrp, char = getHRP()
+		hrp, humanoid, char = getHRP()
 		local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
 		fireTouch(hrp, summit)
 		logBox.Text = "FireTouch ke Summit"
