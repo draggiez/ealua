@@ -152,11 +152,17 @@ end
 
 --============== FREEZE ===============--
 local function freezeCharacter()
+	local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
     hrp.Anchored = true
     humanoid.PlatformStand = true
 end
 
 local function unfreezeCharacter()
+	local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
@@ -251,7 +257,6 @@ local function runLoop()
 
 		--=======================================
 		logBox.Text = "Rendering"
-		hrp, humanoid, char = getHRP()
 		freezeCharacter()
 		for i, pos in ipairs(checkpointsCamera) do
 		    renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
