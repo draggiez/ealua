@@ -201,8 +201,8 @@ local loopRunning = false
 local function runLoop()
 	loopRunning = true
 	while loopRunning do
-		logBox.Text = "Teleporting"
 		local hrp = getHRP()
+		logBox.Text = "Teleporting"
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
 
@@ -217,7 +217,7 @@ local function runLoop()
 		--=======================================
 		
 		-- CP1
-		hrp, humanoid, char = getHRP()
+		hrp = getHRP()
 		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
 		fireTouch(hrp, cp1)
 		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
