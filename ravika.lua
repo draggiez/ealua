@@ -82,7 +82,9 @@ end
 --=============== TOUCH =================--
 local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 0)
+	task.wait(0.1)
 	firetouchinterest(part1, part2, 1)
+	task.wait(touchDelay)
 end
 
 --============== RENDER =================--
@@ -119,7 +121,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "Ravika Push v1.0   "
+local rev = "✨ Ravika Push v1.1   "
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -228,29 +230,6 @@ touchBox.Parent = frame
 -- State loop
 local loopRunning = false
 
--- CP Function
-local function scanCheckpoint(cpName, pos, waitTime)
-	while loopRunning do
-		local cpFolder = workspace:FindFirstChild("CheckPoint")
-		local cp = cpFolder and cpFolder:FindFirstChild(cpName)
-		
-		if cp and cp:IsA("BasePart") then
-			local hrp = getHRP()
-			fireTouch(hrp, cp)
-			logBox.Text = "FireTouch ke " .. cpName
-			task.wait(waitTime or 20)
-			break
-		else
-			logBox.Text = "Rendering " .. cpName
-			freezeCharacter()
-			renderAtPosition(pos)
-			renderAtPosition(basePos)
-			unfreezeCharacter()
-			task.wait(1)
-		end
-	end
-end
-
 -- Loop function
 local function runLoop()
 	loopRunning = true
@@ -259,6 +238,28 @@ local function runLoop()
 		logBox.Text = "Teleporting"
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
+		
+		-- CP Function
+		local function scanCheckpoint(cpName, pos, waitTime)
+			while loopRunning do
+				local cpFolder = workspace:FindFirstChild("CheckPoint")
+				local cp = cpFolder and cpFolder:FindFirstChild(cpName)
+				
+				if cp and cp:IsA("BasePart") then
+					local hrp = getHRP()
+					logBox.Text = "FireTouch ke " .. cpName
+					fireTouch(hrp, cp)
+					break
+				else
+					logBox.Text = "Rendering " .. cpName
+					freezeCharacter()
+					renderAtPosition(pos)
+					renderAtPosition(basePos)
+					unfreezeCharacter()
+					task.wait(1)
+				end
+			end
+		end
 		
 		-- Pemanggilan satu-satu
 		scanCheckpoint("CheckPoint1", pos1, 20)
