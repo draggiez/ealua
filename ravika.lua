@@ -22,6 +22,7 @@ local pos7 = Vector3.new(402.23, 121.33, -229.17) -- cp7
 
 -- Default
 local tweenSpeed = 30
+local touchDelay = 20
 
 -- Lama nunggu di tiap titik (detik)
 local renderWait = 2
@@ -227,6 +228,29 @@ touchBox.Parent = frame
 -- State loop
 local loopRunning = false
 
+-- CP Function
+local function scanCheckpoint(cpName, pos, waitTime)
+	while loopRunning do
+		local cpFolder = workspace:FindFirstChild("CheckPoint")
+		local cp = cpFolder and cpFolder:FindFirstChild(cpName)
+		
+		if cp and cp:IsA("BasePart") then
+			local hrp = getHRP()
+			fireTouch(hrp, cp)
+			logBox.Text = "FireTouch ke " .. cpName
+			task.wait(waitTime or 20)
+			break
+		else
+			logBox.Text = "Rendering " .. cpName
+			freezeCharacter()
+			renderAtPosition(pos)
+			renderAtPosition(basePos)
+			unfreezeCharacter()
+			task.wait(1)
+		end
+	end
+end
+
 -- Loop function
 local function runLoop()
 	loopRunning = true
@@ -235,29 +259,6 @@ local function runLoop()
 		logBox.Text = "Teleporting"
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
-
-		local touchDelay = 20
-		local function scanCheckpoint(cpName, pos, waitTime)
-			while loopRunning do
-				local cpFolder = workspace:FindFirstChild("CheckPoint")
-				local cp = cpFolder and cpFolder:FindFirstChild(cpName)
-		
-				if cp and cp:IsA("BasePart") then
-					local hrp = getHRP()
-					fireTouch(hrp, cp)
-					logBox.Text = "FireTouch ke " .. cpName
-					task.wait(waitTime or 20)
-					break
-				else
-					logBox.Text = "Rendering " .. cpName
-					freezeCharacter()
-					renderAtPosition(pos)
-					renderAtPosition(basePos)
-					unfreezeCharacter()
-					task.wait(1)
-				end
-			end
-		end
 		
 		-- Pemanggilan satu-satu
 		scanCheckpoint("CheckPoint1", pos1, 20)
