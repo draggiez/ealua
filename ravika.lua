@@ -5,12 +5,9 @@ local TweenService = game:GetService("TweenService")
 
 --// Player Setup
 local player = Players.LocalPlayer
--- local character = player.Character or player.CharacterAdded:Wait()
--- local humanoid = character:WaitForChild("Humanoid")
--- local hrp = character:WaitForChild("HumanoidRootPart")
 
-local teleportPos = CFrame.new(61, 93, -113)
 -- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
+local teleportPos = CFrame.new(61, 93, -113)
 local loopRunning = false
 
 -- CP
@@ -90,8 +87,10 @@ local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 1)
 end
 
+--============== RENDER =================--
 local function renderAtPosition(pos)
-    local duration = renderWait  -- lama waktu render (detik)
+	local hrp = getHRP()
+	local duration = renderWait  -- lama waktu render (detik)
     local startTime = tick()
 
     -- Loop per-frame
@@ -100,47 +99,6 @@ local function renderAtPosition(pos)
         hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
     end
 end
--- --============== RENDER =================--
--- local renderConn
--- local rendering = false
--- local function startRender(pos)
--- 	local hrp, char = getHRP()
---     stopRender()
---     rendering = true
---     renderConn = RunService.RenderStepped:Connect(function()
---         if rendering then
---             hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
---         end
---     end)
--- end
-
--- function stopRender()
---     rendering = false
---     if renderConn then
---         renderConn:Disconnect()
---         renderConn = nil
---     end
--- end
-
--- local function renderAtPosition(pos)
---     startRender(pos)
---     task.wait(renderWait)
---     stopRender()
--- end
--- --============== RENDER =================--
--- local function renderAtPosition(pos, index, total)
---     local flying = true
---     local conn
-
---     conn = RunService.RenderStepped:Connect(function()
---         if flying then
---             hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
---         end
---     end)
---     task.wait(renderWait)
---     flying = false
---     conn:Disconnect()
--- end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
@@ -152,17 +110,13 @@ end
 
 --============== FREEZE ===============--
 local function freezeCharacter()
-	local char = player.Character or player.CharacterAdded:Wait()
-    local humanoid = char:WaitForChild("Humanoid")
-    local hrp = char:WaitForChild("HumanoidRootPart")
+	local hrp, humanoid = getHRP()
     hrp.Anchored = true
     humanoid.PlatformStand = true
 end
 
 local function unfreezeCharacter()
-	local char = player.Character or player.CharacterAdded:Wait()
-    local humanoid = char:WaitForChild("Humanoid")
-    local hrp = char:WaitForChild("HumanoidRootPart")
+	local hrp, humanoid = getHRP()
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
