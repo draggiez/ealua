@@ -9,10 +9,25 @@ local player = Players.LocalPlayer
 -- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local loopRunning = false
 local tweenSpeed = 0.5
-
+284.17, 14.01, 318.61
+208.22, 50.83, 456.21
+-28.80, 54.71, 315.69
+-332.00, 65.60, 214.00
+-592.00, 99.76, -78.00
+-992.00, 99.50, -4.00
+-1464.00, 126.45, 318.00
+-1648.14, 203.53, 167.78
+-2011.51, 289.82, 84.62
 -- CP
-local start = CFrame.new(-43.81, 3.09, -19.30)
-local ending = CFrame.new(-7460.98, 1167.55, -5100.18)
+local pos1 = CFrame.new(284.17, 14.01, 318.61)
+local pos2 = CFrame.new(208.22, 50.83, 456.21)
+local pos3 = CFrame.new(-28.80, 54.71, 315.69)
+local pos4 = CFrame.new(-332.00, 65.60, 214.00)
+local pos5 = CFrame.new(-592.00, 99.76, -78.00)
+local pos6 = CFrame.new(-992.00, 99.50, -4.00)
+local pos7 = CFrame.new(-1464.00, 126.45, 318.00)
+local pos8 = CFrame.new(-1648.14, 203.53, 167.78)
+local summit = CFrame.new(-2011.51, 289.82, 84.62)
 
 --================= AUTO LEAVE PART =================--
 -- [Blacklist]
@@ -169,6 +184,11 @@ tweenBox.Font = Enum.Font.Code
 tweenBox.TextSize = 14
 tweenBox.Parent = frame
 
+local positions = {
+    pos1, pos2, pos3, pos4,
+    pos5, pos6, pos7, pos8
+}
+
 -- State loop
 local loopRunning = false
 
@@ -179,13 +199,18 @@ local function runLoop()
     
     --=================================================================== BEGIN
 		local hrp = getHRP()
-		logBox.Text = "To StartZone"
-		tweenHRP(hrp, start)
-		task.wait(1)
+		
+		-- looping tiap posisi
+		for i, pos in ipairs(positions) do
+		    hrp = getHRP()
+			logBox.Text = "Pos" .. i
+		    tweenHRP(hrp, pos)
+		    task.wait(1)
+		end
     
-    hrp = getHRP()
-    logBox.Text = "To EndingPart"
-		tweenHRP(hrp, start)
+    	hrp = getHRP()
+    	logBox.Text = "To Summit"
+		tweenHRP(hrp, summit)
 		task.wait(1)
 
 		--=================================================================== SPAWN
