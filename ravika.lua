@@ -84,7 +84,7 @@ local function fireTouch(part1, part2)
 end
 
 local function renderAtPosition(pos)
-	local hrp, = getHRP()
+	local hrp, humanoid, char = getHRP()
     local duration = renderWait  -- lama waktu render (detik)
     local startTime = tick()
 
@@ -105,13 +105,13 @@ end
 
 --============== FREEZE ===============--
 local function freezeCharacter()
-	local hrp, humanoid = getHRP()
+	local hrp, humanoid, char = getHRP()
     hrp.Anchored = true
     humanoid.PlatformStand = true
 end
 
 local function unfreezeCharacter()
-	local hrp, humanoid = getHRP()
+	local hrp, humanoid, char = getHRP()
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
@@ -216,11 +216,11 @@ local function runLoop()
 		--=======================================
 		
 		-- CP1
-		hrp = getHRP()
-		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
-		fireTouch(hrp, cp1)
-		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
-		task.wait(5)
+		-- hrp = getHRP()
+		-- local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
+		-- fireTouch(hrp, cp1)
+		-- logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
+		-- task.wait(5)
 		-- -- CP2
 		-- hrp, humanoid, char = getHRP()
 		-- local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
