@@ -9,15 +9,7 @@ local player = Players.LocalPlayer
 -- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local loopRunning = false
 local tweenSpeed = 0.5
-284.17, 14.01, 318.61
-208.22, 50.83, 456.21
--28.80, 54.71, 315.69
--332.00, 65.60, 214.00
--592.00, 99.76, -78.00
--992.00, 99.50, -4.00
--1464.00, 126.45, 318.00
--1648.14, 203.53, 167.78
--2011.51, 289.82, 84.62
+
 -- CP
 local pos1 = CFrame.new(284.17, 14.01, 318.61)
 local pos2 = CFrame.new(208.22, 50.83, 456.21)
