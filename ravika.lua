@@ -5,9 +5,12 @@ local TweenService = game:GetService("TweenService")
 
 --// Player Setup
 local player = Players.LocalPlayer
+-- local character = player.Character or player.CharacterAdded:Wait()
+-- local humanoid = character:WaitForChild("Humanoid")
+-- local hrp = character:WaitForChild("HumanoidRootPart")
 
--- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local teleportPos = CFrame.new(61, 93, -113)
+-- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
 local loopRunning = false
 
 -- CP
@@ -62,6 +65,10 @@ local function cekPlayer()
 end	
 
 --================= HRP =================--
+-- local function getHRP()
+-- 	local char = player.Character or player.CharacterAdded:Wait()
+-- 	return char:WaitForChild("HumanoidRootPart"), char
+-- end
 local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
     local humanoid = char:WaitForChild("Humanoid")
@@ -84,7 +91,6 @@ local function fireTouch(part1, part2)
 end
 
 local function renderAtPosition(pos)
-	local hrp, humanoid, char = getHRP()
     local duration = renderWait  -- lama waktu render (detik)
     local startTime = tick()
 
@@ -94,10 +100,51 @@ local function renderAtPosition(pos)
         hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
     end
 end
+-- --============== RENDER =================--
+-- local renderConn
+-- local rendering = false
+-- local function startRender(pos)
+-- 	local hrp, char = getHRP()
+--     stopRender()
+--     rendering = true
+--     renderConn = RunService.RenderStepped:Connect(function()
+--         if rendering then
+--             hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
+--         end
+--     end)
+-- end
+
+-- function stopRender()
+--     rendering = false
+--     if renderConn then
+--         renderConn:Disconnect()
+--         renderConn = nil
+--     end
+-- end
+
+-- local function renderAtPosition(pos)
+--     startRender(pos)
+--     task.wait(renderWait)
+--     stopRender()
+-- end
+-- --============== RENDER =================--
+-- local function renderAtPosition(pos, index, total)
+--     local flying = true
+--     local conn
+
+--     conn = RunService.RenderStepped:Connect(function()
+--         if flying then
+--             hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
+--         end
+--     end)
+--     task.wait(renderWait)
+--     flying = false
+--     conn:Disconnect()
+-- end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
-	local tweenInfo = TweenInfo.new(30,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(35,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
 	tween:Play()
 	tween.Completed:Wait()
@@ -105,13 +152,17 @@ end
 
 --============== FREEZE ===============--
 local function freezeCharacter()
-	local hrp, humanoid, char = getHRP()
+	local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
     hrp.Anchored = true
     humanoid.PlatformStand = true
 end
 
 local function unfreezeCharacter()
-	local hrp, humanoid, char = getHRP()
+	local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
@@ -199,9 +250,8 @@ local loopRunning = false
 local function runLoop()
 	loopRunning = true
 	while loopRunning do
-		local hrp, humanoid, char = getHRP()
-		
 		logBox.Text = "Teleporting"
+		local hrp, humanoid, char = getHRP()
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
 
@@ -215,12 +265,12 @@ local function runLoop()
 		task.wait(2)
 		--=======================================
 		
-		-- CP1
-		-- hrp = getHRP()
+		-- -- CP1
+		-- hrp, humanoid, char = getHRP()
 		-- local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
 		-- fireTouch(hrp, cp1)
 		-- logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
-		-- task.wait(5)
+		-- task.wait(10)
 		-- -- CP2
 		-- hrp, humanoid, char = getHRP()
 		-- local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
