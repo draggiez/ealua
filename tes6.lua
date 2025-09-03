@@ -20,6 +20,9 @@ local pos5 = Vector3.new(973.33, 97.97, 135.15)   -- cp5
 local pos6 = Vector3.new(980.60, 112.06, -535.60) -- cp6
 local pos7 = Vector3.new(402.23, 121.33, -229.17) -- cp7
 
+-- Default
+local tweenSpeed = 30
+local touchDelay = 20
 
 -- Lama nunggu di tiap titik (detik)
 local renderWait = 2
@@ -79,7 +82,9 @@ end
 --=============== TOUCH =================--
 local function fireTouch(part1, part2)
 	firetouchinterest(part1, part2, 0)
+	task.wait(0.1)
 	firetouchinterest(part1, part2, 1)
+	task.wait(touchDelay)
 end
 
 --============== RENDER =================--
@@ -97,7 +102,7 @@ end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
-	local tweenInfo = TweenInfo.new(30,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(tweenSpeed,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
 	tween:Play()
 	tween.Completed:Wait()
@@ -116,7 +121,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "Checkpoint touch v0.5.1 "
+local rev = "✨ Ravika Push v1.1   "
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -139,7 +144,12 @@ title.Text = rev
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 18
+title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = frame
+
+local padding = Instance.new("UIPadding")
+padding.PaddingLeft = UDim.new(0, 10) -- geser kanan 10 pixel
+padding.Parent = title
 
 local startBtn = Instance.new("TextButton")
 startBtn.Size = UDim2.new(0.5, -15, 0, 30)
@@ -186,12 +196,36 @@ closeBtn.Parent = frame
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
 minimizeBtn.Position = UDim2.new(1, -70, 0, 0)
-minimizeBtn.Text = "_"
+minimizeBtn.Text = "-"
 minimizeBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 minimizeBtn.TextColor3 = Color3.new(1,1,1)
 minimizeBtn.Font = Enum.Font.SourceSansBold
 minimizeBtn.TextSize = 16
 minimizeBtn.Parent = frame
+
+-- Tween Speed Input
+local tweenBox = Instance.new("TextBox")
+tweenBox.Size = UDim2.new(0.5, -15, 0, 25)
+tweenBox.Position = UDim2.new(0, 10, 0, 130)
+tweenBox.PlaceholderText = "Tween Speed (detik)"
+tweenBox.Text = tostring(tweenSpeed)
+tweenBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+tweenBox.TextColor3 = Color3.new(1,1,1)
+tweenBox.Font = Enum.Font.Code
+tweenBox.TextSize = 14
+tweenBox.Parent = frame
+
+-- Touch Delay Input
+local touchBox = Instance.new("TextBox")
+touchBox.Size = UDim2.new(0.5, -15, 0, 25)
+touchBox.Position = UDim2.new(0.5, 5, 0, 130)
+touchBox.PlaceholderText = "Touch Delay (detik)"
+touchBox.Text = tostring(touchDelay)
+touchBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+touchBox.TextColor3 = Color3.new(1,1,1)
+touchBox.Font = Enum.Font.Code
+touchBox.TextSize = 14
+touchBox.Parent = frame
 
 -- State loop
 local loopRunning = false
@@ -204,105 +238,51 @@ local function runLoop()
 		logBox.Text = "Teleporting"
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
-
-		-- CP1
-		logBox.Text = "Rendering"
-		freezeCharacter()
-		renderAtPosition(pos1)  -- tiap titik ditahan selama renderWait detik
-		renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		unfreezeCharacter()
-    task.wait(2)
 		
-    hrp = getHRP()
-		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
-		fireTouch(hrp, cp1)
-		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
-		task.wait(5)
+		-- CP Function
+		local function scanCheckpoint(cpName, pos, waitTime)
+			while loopRunning do
+				local cpFolder = workspace:FindFirstChild("CheckPoint")
+				local cp = cpFolder and cpFolder:FindFirstChild(cpName)
+				
+				if cp and cp:IsA("BasePart") then
+					local hrp = getHRP()
+					logBox.Text = "FireTouch ke " .. cpName
+					fireTouch(hrp, cp)
+					break
+				else
+					logBox.Text = "Rendering " .. cpName
+					freezeCharacter()
+					renderAtPosition(pos)
+					renderAtPosition(basePos)
+					unfreezeCharacter()
+					task.wait(1)
+				end
+			end
+		end
+		
+		-- Pemanggilan satu-satu
+		scanCheckpoint("CheckPoint1", pos1, 20)
+		scanCheckpoint("CheckPoint2", pos2, 20)
+		scanCheckpoint("CheckPoint3", pos3, 20)
+		scanCheckpoint("CheckPoint4", pos4, 20)
+		scanCheckpoint("CheckPoint5", pos5, 20)
+		scanCheckpoint("CheckPoint6", pos6, 20)
+		scanCheckpoint("CheckPoint7", pos7, 20)
+		
+		--=================================================================== SUMMIT
+		hrp = getHRP()
+		local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
+		fireTouch(hrp, summit)
+		logBox.Text = "FireTouch ke Summit"
+		task.wait(2)
+
+		--=================================================================== SPAWN
 		killCharacter()
 		task.wait(5)
-
-		-- -- CP2
-		-- logBox.Text = "Rendering"
-		-- freezeCharacter()
-		-- renderAtPosition(pos2)  -- tiap titik ditahan selama renderWait detik
-		-- renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		-- unfreezeCharacter()
-		-- hrp = getHRP()
-		-- local cp2 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint2") 
-		-- fireTouch(hrp, cp2)
-		-- logBox.Text = "FireTouch ke " .. (cp2.Parent.Name or cp2.Name).."2"
-		-- task.wait(20)
-		
-		-- -- CP3
-		-- logBox.Text = "Rendering"
-		-- freezeCharacter()
-		-- renderAtPosition(pos3)  -- tiap titik ditahan selama renderWait detik
-		-- renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		-- unfreezeCharacter()
-		-- hrp = getHRP()
-		-- local cp3 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint3") 
-		-- fireTouch(hrp, cp3)
-		-- logBox.Text = "FireTouch ke " .. (cp3.Parent.Name or cp3.Name).."3"
-		-- task.wait(20)
-		
-		-- -- CP4
-		-- logBox.Text = "Rendering"
-		-- freezeCharacter()
-		-- renderAtPosition(pos4)  -- tiap titik ditahan selama renderWait detik
-		-- renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		-- unfreezeCharacter()
-		-- hrp = getHRP()
-		-- local cp4 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint4") 
-		-- fireTouch(hrp, cp4)
-		-- logBox.Text = "FireTouch ke " .. (cp4.Parent.Name or cp4.Name).."4"
-		-- task.wait(20)
-		
-		-- -- CP5
-		-- logBox.Text = "Rendering"
-		-- freezeCharacter()
-		-- renderAtPosition(pos5)  -- tiap titik ditahan selama renderWait detik
-		-- renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		-- unfreezeCharacter()
-		-- hrp = getHRP()
-		-- local cp5 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint5") 
-		-- fireTouch(hrp, cp5)
-		-- logBox.Text = "FireTouch ke " .. (cp5.Parent.Name or cp5.Name).."5"
-		-- task.wait(20)
-		
-		-- -- CP6
-		-- logBox.Text = "Rendering"
-		-- freezeCharacter()
-		-- renderAtPosition(pos6)  -- tiap titik ditahan selama renderWait detik
-		-- renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		-- unfreezeCharacter()
-		-- hrp = getHRP()
-		-- local cp6 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint6") 
-		-- fireTouch(hrp, cp6)
-		-- logBox.Text = "FireTouch ke " .. (cp6.Parent.Name or cp6.Name).."6"
-		-- task.wait(20)
-		
-		-- -- CP7
-		-- logBox.Text = "Rendering"
-		-- freezeCharacter()
-		-- renderAtPosition(pos7)  -- tiap titik ditahan selama renderWait detik
-		-- renderAtPosition(basePos)  -- tiap titik ditahan selama renderWait detik
-		-- unfreezeCharacter()
-		-- hrp = getHRP()
-		-- local cp7 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint7") 
-		-- fireTouch(hrp, cp7)
-		-- logBox.Text = "FireTouch ke " .. (cp7.Parent.Name or cp7.Name).."7"
-		-- task.wait(20)
-		
-		-- -- Summit
-		-- hrp = getHRP()
-		-- local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
-		-- fireTouch(hrp, summit)
-		-- logBox.Text = "FireTouch ke Summit"
-		-- task.wait(2)
-		-- killCharacter()
-		-- task.wait(5)
 	end
 end
+
 -- Event tombol
 startBtn.MouseButton1Click:Connect(function()
 	if not loopRunning then
@@ -368,6 +348,31 @@ frame.InputChanged:Connect(function(input)
             )
         end
     end
+end)
+
+-- Update value pas di-enter
+tweenBox.FocusLost:Connect(function(enter)
+	if enter then
+		local val = tonumber(tweenBox.Text)
+		if val and val > 0 then
+			tweenSpeed = val
+			logBox.Text = "Tween Speed diubah ke " .. tweenSpeed
+		else
+			tweenBox.Text = tostring(tweenSpeed)
+		end
+	end
+end)
+
+touchBox.FocusLost:Connect(function(enter)
+	if enter then
+		local val = tonumber(touchBox.Text)
+		if val and val > 0 then
+			touchDelay = val
+			logBox.Text = "Touch Delay diubah ke " .. touchDelay
+		else
+			touchBox.Text = tostring(touchDelay)
+		end
+	end
 end)
 
 task.spawn(function()
