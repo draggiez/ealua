@@ -215,7 +215,9 @@ local function runLoop()
 		local cp1 = workspace:WaitForChild("CheckPoint"):WaitForChild("CheckPoint1") 
 		fireTouch(hrp, cp1)
 		logBox.Text = "FireTouch ke " .. (cp1.Parent.Name or cp1.Name).."1"
-		task.wait(20)
+		-- task.wait(20)
+		killCharacter()
+		task.wait(5)
 
 		-- -- CP2
 		-- logBox.Text = "Rendering"
