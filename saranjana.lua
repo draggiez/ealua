@@ -185,7 +185,7 @@ local function runLoop()
     
     hrp = getHRP()
     logBox.Text = "To EndingPart"
-		tweenHRP(hrp, start)
+		tweenHRP(hrp, ending)
 		task.wait(1)
 
 		--=================================================================== SPAWN
