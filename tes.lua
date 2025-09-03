@@ -7,22 +7,12 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
 -- local teleportPos = Vector3.new(152.98, 82.87, 103.76)
-local basePos = Vector3.new(61, 94, -113)
-local teleportPos = CFrame.new(61, 93, -113)
 local loopRunning = false
+local tweenSpeed = 0.5
 
 -- CP
-local pos1 = Vector3.new(-782.99, 87.03, -650.32) -- cp1
-local pos2 = Vector3.new(-985.72, 182.07, -81.32) -- cp2
-local pos3 = Vector3.new(-952.87, 178.25, 809.87) -- cp3
-local pos4 = Vector3.new(797.29, 184.63, 875.85)  -- cp4
-local pos5 = Vector3.new(973.33, 97.97, 135.15)   -- cp5
-local pos6 = Vector3.new(980.60, 112.06, -535.60) -- cp6
-local pos7 = Vector3.new(402.23, 121.33, -229.17) -- cp7
-
-
--- Lama nunggu di tiap titik (detik)
-local renderWait = 2
+local start = CFrame.new(-43.81, 3.09, -19.30)
+local ending = CFrame.new(-7460.98, 1167.55, -5100.18)
 
 --================= AUTO LEAVE PART =================--
 -- [Blacklist]
@@ -67,6 +57,7 @@ local function getHRP()
     local hrp = char:WaitForChild("HumanoidRootPart")
     return hrp, humanoid, char
 end
+
 --=============== KILL =================--
 local function killCharacter()
 	local char = player.Character or player.CharacterAdded:Wait()
@@ -76,72 +67,15 @@ local function killCharacter()
     end
 end
 
---=============== TOUCH =================--
-local function fireTouch(part1, part2)
-	firetouchinterest(part1, part2, 0)
-	firetouchinterest(part1, part2, 1)
-end
-
---============== RENDER =================--
-local function renderAtPosition(pos)
-	local hrp = getHRP()
-	local duration = renderWait  -- lama waktu render (detik)
-    local startTime = tick()
-
-    -- Loop per-frame
-    while tick() - startTime < duration do
-        RunService.RenderStepped:Wait()
-        hrp.CFrame = CFrame.new(pos + Vector3.new(0, 10, 0))
-    end
-end
-
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
-	local tweenInfo = TweenInfo.new(30,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(tweenSpeed,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
 	tween:Play()
 	tween.Completed:Wait()
 end
 
---============== FREEZE ===============--
-local function freezeCharacter()
-	local hrp, humanoid = getHRP()
-    hrp.Anchored = true
-    humanoid.PlatformStand = true
-end
-
-local function unfreezeCharacter()
-	local hrp, humanoid = getHRP()
-    hrp.Anchored = false
-    humanoid.PlatformStand = false
-end
-
---============= CP ====================--
-local function scanCheckpoint(cpName, pos, waitTime)
-	while loopRunning do
-		local cpFolder = workspace:FindFirstChild("CheckPoint")
-		local cp = cpFolder and cpFolder:FindFirstChild(cpName)
-
-		if cp and cp:IsA("BasePart") then
-			local hrp, _, _ = getHRP()
-			if hrp then
-				fireTouch(hrp, cp)
-				logBox.Text = "FireTouch ke " .. (cp.Parent.Name or cp.Name)
-			end
-			task.wait(waitTime or 20) -- default 20 detik
-			break
-		else
-			logBox.Text = "Rendering " .. cpName
-			freezeCharacter()
-			renderAtPosition(pos)
-			renderAtPosition(basePos)
-			unfreezeCharacter()
-			task.wait(1)
-		end
-	end
-end
-
-local rev = "Checkpoint touch v0.7  "
+local rev = "✨ Saranjana v0.1  "
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -164,7 +98,12 @@ title.Text = rev
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 18
+title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = frame
+
+local padding = Instance.new("UIPadding")
+padding.PaddingLeft = UDim.new(0, 10) -- geser kanan 10 pixel
+padding.Parent = title
 
 local startBtn = Instance.new("TextButton")
 startBtn.Size = UDim2.new(0.5, -15, 0, 30)
@@ -218,6 +157,18 @@ minimizeBtn.Font = Enum.Font.SourceSansBold
 minimizeBtn.TextSize = 16
 minimizeBtn.Parent = frame
 
+-- Tween Speed Input
+local tweenBox = Instance.new("TextBox")
+tweenBox.Size = UDim2.new(0.5, -15, 0, 25)
+tweenBox.Position = UDim2.new(0, 10, 0, 130)
+tweenBox.PlaceholderText = "Tween Speed (detik)"
+tweenBox.Text = tostring(tweenSpeed)
+tweenBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+tweenBox.TextColor3 = Color3.new(1,1,1)
+tweenBox.Font = Enum.Font.Code
+tweenBox.TextSize = 14
+tweenBox.Parent = frame
+
 -- State loop
 local loopRunning = false
 
@@ -225,31 +176,24 @@ local loopRunning = false
 local function runLoop()
 	loopRunning = true
 	while loopRunning do
+    
+    --=================================================================== BEGIN
 		local hrp = getHRP()
-		logBox.Text = "Teleporting"
-		tweenHRP(hrp, teleportPos)
-		task.wait(2)
-
-		scanCheckpoint("CheckPoint1", pos1, 20)
-		scanCheckpoint("CheckPoint2", pos2, 20)
-		scanCheckpoint("CheckPoint3", pos3, 20)
-		scanCheckpoint("CheckPoint4", pos4, 20)
-		scanCheckpoint("CheckPoint5", pos5, 20)
-		scanCheckpoint("CheckPoint6", pos6, 20)
-		scanCheckpoint("CheckPoint7", pos7, 20)
-		
-		--=================================================================== SUMMIT
-		hrp = getHRP()
-		local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
-		fireTouch(hrp, summit)
-		logBox.Text = "FireTouch ke Summit"
-		task.wait(2)
+		logBox.Text = "To StartZone"
+		tweenHRP(hrp, start)
+		task.wait(1)
+    
+    hrp = getHRP()
+    logBox.Text = "To EndingPart"
+		tweenHRP(hrp, start)
+		task.wait(1)
 
 		--=================================================================== SPAWN
 		killCharacter()
 		task.wait(5)
 	end
 end
+
 -- Event tombol
 startBtn.MouseButton1Click:Connect(function()
 	if not loopRunning then
@@ -315,6 +259,19 @@ frame.InputChanged:Connect(function(input)
             )
         end
     end
+end)
+
+-- Update value pas di-enter
+tweenBox.FocusLost:Connect(function(enter)
+	if enter then
+		local val = tonumber(tweenBox.Text)
+		if val and val > 0 then
+			tweenSpeed = val
+			logBox.Text = "Tween Speed diubah ke " .. tweenSpeed
+		else
+			tweenBox.Text = tostring(tweenSpeed)
+		end
+	end
 end)
 
 task.spawn(function()
