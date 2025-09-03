@@ -139,7 +139,7 @@ end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
-	local tweenInfo = TweenInfo.new(60,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(80,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
 	tween:Play()
 	tween.Completed:Wait()
@@ -246,11 +246,11 @@ local function runLoop()
 
 		--=======================================
 		hrp, char = getHRP()
-		freezeCharacter()
+		--freezeCharacter()
 		for i, pos in ipairs(checkpointsCamera) do
 		    renderAtPosition(pos)  -- tiap titik ditahan selama renderWait detik
 		end
-		unfreezeCharacter()
+		--unfreezeCharacter()
 		task.wait(2)
 		--=======================================
 		
