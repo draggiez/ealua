@@ -197,13 +197,13 @@ local function runLoop()
 		    hrp = getHRP()
 			logBox.Text = "Pos" .. i
 		    tweenHRP(hrp, pos)
-		    task.wait(1)
+		    task.wait(2)
 		end
     
     	hrp = getHRP()
     	logBox.Text = "To Summit"
 		tweenHRP(hrp, summit)
-		task.wait(1)
+		task.wait(2)
 
 		--=================================================================== SPAWN
 		killCharacter()
