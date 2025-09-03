@@ -91,7 +91,7 @@ local function fireTouch(part1, part2)
 end
 
 local function renderAtPosition(pos)
-	local hrp = getHRP()
+	local hrp, humanoid, char = getHRP()
     local duration = renderWait  -- lama waktu render (detik)
     local startTime = tick()
 
@@ -153,13 +153,13 @@ end
 
 --============== FREEZE ===============--
 local function freezeCharacter()
-	local hrp, humanoid = getHRP()
+	local hrp, humanoid, char = getHRP()
     hrp.Anchored = true
     humanoid.PlatformStand = true
 end
 
 local function unfreezeCharacter()
-	local hrp, humanoid = getHRP()
+	local hrp, humanoid, char = getHRP()
     hrp.Anchored = false
     humanoid.PlatformStand = false
 end
@@ -247,7 +247,7 @@ local loopRunning = false
 local function runLoop()
 	loopRunning = true
 	while loopRunning do
-		local hrp, char = getHRP()
+		local hrp, humanoid, char = getHRP()
 		
 		logBox.Text = "Teleporting"
 		tweenHRP(hrp, teleportPos)
