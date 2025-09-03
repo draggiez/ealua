@@ -62,10 +62,6 @@ local function cekPlayer()
 end	
 
 --================= HRP =================--
--- local function getHRP()
--- 	local char = player.Character or player.CharacterAdded:Wait()
--- 	return char:WaitForChild("HumanoidRootPart"), char
--- end
 local function getHRP()
     local char = player.Character or player.CharacterAdded:Wait()
     local humanoid = char:WaitForChild("Humanoid")
@@ -102,7 +98,7 @@ end
 
 --============== TWEEN =================--
 local function tweenHRP(hrp, targetCFrame)
-	local tweenInfo = TweenInfo.new(35,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(30,  Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 	local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
 	tween:Play()
 	tween.Completed:Wait()
@@ -121,6 +117,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
+local rev = "Checkpoint touch 1"
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -139,7 +136,7 @@ frame.ClipsDescendants = true
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
 title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-title.Text = "Checkpoint Toucher"
+title.Text = rev
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 18
@@ -205,7 +202,7 @@ local function runLoop()
 	loopRunning = true
 	while loopRunning do
 		logBox.Text = "Teleporting"
-		local hrp, humanoid, char = getHRP()
+		local hrp = getHRP()
 		tweenHRP(hrp, teleportPos)
 		task.wait(2)
 
