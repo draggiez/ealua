@@ -21,8 +21,8 @@ local pos6 = Vector3.new(980.60, 112.06, -535.60) -- cp6
 local pos7 = Vector3.new(402.23, 121.33, -229.17) -- cp7
 
 -- Default
-local tweenSpeed = 30
-local touchDelay = 20
+local tweenSpeed = 0.5
+local touchDelay = 40
 
 -- Lama nunggu di tiap titik (detik)
 local renderWait = 2
@@ -121,7 +121,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "✨ Ravika Push v1.2.1"
+local rev = "✨ Ravika Push v1.2.2"
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
