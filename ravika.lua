@@ -121,7 +121,7 @@ local function unfreezeCharacter()
     humanoid.PlatformStand = false
 end
 
-local rev = "✨ Ravika Push v1.1   "
+local rev = "✨ Ravika Push v1.2   "
 --============ GUI ==================--
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CheckpointGUI"
@@ -273,9 +273,8 @@ local function runLoop()
 		--=================================================================== SUMMIT
 		hrp = getHRP()
 		local summit = workspace:WaitForChild("CheckPoint"):WaitForChild("Summit") 
-		fireTouch(hrp, summit)
 		logBox.Text = "FireTouch ke Summit"
-		task.wait(2)
+		fireTouch(hrp, summit)
 
 		--=================================================================== SPAWN
 		killCharacter()
