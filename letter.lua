@@ -19,7 +19,7 @@ frame.ZIndex = 10
 frame.Parent = gui
 
 ---------------------------------------------------------
--- TEXTBOX UTAMA (versi lama)
+-- TEXTBOX (utama)
 ---------------------------------------------------------
 local textbox = Instance.new("TextBox")
 textbox.Size = UDim2.new(1, -10, 0, 30)
@@ -30,37 +30,12 @@ textbox.TextColor3 = Color3.new(1,1,1)
 textbox.ZIndex = 11
 textbox.Parent = frame
 
-local suggestion = Instance.new("TextLabel")
-suggestion.Size = UDim2.new(1, -10, 0, 30)
-suggestion.Position = UDim2.new(0, 5, 0, 40)
-suggestion.BackgroundColor3 = Color3.fromRGB(80,80,80)
-suggestion.TextColor3 = Color3.new(1,1,1)
-suggestion.ZIndex = 11
-suggestion.Text = "Suggestion: -"
-suggestion.Parent = frame
-
-local localWords = {"apple","banana","car","cat","dog","dragon","fast","hello","world","water","game","roblox"}
-
-textbox:GetPropertyChangedSignal("Text"):Connect(function()
-    local input = textbox.Text:lower()
-    local found = "-"
-
-    for _, w in ipairs(localWords) do
-        if w:sub(1, #input) == input then
-            found = w
-            break
-        end
-    end
-
-    suggestion.Text = "Suggestion: " .. found
-end)
-
 ---------------------------------------------------------
--- AUTOCOMPLETE API PANEL
+-- PANEL LIST SUGGESTION (API)
 ---------------------------------------------------------
 local autoFrame = Instance.new("Frame")
 autoFrame.Size = UDim2.new(0, 240, 0, 120)
-autoFrame.Position = UDim2.new(0, 30, 0, 80)
+autoFrame.Position = UDim2.new(0, 30, 0, 50)
 autoFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 autoFrame.ZIndex = 50
 autoFrame.Parent = frame
@@ -75,7 +50,7 @@ titleAuto.Font = Enum.Font.GothamBold
 titleAuto.TextSize = 14
 titleAuto.ZIndex = 51
 
-local autoInput = textbox  -- pakai textbox utama sebagai input
+local autoInput = textbox
 
 local listFrame = Instance.new("ScrollingFrame", autoFrame)
 listFrame.Size = UDim2.new(1, -10, 1, -30)
@@ -110,7 +85,7 @@ local function getSuggestions(word)
 	end)
 
 	if not ok then
-		warn("Autocomplete error:", res)
+		warn("Autocomplete API error:", res)
 		return {}
 	end
 
@@ -126,7 +101,7 @@ local function getSuggestions(word)
 end
 
 ---------------------------------------------------------
--- SHOW LIST IN UI
+-- SHOW LIST UI
 ---------------------------------------------------------
 local function showList(words)
 	for _, c in ipairs(listFrame:GetChildren()) do
@@ -153,7 +128,7 @@ local function showList(words)
 end
 
 ---------------------------------------------------------
--- EVENT TYPING
+-- EVENT: KETIKA TYPING
 ---------------------------------------------------------
 autoInput:GetPropertyChangedSignal("Text"):Connect(function()
 	local text = autoInput.Text
