@@ -1,140 +1,157 @@
----------------------------------------------------------
--- SETUP GUI
----------------------------------------------------------
-local player = game.Players.LocalPlayer
+-----------------------------------------------------
+-- AUTO-COMPLETE GUI + API AUTOGENERATE
+-----------------------------------------------------
+local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
-
+local player = Players.LocalPlayer
 local gui = Instance.new("ScreenGui")
 gui.Name = "AutoCompleteGUI"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
+-----------------------------------------------------
+-- API URL
+-----------------------------------------------------
+local API_URL = "https://english-word-suggestion.vercel.app/suggest?word="
+
+
+-----------------------------------------------------
+-- MAIN FRAME
+-----------------------------------------------------
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 180)
+frame.Size = UDim2.new(0, 300, 0, 50)
 frame.Position = UDim2.new(0.3, 0, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
-frame.ZIndex = 10
 frame.Parent = gui
 
----------------------------------------------------------
--- TEXTBOX (utama)
----------------------------------------------------------
-local textbox = Instance.new("TextBox")
-textbox.Size = UDim2.new(1, -10, 0, 30)
-textbox.Position = UDim2.new(0, 5, 0, 5)
-textbox.PlaceholderText = "Type English word..."
-textbox.BackgroundColor3 = Color3.fromRGB(50,50,50)
-textbox.TextColor3 = Color3.new(1,1,1)
-textbox.ZIndex = 11
-textbox.Parent = frame
+local corner1 = Instance.new("UICorner", frame)
+corner1.CornerRadius = UDim.new(0, 10)
 
----------------------------------------------------------
--- PANEL LIST SUGGESTION (API)
----------------------------------------------------------
-local autoFrame = Instance.new("Frame")
-autoFrame.Size = UDim2.new(0, 240, 0, 120)
-autoFrame.Position = UDim2.new(0, 30, 0, 50)
-autoFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-autoFrame.ZIndex = 50
-autoFrame.Parent = frame
-Instance.new("UICorner", autoFrame).CornerRadius = UDim.new(0, 10)
+-----------------------------------------------------
+-- INPUT BOX
+-----------------------------------------------------
+local input = Instance.new("TextBox")
+input.Parent = frame
+input.Size = UDim2.new(1, -10, 0, 40)
+input.Position = UDim2.new(0, 5, 0, 5)
+input.PlaceholderText = "Type English word..."
+input.TextColor3 = Color3.new(1, 1, 1)
+input.BackgroundColor3 = Color3.fromRGB(40,40,40)
+input.Font = Enum.Font.Gotham
+input.TextSize = 16
 
-local titleAuto = Instance.new("TextLabel", autoFrame)
-titleAuto.Size = UDim2.new(1, 0, 0, 20)
-titleAuto.BackgroundTransparency = 1
-titleAuto.Text = "API Suggestions"
-titleAuto.TextColor3 = Color3.fromRGB(255, 255, 255)
-titleAuto.Font = Enum.Font.GothamBold
-titleAuto.TextSize = 14
-titleAuto.ZIndex = 51
+local corner2 = Instance.new("UICorner", input)
+corner2.CornerRadius = UDim.new(0, 6)
 
-local autoInput = textbox
+-----------------------------------------------------
+-- SUGGESTION LIST PANEL
+-----------------------------------------------------
+local listFrame = Instance.new("Frame")
+listFrame.Parent = frame
+listFrame.Size = UDim2.new(1, 0, 0, 220)
+listFrame.Position = UDim2.new(0, 0, 0, 48)
+listFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+listFrame.Visible = true
 
-local listFrame = Instance.new("ScrollingFrame", autoFrame)
-listFrame.Size = UDim2.new(1, -10, 1, -30)
-listFrame.Position = UDim2.new(0, 5, 0, 25)
-listFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-listFrame.ScrollBarThickness = 5
-listFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-listFrame.ZIndex = 50
-Instance.new("UICorner", listFrame).CornerRadius = UDim.new(0, 8)
+local lfCorner = Instance.new("UICorner", listFrame)
+lfCorner.CornerRadius = UDim.new(0, 6)
 
+local scrolling = Instance.new("ScrollingFrame", listFrame)
+scrolling.Size = UDim2.new(1, -10, 1, -10)
+scrolling.Position = UDim2.new(0, 5, 0, 5)
+scrolling.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrolling.ScrollBarThickness = 4
+scrolling.BackgroundTransparency = 1
+
+-----------------------------------------------------
+-- SUGGESTION TEMPLATE
+-----------------------------------------------------
 local suggestionTemplate = Instance.new("TextButton")
-suggestionTemplate.Size = UDim2.new(1, -10, 0, 22)
-suggestionTemplate.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+suggestionTemplate.Size = UDim2.new(1, -8, 0, 26)
+suggestionTemplate.BackgroundColor3 = Color3.fromRGB(50,50,50)
+suggestionTemplate.BorderSizePixel = 0
 suggestionTemplate.TextColor3 = Color3.new(1,1,1)
 suggestionTemplate.Font = Enum.Font.Gotham
-suggestionTemplate.TextSize = 13
+suggestionTemplate.TextSize = 14
 suggestionTemplate.Visible = false
-suggestionTemplate.BorderSizePixel = 0
-suggestionTemplate.ZIndex = 52
-Instance.new("UICorner", suggestionTemplate).CornerRadius = UDim.new(0, 5)
 
----------------------------------------------------------
--- API SUGGESTION FUNCTION
----------------------------------------------------------
-local function getSuggestions(word)
-	if word == "" then return {} end
-	
-	local url = "https://api.datamuse.com/sug?s=" .. HttpService:UrlEncode(word)
+local sugCorner = Instance.new("UICorner", suggestionTemplate)
+sugCorner.CornerRadius = UDim.new(0, 4)
+
+-----------------------------------------------------
+-- FUNCTION: CLEAR LIST
+-----------------------------------------------------
+local function ClearSuggestions()
+	for _, c in ipairs(scrolling:GetChildren()) do
+		if c:IsA("TextButton") then
+			c:Destroy()
+		end
+	end
+end
+
+-----------------------------------------------------
+-- FUNCTION: FETCH API AUTOCOMPLETE
+-----------------------------------------------------
+local function GetSuggestions(query)
+	if query == "" then return {} end
+
+	local url = API_URL .. HttpService:UrlEncode(query)
 
 	local ok, res = pcall(function()
 		return HttpService:GetAsync(url)
 	end)
 
 	if not ok then
-		warn("Autocomplete API error:", res)
+		warn("API Error:", res)
 		return {}
 	end
 
-	local data = HttpService:JSONDecode(res)
-	local out = {}
+	local decoded
+	local success, data = pcall(function()
+		return HttpService:JSONDecode(res)
+	end)
 
-	for i, item in ipairs(data) do
-		if i > 15 then break end
-		table.insert(out, item.word)
+	if success then
+		decoded = data
+	else
+		decoded = {}
 	end
 
-	return out
+	return decoded
 end
 
----------------------------------------------------------
--- SHOW LIST UI
----------------------------------------------------------
-local function showList(words)
-	for _, c in ipairs(listFrame:GetChildren()) do
-		if c ~= suggestionTemplate then c:Destroy() end
-	end
+-----------------------------------------------------
+-- SHOW SUGGESTIONS
+-----------------------------------------------------
+local function Show(list)
+	ClearSuggestions()
 
 	local y = 0
-	for _, word in ipairs(words) do
+	for _, word in ipairs(list) do
 		local btn = suggestionTemplate:Clone()
 		btn.Visible = true
-		btn.Text = word
-		btn.Parent = listFrame
-		btn.Position = UDim2.new(0, 5, 0, y)
-		btn.ZIndex = 52
+		btn.Text = "  " .. word
+		btn.Position = UDim2.new(0, 4, 0, y)
+		btn.Parent = scrolling
 
 		btn.MouseButton1Click:Connect(function()
-			autoInput.Text = word
+			input.Text = word
+			ClearSuggestions()
 		end)
 
-		y += 24
+		y += 28
 	end
 
-	listFrame.CanvasSize = UDim2.new(0, 0, 0, y)
+	scrolling.CanvasSize = UDim2.new(0, 0, 0, y)
 end
 
----------------------------------------------------------
--- EVENT: KETIKA TYPING
----------------------------------------------------------
-autoInput:GetPropertyChangedSignal("Text"):Connect(function()
-	local text = autoInput.Text
-
-	task.spawn(function()
-		local list = getSuggestions(text)
-		showList(list)
-	end)
+-----------------------------------------------------
+-- EVENT: UPDATE ON TYPE
+-----------------------------------------------------
+input:GetPropertyChangedSignal("Text"):Connect(function()
+	local text = input.Text
+	local suggestions = GetSuggestions(text)
+	Show(suggestions)
 end)
