@@ -1,157 +1,139 @@
 -----------------------------------------------------
--- AUTO-COMPLETE GUI + API AUTOGENERATE
------------------------------------------------------
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-local player = Players.LocalPlayer
-local gui = Instance.new("ScreenGui")
-gui.Name = "AutoCompleteGUI"
-gui.ResetOnSpawn = false
-gui.Parent = player:WaitForChild("PlayerGui")
-
------------------------------------------------------
--- API URL
+-- CONFIG
 -----------------------------------------------------
 local API_URL = "https://english-word-suggestion.vercel.app/suggest?word="
 
+-----------------------------------------------------
+-- SERVICES
+-----------------------------------------------------
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local Player = Players.LocalPlayer
 
 -----------------------------------------------------
--- MAIN FRAME
+-- GUI CREATION
 -----------------------------------------------------
+local gui = Instance.new("ScreenGui")
+gui.Name = "AutoCompleteGUI"
+gui.ResetOnSpawn = false
+gui.Parent = Player:WaitForChild("PlayerGui")
+
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 50)
+frame.Size = UDim2.new(0, 320, 0, 260)
 frame.Position = UDim2.new(0.3, 0, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
 
-local corner1 = Instance.new("UICorner", frame)
-corner1.CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0,10)
 
------------------------------------------------------
--- INPUT BOX
------------------------------------------------------
 local input = Instance.new("TextBox")
-input.Parent = frame
 input.Size = UDim2.new(1, -10, 0, 40)
 input.Position = UDim2.new(0, 5, 0, 5)
 input.PlaceholderText = "Type English word..."
-input.TextColor3 = Color3.new(1, 1, 1)
-input.BackgroundColor3 = Color3.fromRGB(40,40,40)
+input.TextColor3 = Color3.fromRGB(255,255,255)
+input.BackgroundColor3 = Color3.fromRGB(35,35,35)
 input.Font = Enum.Font.Gotham
 input.TextSize = 16
+input.Parent = frame
 
-local corner2 = Instance.new("UICorner", input)
-corner2.CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", input).CornerRadius = UDim.new(0,5)
 
------------------------------------------------------
--- SUGGESTION LIST PANEL
------------------------------------------------------
-local listFrame = Instance.new("Frame")
-listFrame.Parent = frame
-listFrame.Size = UDim2.new(1, 0, 0, 220)
-listFrame.Position = UDim2.new(0, 0, 0, 48)
-listFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-listFrame.Visible = true
+local list = Instance.new("ScrollingFrame")
+list.Size = UDim2.new(1, -10, 1, -55)
+list.Position = UDim2.new(0, 5, 0, 50)
+list.BackgroundColor3 = Color3.fromRGB(30,30,30)
+list.ScrollBarThickness = 4
+list.CanvasSize = UDim2.new(0,0,0,0)
+list.Parent = frame
 
-local lfCorner = Instance.new("UICorner", listFrame)
-lfCorner.CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", list).CornerRadius = UDim.new(0,5)
 
-local scrolling = Instance.new("ScrollingFrame", listFrame)
-scrolling.Size = UDim2.new(1, -10, 1, -10)
-scrolling.Position = UDim2.new(0, 5, 0, 5)
-scrolling.CanvasSize = UDim2.new(0, 0, 0, 0)
-scrolling.ScrollBarThickness = 4
-scrolling.BackgroundTransparency = 1
+local template = Instance.new("TextButton")
+template.Size = UDim2.new(1, -10, 0, 28)
+template.BackgroundColor3 = Color3.fromRGB(50,50,50)
+template.Font = Enum.Font.Gotham
+template.TextColor3 = Color3.new(1,1,1)
+template.TextSize = 14
+template.Visible = false
 
------------------------------------------------------
--- SUGGESTION TEMPLATE
------------------------------------------------------
-local suggestionTemplate = Instance.new("TextButton")
-suggestionTemplate.Size = UDim2.new(1, -8, 0, 26)
-suggestionTemplate.BackgroundColor3 = Color3.fromRGB(50,50,50)
-suggestionTemplate.BorderSizePixel = 0
-suggestionTemplate.TextColor3 = Color3.new(1,1,1)
-suggestionTemplate.Font = Enum.Font.Gotham
-suggestionTemplate.TextSize = 14
-suggestionTemplate.Visible = false
-
-local sugCorner = Instance.new("UICorner", suggestionTemplate)
-sugCorner.CornerRadius = UDim.new(0, 4)
+Instance.new("UICorner", template).CornerRadius = UDim.new(0,4)
 
 -----------------------------------------------------
--- FUNCTION: CLEAR LIST
+-- CLEAR LIST
 -----------------------------------------------------
-local function ClearSuggestions()
-	for _, c in ipairs(scrolling:GetChildren()) do
-		if c:IsA("TextButton") then
-			c:Destroy()
-		end
+local function ClearList()
+	for _, child in ipairs(list:GetChildren()) do
+		if child:IsA("TextButton") then child:Destroy() end
 	end
 end
 
 -----------------------------------------------------
--- FUNCTION: FETCH API AUTOCOMPLETE
+-- FETCH API
 -----------------------------------------------------
-local function GetSuggestions(query)
-	if query == "" then return {} end
+local function GetSuggestions(word)
+	if word == "" then return {} end
 
-	local url = API_URL .. HttpService:UrlEncode(query)
+	local url = API_URL .. HttpService:UrlEncode(word)
+	print("Fetching:", url)
 
 	local ok, res = pcall(function()
 		return HttpService:GetAsync(url)
 	end)
 
 	if not ok then
-		warn("API Error:", res)
+		warn("API ERROR:", res)
 		return {}
 	end
 
-	local decoded
-	local success, data = pcall(function()
+	print("API response:", res)
+
+	local success, json = pcall(function()
 		return HttpService:JSONDecode(res)
 	end)
 
-	if success then
-		decoded = data
-	else
-		decoded = {}
+	if not success then
+		warn("JSON decode error:", json)
+		return {}
 	end
 
-	return decoded
+	-- json HARUS table array-string
+	print("Decoded table length:", #json)
+
+	return json
 end
 
 -----------------------------------------------------
--- SHOW SUGGESTIONS
+-- SHOW RESULTS
 -----------------------------------------------------
-local function Show(list)
-	ClearSuggestions()
+local function ShowResults(results)
+	ClearList()
 
 	local y = 0
-	for _, word in ipairs(list) do
-		local btn = suggestionTemplate:Clone()
+	for _, word in ipairs(results) do
+		local btn = template:Clone()
 		btn.Visible = true
 		btn.Text = "  " .. word
-		btn.Position = UDim2.new(0, 4, 0, y)
-		btn.Parent = scrolling
+		btn.Position = UDim2.new(0, 5, 0, y)
+		btn.Parent = list
 
 		btn.MouseButton1Click:Connect(function()
 			input.Text = word
-			ClearSuggestions()
+			ClearList()
 		end)
 
-		y += 28
+		y += 30
 	end
 
-	scrolling.CanvasSize = UDim2.new(0, 0, 0, y)
+	list.CanvasSize = UDim2.new(0,0,0,y)
 end
 
 -----------------------------------------------------
--- EVENT: UPDATE ON TYPE
+-- TEXT CHANGE EVENT
 -----------------------------------------------------
 input:GetPropertyChangedSignal("Text"):Connect(function()
 	local text = input.Text
-	local suggestions = GetSuggestions(text)
-	Show(suggestions)
+	local words = GetSuggestions(text)
+	ShowResults(words)
 end)
